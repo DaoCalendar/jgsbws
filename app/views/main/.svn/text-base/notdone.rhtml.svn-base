@@ -1,0 +1,7 @@
+<% @heading = "Joe Guy's Sports Betting Web Site"-%>
+<% @content = "Opening Screen - here be found National Football League predictions and more to come" -%>
+<% @desc    = "Opening Screen - here be found National Football League predictions and more to come" %>
+<div id="Originalcontent">
+   Not done yet.<br><br>
+   <%= link_to "Joe Guy's Sport Betting Web Site Home Page", :action => :index %>
+</div>

@@ -1,0 +1,22 @@
+Joe Guy's Sports Betting Web Site User Story
+
+What I want is the user to join the web site and see the opening page explaining the Joe Guy concept.
+
+When the guest goes to a NFL, NBA or EPL page he will see the whole season with the upcoming games having links to Login/Registration.
+
+In the forum he cannot post or read posts on upcoming games.
+
+When the non paying member goes to a NFL NBA or EPL page he will see the whole season with the upcoming games having links to pay page.
+
+In the forum he cannot post or read posts on upcoming games and clicking them sends him to the pay page.
+
+When the pay page is used to send me $10 for a day or $40 for a week or $100 for a month or $1,000 for a year, PP will use IPN to send me a message that the $ is in my bank account. Their fee is $0.55 plus 2.9 % which is $10 = $9.16 $40 = $38.29 $100 = $96.55 $1,000 = $974.40
+
+At this point the user database will be updated so the user is credited for the # of days he bought - $10 - now plus a day $40 - now plus a week $ 100 - now plus a month $1,000 - now plus a year.
+
+Put an around filter in the header to check for expiry every time the user changes page.
+
+The footer or header will tell him how long he has to go until the membership runs out.
+
+When the user has paid he can see JG picks for the games and post to the forum and read the latest messages in the forum not just the stale ones.
+

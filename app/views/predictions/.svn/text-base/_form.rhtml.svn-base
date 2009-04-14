@@ -1,0 +1,76 @@
+<%= error_messages_for 'prediction' %>
+
+<!--[form:prediction]-->
+
+<p><label for="prediction_game_date_time">Game date time</label><br/>
+<%= datetime_select 'prediction', 'game_date_time'  %></p>
+
+Home <%= Team.find(form.home_team_id).name+" "+form.home_team_id.to_s %> Away <%= Team.find(form.away_team_id).name+" "+form.away_team_id.to_s %>
+<br/>
+
+<p><label for="prediction_spread">Spread</label><br/>
+<%= text_field 'prediction', 'spread'  %></p>
+
+<p><label for="prediction_actual_home_score">Actual home score</label><br/>
+<%= text_field 'prediction', 'actual_home_score'  %></p>
+
+<p><label for="prediction_actual_away_score">Actual away score</label><br/>
+<%= text_field 'prediction', 'actual_away_score'  %></p>
+
+<p><label for="prediction_joe_guys_bet">Joe guys bet</label><br/>
+<%= text_field 'prediction', 'joe_guys_bet'  %></p>
+
+<!--
+<% # form.select(:id, [[Team.find(form.home_team_id).name, form.home_team_id],[Team.find(form.away_team_id).name, form.away_team_id]]) %>
+-->
+
+<p><label for="prediction_joe_guys_bet_amount_won">Joe guys bet amount won</label><br/>
+<%= text_field 'prediction', 'joe_guys_bet_amount_won'  %></p>
+
+<p><label for="prediction_prob_home_win_su">prob_home_win_su</label><br/>
+<%= text_field 'prediction', 'prob_home_win_su'  %></p>
+
+<p><label for="prediction_prob_away_win_su">prob_away_win_su</label><br/>
+<%= text_field 'prediction', 'prob_away_win_su'  %></p>
+
+<p><label for="prediction_prob_push_su">prob_push_su</label><br/>
+<%= text_field 'prediction', 'prob_push_su'  %></p>
+
+<p><label for="prediction_prob_home_win_ats">prob_home_win_ats</label><br/>
+<%= text_field 'prediction', 'prob_home_win_ats'  %></p>
+
+<p><label for="prediction_prob_away_win_ats">prob_away_win_ats</label><br/>
+<%= text_field 'prediction', 'prob_away_win_ats'  %></p>
+
+<p><label for="prediction_prob_push_ats">prob_push_ats</label><br/>
+<%= text_field 'prediction', 'prob_push_ats'  %></p>
+
+<!--
+
+<p><label for="prediction_league">League</label><br/>
+<%= text_field 'prediction', 'league'  %></p>
+
+<p><label for="prediction_week">Week</label><br/>
+<%= text_field 'prediction', 'week'  %></p>
+
+<p><label for="prediction_predicted_home_score">Predicted home score</label><br/>
+<%= text_field 'prediction', 'predicted_home_score'  %></p>
+
+<p><label for="prediction_predicted_away_score">Predicted away score</label><br/>
+<%= text_field 'prediction', 'predicted_away_score'  %></p>
+
+-->
+
+<p><label for="prediction_joe_guys_bet_amount">Joe guys bet amount</label><br/>
+<%= text_field 'prediction', 'joe_guys_bet_amount'  %></p>
+
+<!--
+<p><label for="prediction_created_at">Created at</label><br/>
+<%= datetime_select 'prediction', 'created_at'  %></p>
+
+<p><label for="prediction_updated_at">Updated at</label><br/>
+<%= datetime_select 'prediction', 'updated_at'  %></p>
+-->
+
+<!--[eoform:prediction]-->
+

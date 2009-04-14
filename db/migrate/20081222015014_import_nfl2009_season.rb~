@@ -1,0 +1,8 @@
+class ImportNfl2009Season < ActiveRecord::Migration
+  def self.up
+    nfl2008a = IO.readlines('~/terry/Dropbox/My Work/joe guy nfl 2008/')
+  end
+
+  def self.down
+  end
+end

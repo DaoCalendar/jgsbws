@@ -1,0 +1,8 @@
+<% for column in League.content_columns %>
+<p>
+  <b><%= column.human_name %>:</b> <%=h @league.send(column.name) %>
+</p>
+<% end %>
+
+<%= link_to 'Edit', :action => 'edit', :id => @league %> |
+<%= link_to 'Back', :action => 'list' %>

@@ -1,0 +1,257 @@
+ <% @heading = "Joe Guy's Sports Betting Web Site"-%>
+<% @content = "Opening Screen - here be found National Football League predictions && more to come" -%>
+<% @desc		= "Opening Screen - here be found National Football League predictions && more to come" %>
+<% leagueid = params[:league].to_i %>
+<% mlfullbet, brmlats, tta, mlats, mlsum, winprob, weeklywinmatrix, totalwinmatrix, suww, sulw, supw, suwy, suly, supy, weeklyprofit, isadmin, mlhash, tthash, wageramount, ttwageramount,  topten = nflinit(leagueid) %>
+	<% topten	=	0.75 %>
+	<% winprob	=	0.95  %>
+	
+	<div id = "Originalcontent">
+	
+	<%= gettitle(params) %>
+	
+	Green is Win - Red is Loss - Yellow is Push (or No Opinion) - TT is Top Ten (estimated prob of winning > <%= (topten*100).to_s %> % ) - HW is High Water<br>
+	<% # leagueid  = League.find_by_name("National Football League")%>
+	<% topten	=	0.9 if	leagueid	==	2 %>
+	<% isnba = false # (leagueid == 2) %>
+
+	<% @pred	= Prediction.find_all_by_league(leagueid) %>
+		<% @pred.sort!{|a,b|a["game_date_time"]<=>b["game_date_time"]} %>
+		
+		<% adjweek = 0 %>
+		<% adjweek = @pred[0].week-1 if isnba %>
+		<% logger.warn "pred length is #{@pred.length}" %>
+		<% @pred.each{|p| %>
+			<% tta << p.prob_home_win_ats if p.prob_home_win_ats > 0.0 && p.prob_home_win_ats < 1.0 %>
+			<% tta << p.prob_away_win_ats if p.prob_away_win_ats > 0.0 && p.prob_away_win_ats < 1.0 %>
+			<% tta << p.prob_game_over_total if p.prob_game_over_total > 0.0 && p.prob_game_over_total < 1.0 %>
+			<% tta << (1.0 - p.prob_game_over_total)  if (1.0 - p.prob_game_over_total) > 0.0 && (1.0 - p.prob_game_over_total) < 1.0 %>
+		<% } %>
+		<% tta.sort!{|a,b|b<=>a}  %>
+		<% logger.warn "tta.inspect #{tta.inspect}" %>
+		<% # logger.warn tta.inspect %>
+		<% # logger.warn "tta.length" %>
+		<% # logger.warn tta.length %>
+		<% # logger.warn "tenpercent is " %>
+		<% # logger.warn tta[tta.length/10] %>
+		<% topten = tta[tta.length/25] if tta[tta.length/25] > topten %>
+		<% weekv	= 0 %>
+		<% wins		= losses = pushes = weeklyinvestment = 0 %>
+		<% totalwinmatrix[0][0] = totalwinmatrix[0][2] = totalwinmatrix[0][1] = 0 %>
+		<% bankroll	= 1000.0 %>
+		<% # 1 888 764 3771 rogers tech support %>
+		<% ttbankroll = 1000.0 %>
+		<% ww  = lw	= 0 %>
+		Starting bankroll $1,000 - wager $<%= wageramount %><br>
+		Starting Top Ten bankroll $1,000 - wager $<%= ttwageramount %>
+		<br>
+		<% highwatermark  = 1000 %>
+		<% tthighwatermark  = 1000 %>
+		<% shash	=	{} %>
+		<% logger.warn "@pred.inspect" %>
+		<% logger.warn @pred.inspect %>
+		<% logger.warn "@pred.inspect done" %>
+		<% lastweek	=	Prediction.new %>
+		<% lastweek.week	+=	@pred.last.week+1 %>
+		<% # @pred << lastweek %>
+		<% logger.warn "@pred.inspect after push" %>
+		<% logger.warn @pred.inspect %>
+		<% logger.warn "@pred.inspect after push done" %>
+
+	<% @pred.reject!{|g|!(g["season"].to_i == params[:id].to_i)}%>
+
+	<% @pred.each_with_index{|p, pi| %>
+		<% newhigh	= false %>
+			<% ttnewhigh	= false %>
+			<% unless weekv == p.week %>
+				<%= "</table>"  unless weekv == 0 %>
+		<% shash, ww, lw = chargeshash(shash, weeklyinvestment, wins, losses, pushes, weeklywinmatrix, totalwinmatrix, suww, sulw, supw, suwy, suly, supy, weeklyprofit, tthash, mlhash, ww, lw) %>
+		<% shash["tt"]		=	topten %>
+		<% shash["wp"]	=	winprob %>
+
+		<%= render :partial => 'summary', :object => shash %>
+
+		<% # next if (pi+1) == @pred.length %>
+				<%= "<br>" unless wins == 0 %>
+				<%= "<br>" unless wins == 0 %>
+				<% wstr = (isnba ? "Day "+ (p.week-adjweek).to_s : "Week "+ p.week.to_s) %>
+				<% wstr = "AFC/NFC Wild Card"	if p.week == 18 %>
+				<% wstr = "AFC/NFC Divisional"	if p.week == 19 %>
+				<% wstr = "AFC/NFC Championships" if p.week == 20 %>
+				<% wstr = "Super Bowl"					if p.week == 21 %>
+				<%= wstr %>
+				<%= "<br>" %>
+				<table border="1">
+				<tr><th>Game Date</th><th>Game Time</th><th>Home</th><th>Score</th><th>Spread</th><th>Away</th><th>Score</th><th>Joe Guy's Pick ATS</th><th>Over / Under</th><th>OU Choice</th><th>Bankroll - $20 bet</th><th>TT Bankroll - $40 bet</th><% (isadmin ? "<th>Edit</th>" : "") %><th>Moneyline - $20 bet - >full bet<</th><th>When Moneyline pic is underdog, also bet it ATS</th><th>Hedge bet</th></tr>
+		<% wins, loses, pushes, weeklywinmatrix, weeklyinvestment, suww, sulw, supw, weekv, weeklyprofit, tthash, mlhash = weeklyinit(p, wins, loses, pushes, weeklywinmatrix, weeklyinvestment, suww, sulw, supw, weekv, weeklyprofit, tthash, mlhash) %>
+			<tr>
+			<% end %>
+			<% suww += ((p.prob_home_win_su > p.prob_away_win_su && p.actual_home_score > p.actual_away_score) or (p.prob_away_win_su > p.prob_home_win_su && p.actual_away_score > p.actual_home_score)) ? 1 : 0 %>
+			<% sulw += ((p.prob_home_win_su > p.prob_away_win_su && p.actual_home_score < p.actual_away_score) or (p.prob_away_win_su > p.prob_home_win_su && p.actual_away_score < p.actual_home_score)) ? 1 : 0 %>
+			<% suwy += ((p.prob_home_win_su > p.prob_away_win_su && p.actual_home_score > p.actual_away_score) or (p.prob_away_win_su > p.prob_home_win_su && p.actual_away_score > p.actual_home_score)) ? 1 : 0 %>
+			<% suly += ((p.prob_home_win_su > p.prob_away_win_su && p.actual_home_score < p.actual_away_score) or (p.prob_away_win_su > p.prob_home_win_su && p.actual_away_score < p.actual_home_score)) ? 1 : 0 %>
+			<%= "<td>"+p.game_date_time.strftime("%b %d %Y")+"</td>" %>
+			<%= "<td>"+p.game_date_time.strftime("%I %M %p")+"</td>" %>
+			<% homediv = awaydiv = homeenddiv = awayenddiv = "" %>
+			<% homediv = "<div id='yellow'>" if p.prob_home_win_su > p.prob_away_win_su %>
+			<% awaydiv = "<div id='yellow'>" if p.prob_home_win_su < p.prob_away_win_su %>
+			<% homediv = "<div id='green'>" if p.prob_home_win_su > p.prob_away_win_su && p.actual_home_score > p.actual_away_score %>
+			<% homediv = "<div id='red'>"	if p.prob_home_win_su > p.prob_away_win_su && p.actual_home_score < p.actual_away_score %>
+			<% awaydiv = "<div id='green'>" if p.prob_away_win_su > p.prob_home_win_su && p.actual_away_score > p.actual_home_score %>
+			<% awaydiv = "<div id='red'>"	if p.prob_away_win_su > p.prob_home_win_su && p.actual_away_score < p.actual_home_score %>
+			<% homeenddiv = "</div>" unless homediv.empty? %>
+			<% awayenddiv = "</div>" unless awaydiv.empty? %>
+			<%= "<td>"+homediv+nameconv(Team.find(p.home_team_id).name, p.league)+" #{(p.moneyline_home == -110 && p.moneyline_away == -110) ?  "" : p.moneyline_home.commify}"+homeenddiv+"</td><td><center>"+(p.actual_home_score > -1 ? p.actual_home_score.to_s : "No Score")+"</center></td>" %>
+			<% comppick = "No Opinion"; startdiv = "<div id='yellow'>" %>
+			<% atspick = p.prob_home_win_ats >= winprob ||  p.prob_away_win_ats >= winprob %>
+			<% comppick = nameconv(Team.find(p.home_team_id).name, p.league) + winprob.to_s if p.prob_home_win_ats >= winprob %>
+			<% comppick = nameconv(Team.find(p.away_team_id).name, p.league) + winprob.to_s  if p.prob_away_win_ats >= winprob %>
+			<% ttstr = (((p.prob_home_win_ats > topten or p.prob_away_win_ats > topten) && p.prob_away_win_ats != 0 && p.prob_away_win_ats != 1.0 && p.prob_home_win_ats != 0 && p.prob_home_win_ats != 1.0) ? " TT" : "")%>
+			<% startdiv = "<div id='yellow'>"	%>
+			<% startdiv = "<div id='green'>"	if p.prob_home_win_ats >= winprob && p.actual_home_score + p.spread > p.actual_away_score && p.actual_away_score != -1 %>
+			<% startdiv = "<div id='green'>"	if p.prob_away_win_ats >= winprob && p.actual_home_score + p.spread < p.actual_away_score && p.actual_away_score != -1 %>
+			<% startdiv = "<div id='red'>"	if p.prob_home_win_ats >= winprob && p.actual_home_score + p.spread < p.actual_away_score && p.actual_away_score != -1 %>
+			<% startdiv = "<div id='red'>"	if p.prob_away_win_ats >= winprob && p.actual_home_score + p.spread > p.actual_away_score && p.actual_away_score != -1 %>
+			<% weeklyinvestment += wageramount unless atspick %>
+			<% bankroll	+= wageramount if startdiv == "<div id='green'>" && ttstr.empty? %>
+			<% bankroll	-= (1.1 * wageramount) if startdiv.include?("<div id='red'>") && ttstr.empty? %>
+			<% ttbankroll	+= ttwageramount if startdiv == "<div id='green'>" && !ttstr.empty? %>
+			<% ttbankroll	-= (1.1 * ttwageramount) if startdiv.include?("<div id='red'>") && !ttstr.empty? %>
+			<% weeklyprofit += wageramount if startdiv == "<div id='green'>" %>
+			<% weeklyprofit -= (1.1 * wageramount) if startdiv.include?("<div id='red'>") %>
+			<% newhigh				=	true	if bankroll > highwatermark %>
+			<% ttnewhigh				=	true	if ttbankroll > tthighwatermark %>
+			<% highwatermark			=	bankroll if bankroll > highwatermark %>
+			<% tthighwatermark		=	ttbankroll if ttbankroll > tthighwatermark %>
+			<% weeklywinmatrix[0][0]	+= 1 if startdiv == "<div id='green'>" %>
+			<% weeklywinmatrix[0][2]	+= 1 if startdiv.include?("<div id='red'>") %>
+			<% weeklywinmatrix[0][1]	+= 1 if startdiv == "<div id='yellow'>" && atspick %>
+			<% totalwinmatrix[0][0]		+= 1 if startdiv == "<div id='green'>" %>
+			<% totalwinmatrix[0][2]		+= 1 if startdiv.include?("<div id='red'>") %>
+			<% totalwinmatrix[0][1]		+= 1 if startdiv == "<div id='yellow'>" && atspick  %>
+			<%= "<td><center>"+(p.spread != 0 ? p.spread.to_s : "NL")+"</center></td>" %>
+			<%= "<td>"+awaydiv+nameconv(Team.find(p.away_team_id).name, p.league)+" #{(p.moneyline_home == -110 && p.moneyline_away == -110) ?  "" : p.moneyline_away.commify}"+awayenddiv+"</td><td><center>"+(p.actual_away_score > -1 ? p.actual_away_score.to_s : "No Score")+"</center></td>" %>
+			<% startdiv = "<div id='red'>" %>
+			<% unless p.joe_guys_bet.nil? or comppick == "No Opinion" %>
+				<% startdiv = "<div id='green'>"  if p.joe_guys_bet == p.home_team_id && p.actual_home_score + p.spread > p.actual_away_score && p.actual_away_score != -1 %>
+				<% startdiv = "<div id='green'>"  if p.joe_guys_bet == p.away_team_id && p.actual_home_score + p.spread < p.actual_away_score && p.actual_away_score != -1 %>
+				<% startdiv = "<div id='yellow'>" if p.joe_guys_bet == 0 or p.actual_home_score + p.spread == p.actual_away_score or p.actual_away_score == -1 %>
+			<% else %>
+				<% startdiv = "<div id='yellow'>" %>
+			<% end %>
+			<% weeklywinmatrix[1][2]	+= 1 if startdiv.include?("<div id='red'>") %>
+			<% weeklywinmatrix[1][1]	+= 1 if startdiv == "<div id='yellow'>" %>
+			<% weeklywinmatrix[1][0]	+= 1 if startdiv == "<div id='green'>" %>
+			<% totalwinmatrix[1][2]		+= 1 if startdiv.include?("<div id='red'>") %>
+			<% totalwinmatrix[1][1]		+= 1 if startdiv == "<div id='yellow'>"	&&	!comppick	==	"No Opinion" %>
+			<% totalwinmatrix[1][0]		+= 1 if startdiv == "<div id='green'>" %>
+			<% # ttstr = "" %>
+
+	<% mlo, mlm, mlats, bbmlprz, hhf, ahf, bh = mlhlpr(p) %>
+
+	<% hrh = 0.0 %>
+	<% hrh = wageramount*hhf if p.actual_home_score + p.spread > p.actual_away_score && p.actual_away_score != -1 %>
+	<% hrh -= wageramount*(1.0-hhf) if p.actual_home_score < p.actual_away_score && p.actual_away_score != -1%>
+	<% hrh += wageramount*(1.0-hhf)*mlm if p.actual_home_score > p.actual_away_score && p.actual_away_score != -1%>
+	<% hra = 0.0 %>
+	<% hra = wageramount*ahf if p.actual_home_score + p.spread < p.actual_away_score && p.actual_away_score != -1 %>
+	<% hra -= wageramount*(1.0-ahf) if p.actual_home_score > p.actual_away_score && p.actual_away_score != -1%>
+	<% hra += wageramount*(1.0-ahf)*mlm if p.actual_home_score < p.actual_away_score && p.actual_away_score != -1%>
+			<% unless p.game_total == 0 %>
+				<% outt	=	(p.prob_game_over_total > topten or (1.0 - p.prob_game_over_total) > topten) %>
+				<% totaldiv = "<div id='red'>" %>
+				<% oupick = (p.prob_game_over_total > winprob &&  (p.actual_home_score + p.actual_away_score)> p.game_total) || ((1.0 - p.prob_game_over_total) > winprob && (p.actual_home_score + p.actual_away_score) < p.game_total) %>
+				<% totaldiv = "<div id='green'>"  if p.prob_game_over_total > winprob &&  (p.actual_home_score + p.actual_away_score)> p.game_total %>
+				<% totaldiv = "<div id='green'>"  if (1.0 - p.prob_game_over_total) > winprob && (p.actual_home_score + p.actual_away_score) < p.game_total %>
+				<% totaldiv = "<div id='yellow'>" if (p.prob_game_over_total < winprob && (1.0 - p.prob_game_over_total) < winprob) or (p.actual_home_score + p.actual_away_score) == p.game_total or p.actual_away_score == -1 %>
+				<% weeklyinvestment += wageramount unless totaldiv == "<div id='yellow'>" %>
+				<% weeklywinmatrix[1][2] += 1 if totaldiv.include?("<div id='red'>") %>
+				<% weeklywinmatrix[1][1] += 1 if totaldiv == "<div id='yellow'>" %>
+				<% weeklywinmatrix[1][0] += 1 if totaldiv == "<div id='green'>" %>
+				<% totalwinmatrix[1][2]  += 1 if totaldiv.include?("<div id='red'>") %>
+				<% totalwinmatrix[1][1]  += 1 if totaldiv == "<div id='yellow'>" %>
+				<% totalwinmatrix[1][0]  += 1 if totaldiv == "<div id='green'>" %>
+				<% bankroll	+= wageramount if totaldiv == "<div id='green'>"  && !outt %>
+				<% bankroll	-= (1.1 * wageramount) if totaldiv.include?("<div id='red'>") && !outt %>
+				<% ttbankroll	+= ttwageramount if totaldiv == "<div id='green'>" && outt %>
+				<% ttbankroll	-= (1.1 * ttwageramount) if totaldiv.include?("<div id='red'>") && outt %>
+				<% newhigh		= false	if bankroll < highwatermark %>
+				<% newhigh		= true	if bankroll > highwatermark %>
+				<% ttnewhigh		= false	if ttbankroll < tthighwatermark %>
+				<% ttnewhigh		= true	if ttbankroll > tthighwatermark %>
+				<% highwatermark		= bankroll if bankroll > highwatermark %>
+				<% tthighwatermark	= ttbankroll if ttbankroll > tthighwatermark %>
+				<% weeklyprofit	+= wageramount if totaldiv == "<div id='green'>" %>
+				<% weeklyprofit	-= (1.1 * wageramount) if totaldiv.include?("<div id='red'>") %>
+				<% totalchoice		= "No Opinion" %>
+				<% totalchoice		= "Over"		if p.prob_game_over_total > winprob %>
+				<% totalchoice		= "Under"		if (1.0 - p.prob_game_over_total) > winprob %>
+				<% totalchoice		= "No Opinion" if p.prob_game_over_total == 0 %>
+		<% logger.warn "mlsum is nil" if mlsum.nil? %>
+		<% logger.warn "mlm is nil" if mlm.nil? %>
+		<% mlhash["ml bets"]	+= 1 unless mlm == 0.0 %>
+		<% mlhash["ml wins"]	+= 1 if mlm > 0.0 %>
+		<% mlhash["ml losses"]  += 1 if mlm == -1 %>
+		<% mlhash["ml pushes"] += 1 if mlm == 0.0 unless mlo.include?("No ") %>
+		<% mlhash["ml prize"] += mlm %>
+		<% mlhash["weekly ml bets"]	+= 1 unless mlm == 0.0 %>
+		<% mlhash["weekly ml wins"]	+= 1 if mlm > 0.0 %>
+		<% mlhash["weekly ml losses"]  += 1 if mlm == -1 %>
+		<% mlhash["weekly ml pushes"] += 1 if mlm == 0.0 unless mlo.include?("No ") %>
+		<% mlhash["weekly ml prize"] += mlm %>
+		<% mlsum += mlm %>
+		<% raise "mlfullbet is nil" if mlfullbet.nil? %>
+		<% raise "bbmlprz is nil" if bbmlprz.nil? %>
+		<% mlfullbet += bbmlprz %>
+				<% if outt %>
+				<% # totalchoice += " TT" %>
+				<% totalchoice	+= " TT" %>
+				<% tthash["bets"]	+= 1  %>
+				<% tthash["wins"]	+= 1 if totaldiv  == "<div id='green'>" %>
+				<% tthash["losses"] += 1 if totaldiv.include?("<div id='red'>") %>
+				<% tthash["pushes"] += 1 if totaldiv == "<div id='yellow'>" && !totalchoice == "No Opinion" %>
+				<% tthash["Weekly TT Bets"]	+= 1 %>
+				<% tthash["Weekly TT Wins"]	+= 1 if totaldiv == "<div id='green'>" %>
+				<% tthash["Weekly TT Losses"]  += 1 if totaldiv.include?("<div id='red'>") %>
+				<% tthash["Weekly TT Pushes"]  += 1 if totaldiv == "<div id='yellow'>" %>
+				<% end %>
+				<%= "<td>"+startdiv+((!p.joe_guys_bet.nil? && !comppick == "No Opinion")  ? nameconv(Team.find(p.joe_guys_bet).name, p.league) : " No Opinion " ) + ttstr+"</div></td>" %>
+				<td><center><%= p.game_total %></center></td>
+				<%= "<td>"+totaldiv+totalchoice+"</div></td>" %> 
+		<% # if !mlats.nil? &&  %>
+		<% brout	=  "<td>$"+(((bankroll*100.0).to_i) / 100.0).r2.commify.rjust(7)+(newhigh ? ' HW' : '' )+"</td>"%>
+		<% ttbrout	= "<td>$" +(((ttbankroll*100.0).to_i) / 100.0).r2.commify.rjust(7)+(ttnewhigh ? ' HW' : '' )+"</td>" %>
+		<% mlout	= "<td>#{mlo} -> $#{(wageramount*mlsum).r2.commify} >$#{mlfullbet.r2.commify}<</td>" %>
+		<% mlatsout = "<td>$ #{(mlats.nil? ? 'no wager' : nameconv(Team.find(mlats).name, p.league))}</td>" %>
+		<% hfout		= "<td>$ #{(wageramount*ahf).r2}</td>" %>
+		<%= brout + ttbrout + mlout + mlatsout + hfout %>
+			<% else # no OU choice in this game %>
+	<% # begin %>
+		<%= raise "p.joe_guys_bet is zero #{p.inspect}" if p.joe_guys_bet == 0.0 %>
+		<% jjb = (!p.joe_guys_bet.nil? ? Team.find(p.joe_guys_bet).name : " No Opinion " ) %>
+		<% mlbet = nameconv(Team.find(mlats).name, p.league) unless mlats.nil? %>
+		<%= "<td>"+startdiv+ jjb + ttstr +"</div></td><td><center><div id='yellow'>No OU</div></center></td><td><div id='yellow'>No Opinion</div></td><td>$5"+(((bankroll*100.0).to_i)/100.0).commify.rjust(7)+(newhigh ? " HW" : "" )+"</td><td>"+(((ttbankroll*100.0).to_i)/100.0).commify.rjust(7)+(ttnewhigh ? " HW" : "" )+"</td><td>#{mlo} -> $#{(wageramount*mlsum).commify} >$#{mlfullbet.commify}<</td><td>#{(mlats.nil? ? 'no wager' : mlbet)}</td><td>#{(wageramount*hhf).r2}</td>" %>
+		<% #rescue %>
+		<% #raise p.inspect %>
+		<% #end %>
+			<% end %>
+			<% unless ttstr.empty? %>
+				<% tthash["bets"]	+= 1  %>
+				<% tthash["wins"]	+= 1 if startdiv == "<div id='green'>" %>
+				<% tthash["losses"] += 1 if startdiv.include?("<div id='red'>") %>
+				<% tthash["pushes"] += 1 if startdiv == "<div id='yellow'>" %>
+				<% tthash["Weekly TT Bets"]	+= 1 %>
+				<% tthash["Weekly TT Wins"]	+= 1 if startdiv == "<div id='green'>" %>
+				<% tthash["Weekly TT Losses"] += 1 if startdiv.include?("<div id='red'>") %>
+				<% tthash["Weekly TT Pushes"] += 1 if startdiv == "<div id='yellow'>" %>
+			<% end %>
+			<% if isadmin %>
+				<td><%= link_to "Edit", :controller => 'predictions', :action => 'edit', :id => p %></td>
+			<% end %>
+			</tr>
+		<% } %>
+	<% # logger.warn @pred.inspect %>
+	<% # logger.warn @pred.length %>
+	<% # logger.warn params.inspect %>
+	</div>
+

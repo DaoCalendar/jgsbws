@@ -1,0 +1,9 @@
+<h1>Editing prediction</h1>
+
+<% form_tag :action => 'update', :id => @prediction do %>
+  <%= render :partial => 'form', :object => @prediction %>
+  <%= submit_tag 'Edit' %>
+<% end %>
+
+<%= link_to 'Show', :action => 'show', :id => @prediction %> |
+<%= link_to 'Back', :action => 'list' %>

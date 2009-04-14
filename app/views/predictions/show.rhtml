@@ -1,0 +1,9 @@
+<% for column in Prediction.content_columns %>
+<p>
+  <b><%= column.human_name %>:</b> <%=h @prediction.send(column.name) %>
+</p>
+<% end %>
+
+<%= link_to 'Edit', :action => 'edit', :id => @prediction %> |
+<%= link_to 'Back', :action => 'list' %>
+<%= link_to 'Edit Next', :action => 'edit', :id => @prediction.id + 1 %> |

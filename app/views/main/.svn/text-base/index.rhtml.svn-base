@@ -1,0 +1,30 @@
+<% @heading = "Joe Guy's Sports Betting Web Site"-%>
+<% @content = "Opening Screen - here be found National Football League predictions and more to come" -%>
+<% @desc    = "Opening Screen - here be found National Football League predictions and more to come" %>
+<div id="Originalcontent">
+   Hello and welcome to Joe Guy's Sports Betting Web Site.<br>
+   <br>
+   My name is Terry Smith. I have been writing software for betting sporting events since the 80s, when I started with a QBASIC program on an IBM XT clone with a 10 MB hard drive.<br>
+   <br>
+   I have since moved this program to Visual Basic, then Java and now, Ruby. The hardware has changed from a 8088 chip to a 286 then a 386 and now a series of Pentiums.<br>
+   <br>
+   I have never stopped studying, developing and improving this model.<br>
+   <br>
+   'Joe Guy' is a theoretical member of the sports betting public. He makes bets with a bookie at the standard odds of 11 to 10, that is, he has to bet 11 dollars in order to win 10. If he loses, he loses the 11 dollars.<br>
+   <br>
+   This web page follows his year as he plays the NFL, the NBA, NCAA Football, NCAA Basketball and English Premier League Soccer starting with a bankroll of $1,000 for each sport.<br>
+   <br>
+   However, unlike the average member of the sports betting public, he make two changes in his behaviour.<br>
+   <br>
+   One - he is smart enough to only ever bet about four percent of his bankroll, or $40, per game no matter how attractive the bet is and<br>
+   <br>
+   Two - My software picks all his bets for him.<br>
+   <br>
+   You can look around all the league pages and the forums. But as an unpaid member you can't read the latest messages and you can't post.<br>
+   <br>
+   <%= link_to "Joe Guy's 2008 National Football League Season", :action => :nfl %><br>
+   <%= link_to "Joe Guy's 2008 National Basketball Association Season", :action => :notdone %><br>
+   <%= link_to "Joe Guy's 2008 NCAA Football League Season", :action => :notdone %><br>
+   <%= link_to "Joe Guy's 2008 NCAA Basketball Season", :action => :notdone %><br>
+   <%= link_to "Joe Guy's 2008 English Premier League Season", :action => :notdone %>
+</div>

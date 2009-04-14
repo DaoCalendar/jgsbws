@@ -1,0 +1,276 @@
+9
+
+dir
+2
+file:///C:/jgrep/db/migrate
+file:///C:/jgrep
+
+
+
+2007-12-01T07:31:53.545125Z
+2
+MARIA PIPERNI
+
+
+svn:special svn:externals svn:needs-lock
+
+013_add_totalsto_pred.rb
+file
+106
+
+
+
+2008-01-12T08:55:42.619875Z
+339bd0c1d7c0804c06e2ad3c3558165d
+2008-01-12T12:43:12.595375Z
+106
+MARIA PIPERNI
+
+015_add_superbowl.rb
+file
+148
+
+
+
+2008-07-28T03:24:02.338375Z
+68516b61e94f36f95c86c653f383d006
+2008-07-28T03:25:17.385250Z
+148
+MARIA PIPERNI
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2648
+
+005_create_teams.rb
+file
+11
+
+
+
+2008-01-08T06:33:16.215625Z
+e01cb19d1a600fe31eb4f1b7bf936e15
+2007-12-05T09:43:11.041625Z
+11
+MARIA PIPERNI
+
+016_strength.rb
+file
+133
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+deleted
+
+001_create_predictions.rb
+file
+7
+
+
+
+2007-12-05T04:57:30.651625Z
+57b76c58e5d82a479991f80cc6c72eb3
+2007-12-05T07:52:20.622125Z
+7
+MARIA PIPERNI
+
+009_week15_nfl.rb
+file
+57
+
+
+
+2007-12-20T00:19:10.969375Z
+aeef9b49d31e8495ff1bcae765a2ac09
+2007-12-20T00:19:28.485000Z
+57
+MARIA PIPERNI
+
+016_create_strengths.rb
+file
+138
+
+
+
+2008-01-25T08:08:56.073625Z
+50769fd11db75f7915ae9b6402d904db
+2008-02-06T06:43:45.235625Z
+138
+MARIA PIPERNI
+
+004_create_leagues.rb
+file
+8
+
+
+
+2007-12-03T10:39:28.813500Z
+6015b84d046e90d6e5135c3d87ff3b3d
+2007-12-05T07:52:50.700250Z
+8
+MARIA PIPERNI
+
+012_do_ws_file.rb
+file
+104
+
+
+
+2008-01-08T16:42:19.544000Z
+c030bad0d33acf9cd8c3d744b1429871
+2008-01-12T08:37:20.538125Z
+104
+MARIA PIPERNI
+
+011_add_pw_reset_code_to_users.rb
+file
+87
+
+
+
+2007-12-22T10:17:50.922250Z
+e8b170f5e14656dd1e0855ac6d4bc143
+2007-12-22T10:18:41.266000Z
+87
+MARIA PIPERNI
+
+003_add_sessions.rb
+file
+8
+
+
+
+2007-12-01T08:02:31.685875Z
+b5684e81f9b2da2eb4cecce8a97d6eac
+2007-12-05T07:52:50.700250Z
+8
+MARIA PIPERNI
+
+014_add_nfl_championships.rb
+file
+148
+
+
+
+2008-07-28T03:23:51.102375Z
+815eacdf30626c4a976bf37e8654b8ee
+2008-07-28T03:25:17.385250Z
+148
+MARIA PIPERNI
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+3308
+
+006_enter_predictions.rb
+file
+26
+
+
+
+2008-01-12T14:07:12.671625Z
+8a3f4bc9e1dc689abf2eb5ddce4a502c
+2007-12-06T00:51:04.481250Z
+26
+MARIA PIPERNI
+
+007_create_users.rb
+file
+29
+
+
+
+2007-12-06T01:05:56.053500Z
+db6e5450a982266b87f9c9431c675675
+2007-12-06T01:07:50.647250Z
+29
+MARIA PIPERNI
+
+010_update_nfl_picks_weekly.rb
+file
+59
+
+
+
+2007-12-20T00:22:44.375625Z
+5cf861f76d12ed90dfc2c497e8597c66
+2007-12-21T01:33:56.478875Z
+59
+MARIA PIPERNI
+
+002_modify_predictions.rb
+file
+25
+
+
+
+2007-12-06T00:47:23.450000Z
+72da6f9d04d4190665669fd1c433fbde
+2007-12-06T00:50:40.559375Z
+25
+MARIA PIPERNI
+
+008_update_predictions.rb
+file
+47
+
+
+
+2007-12-13T02:58:36.739750Z
+b87637f7243fc397f9b2df976eed2655
+2007-12-13T06:33:42.486250Z
+47
+MARIA PIPERNI
+

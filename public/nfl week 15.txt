@@ -1,0 +1,16 @@
+NFL,13/12/07,Houston,Denver,31,13,-1.5,47,-115,105
+NFL,15/12/07,San Francisco,Cincinnati,20,13,9.5,43,0,0
+NFL,16/12/07,New Orleans,Arizona,31,24,-3.5,0,-110,-110
+NFL,16/12/07,Tampa Bay,Atlanta,37,3,-13,0,-110,-110
+NFL,16/12/07,Miami,Baltimore,22,16,3,37.5,172,-182
+NFL,16/12/07,Cleveland,Buffalo,8,0,-5.5,45,-235,215
+NFL,16/12/07,St. Louis,Green Bay,14,33,9.5,44,375,-415
+NFL,16/12/07,Pittsburgh,Jacksonville,22,29,-4,39.5,-191,178
+NFL,16/12/07,New England,N.Y. Jets,20,10,-24,50.5,-2300,1700
+NFL,16/12/07,Carolina,Seattle,13,10,7,38,280,-310
+NFL,16/12/07,Kansas City,Tennessee,17,26,4,34,183,-201
+NFL,16/12/07,Oakland,Indianapolis,14,21,10.5,45,450,-500
+NFL,16/12/07,San Diego,Detroit,51,14,-10,45.5,-460,240
+NFL,16/12/07,Dallas,Philadelphia,6,10,-10.5,48.5,-460,420
+NFL,16/12/07,N.Y. Giants,Washington,10,22,-4.5,40,-210,190
+NFL,17/12/07,Minnesota,Chicago,20,13,-10,43.5,-440,400

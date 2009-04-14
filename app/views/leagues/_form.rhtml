@@ -1,0 +1,13 @@
+<%= error_messages_for 'league' %>
+
+<!--[form:league]-->
+<p><label for="league_name">Name</label><br/>
+<%= text_field 'league', 'name'  %></p>
+
+<p><label for="league_created_at">Created at</label><br/>
+<%= datetime_select 'league', 'created_at'  %></p>
+
+<p><label for="league_updated_at">Updated at</label><br/>
+<%= datetime_select 'league', 'updated_at'  %></p>
+<!--[eoform:league]-->
+

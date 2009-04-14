@@ -1,0 +1,13 @@
+<%= error_messages_for 'team' %>
+
+<!--[form:team]-->
+<p><label for="team_team">Team</label><br/>
+<%= text_area 'team', 'team'  %></p>
+
+<p><label for="team_created_at">Created at</label><br/>
+<%= datetime_select 'team', 'created_at'  %></p>
+
+<p><label for="team_updated_at">Updated at</label><br/>
+<%= datetime_select 'team', 'updated_at'  %></p>
+<!--[eoform:team]-->
+

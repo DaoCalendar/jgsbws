@@ -1,0 +1,20 @@
+<% @heading = "Joe Guy's Sports Betting Web Site"-%>
+<% @content = "Opening Screen - here be found National Football League predictions and more to come" -%>
+<% @desc    = "Opening Screen - here be found National Football League predictions and more to come" %>
+<div id="Originalcontent">
+  Your IP is <%= request.env["REMOTE_ADDR"] %>
+  <% form_tag do -%>
+    <p><label for="login">Login</label><br/>
+    <%= text_field_tag 'login' %></p>
+    
+    <p><label for="password">Password</label><br/>
+    <%= password_field_tag 'password' %></p>
+    
+    <!-- Uncomment this if you want this functionality
+    <p><label for="remember_me">Remember me:</label>
+    <%= check_box_tag 'remember_me' %></p>
+    -->
+    
+    <p><%= submit_tag 'Log in' %></p>
+  <% end -%>
+</div>

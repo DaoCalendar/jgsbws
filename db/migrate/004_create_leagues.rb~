@@ -1,0 +1,18 @@
+class CreateLeagues < ActiveRecord::Migration
+  def self.up
+    create_table :leagues do |t|
+      t.column :name,  :string
+      t.column :created_at,   :timestamp
+      t.column :updated_at,   :timestamp
+    end
+    League.create(:name=>"National Football League")
+    League.create(:name=>"National Basketball Association")
+    League.create(:name=>"English Premier League")
+    League.create(:name=>"NCAA Football")
+    League.create(:name=>"NCAA Basketball")
+  end
+
+  def self.down
+    drop_table :leagues
+  end
+end

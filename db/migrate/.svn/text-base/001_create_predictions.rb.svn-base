@@ -1,0 +1,26 @@
+class CreatePredictions < ActiveRecord::Migration
+  def self.up
+    create_table :predictions do |t|
+      t.column :game_date_time,          :datetime
+      t.column :league,                  :integer
+      t.column :week,                    :integer, :default=>0
+      t.column :home_team_id,            :integer
+      t.column :away_team_id,            :integer
+      t.column :spread,                  :float
+      t.column :predicted_home_score,    :integer, :default=>-1
+      t.column :predicted_away_score,    :integer, :default=>-1
+      t.column :actual_home_score,       :integer, :default=>-1
+      t.column :actual_away_score,       :integer, :default=>-1
+      t.column :joe_guys_bet,            :integer
+      t.column :joe_guys_bet_amount,     :integer, :default=>10
+      t.column :joe_guys_bet_amount_won, :integer
+      t.column :created_at,              :timestamp
+      t.column :updated_at,              :timestamp
+    end
+#    Prediction.create(:league=>1) gotta create teams first
+  end
+
+  def self.down
+    drop_table :predictions
+  end
+end

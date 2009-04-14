@@ -1,0 +1,101 @@
+<% divstr = "<div>" %>
+<% # logger.warn "summary.inspect" %>
+<% # logger.warn summary.inspect %>
+
+<% unless summary["Wins"] == 0 %>
+	<% totalresults = summary["Wins"]-1.1*summary["Losses"] %>
+	<% divstr = "<div id='green'>" if totalresults > 0 %>
+	<% divstr = "<div id='yellow'>" if totalresults == 0 %>
+	<% divstr = "<div id='red'>" if totalresults < 0 %>
+	<%= divstr+"0Wins "+summary["Wins"].to_s+" losses "+summary["Losses"].to_s+" pushes "+summary["pushes"].to_s+" %"+((100.0*summary["Wins"] / (summary["Wins"]+summary["Losses"])).r2)+" "+totalresults.to_s+"</div>" %>
+	<%= "<br>" %>
+<% end %>
+
+<% divendstr = '' %>
+<% unless summary["Weekly Wins"] == 0 %>
+	<% ww = summary["Weekly Wins"]-1.1*summary["Weekly Losses"] %>
+	<%= "<div id='green'>" if ww > 0 %>
+	<%= "<div id='yellow'>" if ww == 0 %>
+	<%= "<div id='red'>" if ww < 0 %>
+	<% divendstr = '</div>' %>
+<% else %>
+	<%= "<div id='red'>" %>
+	<% divendstr = '</div>' %>
+<% end %>
+
+<% if summary["Weekly Investment"] > 0 %>
+	<% ww = summary["Weekly Wins"]-1.1*summary["Weekly Losses"] %>
+	<%= "Weekly Investment is $" + summary["Weekly Investment"].commify %>
+	<%= " - Weekly Return is " +((100.0*summary["Weekly Profit"] / summary["Weekly Investment"]).r2.commify) %>
+	<% wpstr  = (summary["Weekly Profit"] > 0 ? " Weekly Profit " : " Weekly Loss ") %>
+	<%= "% - $"+(summary["Weekly Profit"].to_i).abs.commify+wpstr %><br>
+	<% summary["Weekly Pushes"] = 0 unless summary["Weekly Pushes"].kind_of? Float %>
+	<%= "This Week ATS - " %>
+	<%= summary["Weekly Wins"].to_s %>
+	<%= " Wins "+summary["Weekly Losses"].to_s %>
+	<%= " losses "+(summary["Weekly Pushes"] == 0 ? "" : summary["Weekly Pushes"].to_s+" pushes %") %>
+	<%= (((100.0 * summary["Weekly Wins"]) / (summary["Weekly Wins"]+summary["Weekly Losses"])).r2.commify)+" " unless  (summary["Weekly Wins"]+summary["Weekly Losses"]) == 0 %>
+	<%= "0.0  " if  (summary["Weekly Wins"]+summary["Weekly Losses"]) == 0 %>
+	<%= (ww > 0 ? "=+" : "=" )+ww.r2.commify+divendstr %>
+	<% divendstr	=	'' %>
+	<% suw	=	summary["SU Weekly Wins"]	-	summary["SU Weekly Losses"] %>
+	<%= "<div id='green'>" if suw > 0 %>
+	<%= "<div id='yellow'>" if suw == 0 %>
+	<%= "<div id='red'>" if suw < 0 %>
+	<%= "This week SU - "+summary["SU Weekly Wins"].to_s+" SU Wins "+summary["SU Weekly Losses"].to_s+" SU Losses - %#{100.0*summary["SU Weekly Wins"] / (summary["SU Weekly Losses"].+summary["SU Weekly Wins"])}</div>" %>
+	<% ysuw = summary["SU Total Wins"] - summary["SU Total Losses"] %>
+	<%= "<div id='green'>" if ysuw > 0 %>
+	<%= "<div id='yellow'>" if ysuw == 0 %>
+	<%= "<div id='red'>" if ysuw < 0 %>
+	<%= "Accumulated Year "+summary["SU Total Wins"].commify+" SU Wins "+summary["SU Total Losses"].to_s+" SU Losses %"+((100.0*summary["SU Total Wins"]  / (summary["SU Total Wins"]+summary["SU Total Losses"])).r2.commify) unless summary["Weekly Wins"] == 0 %>
+	</div>
+<% end %>
+<%= divendstr %>
+<% unless summary["Weekly TT Wins"] == 0 and summary["Weekly TT Losses"] == 0 %>
+	<% ttwresults = summary["Weekly TT Wins"]-1.1*summary["Weekly TT Losses"] %>
+	<%= "<div id='green'>" if ttwresults > 0 %>
+	<%= "<div id='yellow'>" if ttwresults == 0 %>
+	<%= "<div id='red'>" if ttwresults < 0 %>
+	<%= "Weekly TT ATS - "+summary["Weekly TT Bets"].to_s+" Bets "+summary["Weekly TT Wins"].to_s+" Wins "+summary["Weekly TT Losses"].to_s+" losses "+(summary["Weekly TT Pushes"] == 0 ? "" : summary["Weekly TT Pushes"].to_s+" pushes")+" %"+((100.0*summary["Weekly TT Wins"] / (summary["Weekly TT Wins"]+summary["Weekly TT Losses"])).r2.commify)+" "+(ttwresults > 0 ? "=+" : "=")+(ttwresults.r2.commify)+"</div>" %>
+<% end %>
+
+<% unless summary["Total Wins"] == 0 %>
+	<% tw = summary["Total Wins"]-1.1*summary["Total Losses"] %>
+	<%= "<div id='green'>" if tw > 0 %>
+	<%= "<div id='yellow'>" if tw == 0 %>
+	<%= "<div id='red'>" if tw < 0 %>
+	<% # pr = 100.0 * tw / (summary["Total Wins"]+summary["Total Losses"]+summary["Total Pushes"]) %>
+	<% # "Year ATS - "+(summary["Total Wins"].commify+summary["Total Losses"]+summary["Total Pushes"]).to_s+" Bets "+summary["Total Wins"].to_s+" Wins "+summary["Total Losses"].to_s+" losses "+(summary["Total Pushes"] == 0 ? "" : summary["Total Pushes"].to_s+" pushes")+" %"+((100.0*summary["Total Wins"] / (summary["Total Wins"]+summary["Total Losses"])).to_s)[0..4]+" "+(tw > 0 ? "=+" : "=")+(tw.to_s)[0..4]+" - "+(pr.to_s)[0..4]+"% Return </div>" %>
+	<%= "ATS threshold is #{summary['wp']*100.0} percent estimated probability of winning<br>"%>
+	<%= "Year ATS - "+(summary["Total Wins"]+summary["Total Losses"]+summary["Total Pushes"]).commify+" Bets "+summary["Total Wins"].commify+" Wins "+summary["Total Losses"].commify+" losses "+(summary["Total Pushes"] == 0 ? "" : summary["Total Pushes"].to_s+" pushes")+" %"+((100.0*summary["Total Wins"] / (summary["Total Wins"]+summary["Total Losses"])).r2.commify)+" "+(tw > 0 ? "=+" : "=")+(tw.r2.commify)+"</div>" %>
+<% end %>
+
+<% unless summary["TT Wins"] == 0 %>
+	<% ttresult = summary["TT Wins"]-1.1*summary["TT Losses"] %>
+	<%= "<div id='green'>" if ttresult > 0 %>
+	<%= "<div id='yellow'>" if ttresult == 0 %>
+	<%= "<div id='red'>" if ttresult < 0 %>
+	<%= "Top Ten is #{summary['tt']*100.0} percent estimated probability of winning<br>"%>
+	<%= "Year TT ATS - "+summary["TT Bets"].to_s+" Bets "+summary["TT Wins"].to_s+" Wins "+summary["TT Losses"].to_s+" losses "+(summary["TT Pushes"] == 0 ? "" : summary["TT Pushes"].to_s+" pushes")+" %"+((100.0*summary["TT Wins"] / (summary["TT Wins"]+summary["TT Losses"])).r2.commify)+" "+(ttresult > 0 ? "=+" : "=")+(ttresult.r2.commify)+"</div>" %>
+<% end %>
+
+<% unless summary["weekly ml wins"] == 0 %>
+<% ttresult = summary["weekly ml prize"] %>
+	<%= "<div id='green'>" if ttresult > 0 %>
+	<%= "<div id='yellow'>" if ttresult == 0 %>
+	<%= "<div id='red'>" if ttresult < 0 %>
+	<%= "Weekly ML  - "+summary["weekly ml bets"].to_s+" Bets "+summary["weekly ml wins"].to_s+" Wins "+summary["weekly ml losses"].to_s+" losses "+(summary["weekly ml pushes"] == 0 ? "" : summary["weekly ml pushes"].to_s+" pushes")+" %"+((100.0*summary["weekly ml wins"] / (summary["weekly ml wins"]+summary["weekly ml losses"])).r2.commify)+" "+(ttresult > 0 ? "=+" : "=")+(ttresult.r2.commify)+((summary["weekly ml prize"]>0.0) ? ' Won ' : ' Lost ')+summary["weekly ml prize"].abs.to_s+"</div>" %>
+<% end%>
+
+<% unless summary["ml wins"] == 0 %>
+	<% ttresult = summary["ml prize"] %>
+	<%= "<div id='green'>" if ttresult > 0 %>
+	<%= "<div id='yellow'>" if ttresult == 0 %>
+	<%= "<div id='red'>" if ttresult < 0 %>
+	<%= "Year ML  - "+summary["ml bets"].commify+" Bets "+summary["ml wins"].commify+" Wins "+summary["ml losses"].commify+" losses "+(summary["ml pushes"] == 0 ? "" : summary["ml pushes"].commify+" pushes")+" %"+((100.0*summary["ml wins"] / (summary["ml wins"]+summary["ml losses"])).r2.commify)+" "+(ttresult > 0 ? "=+" : "=")+(ttresult.r2.commify)+((summary["ml prize"]>0.0) ? ' Won ' : ' Lost ')+summary["ml prize"].abs.to_s+"</div>" %>
+<% end%>
+
+<%= "<div id='green'>"  if summary["Winning Weeks"] > summary["Losing Weeks"] %>
+<%= "<div id='red'>"    if summary["Winning Weeks"] < summary["Losing Weeks"] %>
+<%= "<div id='yellow'>" if summary["Winning Weeks"] == summary["Losing Weeks"]  unless summary["Winning Weeks"]+summary["Losing Weeks"] == 0 %>
+<%= summary["Winning Weeks"].to_s+" winning week"+(summary["Winning Weeks"] == 1 ? "" : "s")+" "+summary["Losing Weeks"].to_s+" losing week"+(summary["Losing Weeks"] == 1 ? "" : "s")+"</div>" unless summary["Winning Weeks"]+summary["Losing Weeks"] == 0 %>
