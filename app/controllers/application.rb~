@@ -98,13 +98,13 @@ class ApplicationController < ActionController::Base
 #		puts "mlats.inspect #{mlats.inspect}"
 		raise "mlats is zero #{p.inspect}" if mlats == 0
 		return ["<div id='yellow'>No Opinion </div>", 0.0, nil, 0.0, 0.0, 0.0, false]  if pickhome == false and pickaway == false
-		return ["<div id='green'> #{nameconv(Team.find(p.home_team_id).name, p.league)} -> #{(hwinprize).to_s[0,6]}</div>", hwinprize, mlats, hbbmlwin, hhf, ahf, bh] if pickhome and p.actual_home_score > p.actual_away_score
-		return ["<div id='red'> #{nameconv(Team.find(p.home_team_id).name, p.league)} -> #{hlose.to_s[0,6]}</div>", hlose, mlats, hbbmllose, hhf, ahf, bh] if pickhome and p.actual_home_score < p.actual_away_score
-		return ["<div id='yellow'> #{nameconv(Team.find(p.home_team_id).name, p.league)} -> 0.0</div>", 0.0, mlats, 0.0, 0.0, 0.0, false] if pickhome and p.actual_home_score == p.actual_away_score
+		return ["<div id='green'> #{nameconv(Team.find(p.home_team_id).name, p.league)}  ->  #{(hwinprize).to_s[0,6]}</div>", hwinprize, mlats, hbbmlwin, hhf, ahf, bh] if pickhome and p.actual_home_score > p.actual_away_score
+		return ["<div id='red'> #{nameconv(Team.find(p.home_team_id).name, p.league)}  ->  #{hlose.to_s[0,6]}</div>", hlose, mlats, hbbmllose, hhf, ahf, bh] if pickhome and p.actual_home_score < p.actual_away_score
+		return ["<div id='yellow'> #{nameconv(Team.find(p.home_team_id).name, p.league)}  ->  0.0</div>", 0.0, mlats, 0.0, 0.0, 0.0, false] if pickhome and p.actual_home_score == p.actual_away_score
 
-		return ["<div id='green'> #{nameconv(Team.find(p.away_team_id).name, p.league)} -> #{(awinprize).to_s[0,6]}</div>", awinprize, mlats, abbmlwin, hhf, ahf, bh] if pickaway and p.actual_away_score > p.actual_home_score
-		return ["<div id='red'> #{nameconv(Team.find(p.away_team_id).name, p.league)} -> #{alose.to_s[0,6]}</div>", alose, mlats, abbmllose, hhf, ahf, bh] if pickaway and p.actual_away_score < p.actual_home_score
-		return ["<div id='yellow'> #{nameconv(Team.find(p.away_team_id).name, p.league)} -> 0.0</div>", 0.0, mlats, 0.0, 0.0, 0.0, false] if pickaway and p.actual_away_score == p.actual_home_score
+		return ["<div id='green'> #{nameconv(Team.find(p.away_team_id).name, p.league)}  ->  #{(awinprize).to_s[0,6]}</div>", awinprize, mlats, abbmlwin, hhf, ahf, bh] if pickaway and p.actual_away_score > p.actual_home_score
+		return ["<div id='red'> #{nameconv(Team.find(p.away_team_id).name, p.league)}  ->  #{alose.to_s[0,6]}</div>", alose, mlats, abbmllose, hhf, ahf, bh] if pickaway and p.actual_away_score < p.actual_home_score
+		return ["<div id='yellow'> #{nameconv(Team.find(p.away_team_id).name, p.league)}  ->  0.0</div>", 0.0, mlats, 0.0, 0.0, 0.0, false] if pickaway and p.actual_away_score == p.actual_home_score
 		raise "why am i here"
 	end
 def hi
@@ -163,9 +163,9 @@ def ms(wsh, ysh, week, header=nil, gaptitle	=	'Week', gc	=	0)
 		ysudiv	=	"<div id='green'>"	if	ysuw	>	ysul
 		ysudiv	=	"<div id='red'>"	if	ysuw	<	ysul
 		ysudiv	=	"<div id='yellow'>"	if	ysuw	==	ysul
-		wpcw	=	100.0 * wsuw / wsut
+		wpcw	=	(100.0 * wsuw / wsut).r2
 		wpcw	=	0.0	if	wpcw.nan?
-		ypcw	=	100.0 * ysuw / ysut
+		ypcw	=	(100.0 * ysuw / ysut).r2
 		ypcw	=	0.0	if	ypcw.nan?
 
 		watsw	=	wsh['atsright']
@@ -194,11 +194,11 @@ def ms(wsh, ysh, week, header=nil, gaptitle	=	'Week', gc	=	0)
 		youdiv	=	"<div id='red'>"	if	youright	<	youl * 1.1
 		youdiv	=	"<div id='yellow'>"	if	youright	==	youl * 1.1
 
-		wmlp	=	wsh['mlp']
+		wmlp	=	wsh['mlp'].r2
 		wmldiv	=	"<div id='green'>"	if	wmlp	>	0
 		wmldiv	=	"<div id='red'>"	if	wmlp	<	0
 		wmldiv	=	"<div id='yellow'>"	if	wmlp	==	0
-		ymlp		=	ysh['mlp']
+		ymlp		=	ysh['mlp'].r2
 		ymldiv	=	"<div id='green'>"	if	ymlp	>	0
 		ymldiv	=	"<div id='red'>"	if	ymlp	<	0
 		ymldiv	=	"<div id='yellow'>"	if	ymlp	==	0
@@ -208,23 +208,45 @@ def ms(wsh, ysh, week, header=nil, gaptitle	=	'Week', gc	=	0)
 		ymll		=	ysh['mll']
 
 		# week
-		ta	<<	"<td>#{wsudiv}SU wins->#{wsuw} loses->#{wsul} % win is #{wpcw}</div></td>"
-		ta	<<	"<td>#{watsdiv}ATS wins->#{watsw} loses->#{watsl} % win is #{100.0 * watsw / (watst == 0 ? 1 : watst)} profit is #{watsw - 1.1 * watsl}</div></td>"
-		ta	<<	"<td>#{woudiv}OU wins->#{wouright} loses->#{woul} % win is #{100.0 * wouright / (wout == 0 ? 1 : wout)} profit is #{wouright - 1.1 * woul}</div></td>"
-		ta	<<	"<td>#{wmldiv}Money Line wins->#{wmlw} loses->#{wmll} % win is #{100.0 * wmlw / ((wmlw + wmll) == 0 ? 1 : (wmlw + wmll))} profit is #{wmlp}</div></td>"
+		ta	<<	"<td>#{wsudiv}SU wins -> #{wsuw} loses -> #{wsul} % win is #{wpcw}</div></td>"
+		ta	<<	"<td>#{watsdiv}ATS wins -> #{watsw} loses -> #{watsl} % win is #{(100.0 * watsw / (watst == 0 ? 1 : watst)).r2} profit is #{(watsw - 1.1 * watsl).r2}</div></td>"
+		ta	<<	"<td>#{woudiv}OU wins -> #{wouright} loses -> #{woul} % win is #{(100.0 * wouright / (wout == 0 ? 1 : wout)).r2} profit is #{(wouright - 1.1 * woul).r2}</div></td>"
+		ta	<<	"<td>#{wmldiv}Money Line wins -> #{wmlw} loses -> #{wmll} % win is #{(100.0 * wmlw / ((wmlw + wmll) == 0 ? 1 : wmlw + wmll))} profit is #{wmlp}</div></td>"
 
 		# year
-		ta	<<	"<td>#{ysudiv}Year #{week} SU wins->#{ysuw} loses->#{ysul} % win is #{ypcw}</div></td>"
-		ta	<<	"<td>#{yatsdiv}ATS wins->#{yatsw} loses->#{yatsl} % win is #{100.0 * yatsw / (yatst == 0 ? 1 : yatst)} profit is #{yatsw - 1.1 * yatsl}</div></td>"
-		ta	<<	"<td>#{youdiv}OU wins->#{youright} loses->#{youl} % win is #{100.0 * youright / (yout == 0 ? 1 : yout)} profit is #{youright - 1.1 * youl}</div></td>"
-		ta	<<	"<td>#{ymldiv}Money Line wins->#{ymlw} loses->#{ymll} % win is #{100.0 * ymlw / ((ymlw+ymll) == 0 ? 1 : (ymlw+ymll))} profit is #{ymlp}</div></td>"
+		ta	<<	"<td>#{ysudiv}Year #{week} SU wins -> #{ysuw} loses -> #{ysul} % win is #{ypcw}</div></td>"
+		ta	<<	"<td>#{yatsdiv}ATS wins -> #{yatsw} loses -> #{yatsl} % win is #{(100.0 * yatsw / (yatst == 0 ? 1 : yatst)).r2} profit is #{yatsw - 1.1 * yatsl}</div></td>"
+		ta	<<	"<td>#{youdiv}OU wins -> #{youright} loses -> #{youl} % win is #{(100.0 * youright / (yout == 0 ? 1 : yout)).r2} profit is #{youright - 1.1 * youl}</div></td>"
+		ta	<<	"<td>#{ymldiv}Money Line wins -> #{ymlw} loses -> #{ymll} % win is #{100.0 * ymlw / ((ymlw+ymll) == 0 ? 1 : (ymlw+ymll))} profit is #{ymlp}</div></td>"
 #		ta	<<	'</table></tr>' # turn off this table
 #		ta	<<	'<tr><table border="1">' # restart old table
 		ta	<<	'</tr>'
 		# now new home dog etc stats
 		outstr	=	"<tr><td>Home and Away Dog and Favorite Stats</td>"
-		outstr	+=	"<td>Weekly Home Dog Stats - #{wsh['hd'][0]} wins #{wsh['hd'][1]} loses</td>"
-		outstr	+=	"<td>Yearly Home Dog Stats - #{ysh['hd'][0]} wins #{ysh['hd'][1]} loses</td>"
+		p		=	(wsh['hd'][0]-wsh['hd'][1]*1.1).r2
+		sd		=	p	>	0.0	?	"<div id='green'>" : (p	==	0.0	?	"<div id='yellow'>" : "<div id='red'>")
+		outstr	+=	"<td>#{sd}Weekly Home Dog Stats - #{wsh['hd'][0].commify} wins #{wsh['hd'][1].commify} loses - Profit is #{p.commify}</div></td>"
+		p		=	(wsh['ad'][0]-wsh['ad'][1]*1.1).r2
+		sd		=	p	>	0.0	?	"<div id='green'>" : (p	==	0.0	?	"<div id='yellow'>" : "<div id='red'>")
+		outstr	+=	"<td>#{sd}Weekly Road Dog Stats - #{wsh['ad'][0].commify} wins #{wsh['ad'][1].commify} loses - Profit is #{p.commify}</div></td>"
+		p		=	(wsh['hf'][0]-wsh['hf'][1]*1.1).r2
+		sd		=	p	>	0.0	?	"<div id='green'>" : (p	==	0.0	?	"<div id='yellow'>" : "<div id='red'>")
+		outstr	+=	"<td>#{sd}Weekly Home Fav Stats - #{wsh['hf'][0].commify} wins #{wsh['hf'][1].commify} loses - Profit is #{p.commify}</div></td>"
+		p		=	(wsh['af'][0]-wsh['af'][1]*1.1).r2
+		sd		=	p	>	0.0	?	"<div id='green'>" : (p	==	0.0	?	"<div id='yellow'>" : "<div id='red'>")
+		outstr	+=	"<td>#{sd}Weekly Road Fav Stats - #{wsh['af'][0].commify} wins #{wsh['af'][1].commify} loses - Profit is #{p.commify}</div></td>"
+		p		=	(ysh['hd'][0]-ysh['hd'][1]*1.1).r2
+		sd		=	p	>	0.0	?	"<div id='green'>" : (p	==	0.0	?	"<div id='yellow'>" : "<div id='red'>")
+		outstr	+=	"<td>#{sd}Yearly Home Dog Stats - #{ysh['hd'][0].commify} wins #{ysh['hd'][1].commify} loses - Profit is #{p.commify}</div></td>"
+		p		=	(ysh['ad'][0]-ysh['ad'][1]*1.1).r2
+		sd		=	p	>	0.0	?	"<div id='green'>" : (p	==	0.0	?	"<div id='yellow'>" : "<div id='red'>")
+		outstr	+=	"<td>#{sd}Yearly Road Dog Stats - #{ysh['ad'][0].commify} wins #{ysh['ad'][1].commify} loses - Profit is #{p.commify}</div></td>"
+		p		=	(ysh['hf'][0]-ysh['hf'][1]*1.1).r2
+		sd		=	p	>	0.0	?	"<div id='green'>" : (p	==	0.0	?	"<div id='yellow'>" : "<div id='red'>")
+		outstr	+=	"<td>#{sd}Yearly Home Fav Stats - #{ysh['hf'][0].commify} wins #{ysh['hf'][1].commify} loses - Profit is #{p.commify}</div></td>"
+		p		=	(ysh['af'][0]-ysh['af'][1]*1.1).r2
+		sd		=	p	>	0.0	?	"<div id='green'>" : (p	==	0.0	?	"<div id='yellow'>" : "<div id='red'>")
+		outstr	+=	"<td>#{sd}Yearly Road Fav Stats - #{ysh['af'][0].commify} wins #{ysh['af'][1].commify} loses - Profit is #{p.commify}</div></td>"
 		outstr	+=	"</tr>"
 		ta	<<	outstr
 		return ta
@@ -503,7 +525,7 @@ def	do_season(newpred,	year,	winprob	=	0.7,	header	=	nil, gap	=	Secondsinthreeda
 	weeklysummary	=	nil
 	returnme			=	[]
 	returnme			<<	header
-	returnme			<<	'<table width="100%"><tr><td><!-- wrapping table -->' # big table that wraps both games and weekly summary
+	returnme			<<	'<table width="100%"><tr><td><!-- wrapping table --> ' # big table that wraps both games and weekly summary
 	returnme			<<	'<table border="1">'
 	trm				=	[]
 	ysh,	wsh			=	hi()
@@ -549,6 +571,7 @@ def	do_season(newpred,	year,	winprob	=	0.7,	header	=	nil, gap	=	Secondsinthreeda
 		thisrow	+=	wrap(g.spread)
 		# ats pick
 		theader	+=	wrap('Spread Pick')	if	header.empty?
+		spick	=	'Wierd'
 		spick	=	" - "+nameconv(Team.find(g.home_team_id).name, 1)+" - "+g.prob_home_win_ats.r2.to_s if g.prob_home_win_ats	>	0.5
 		spick	=	" - "+nameconv(Team.find(g.away_team_id).name, 1)+" - "+g.prob_away_win_ats.r2.to_s if g.prob_away_win_ats	>	0.5
 		wrapme	=	(!atsbet.nil? ? (atsbet == g.home_team_id ? nameconv(Team.find(g.home_team_id).name, 1) : nameconv(Team.find(g.away_team_id).name, 1))	:	NO) 
@@ -579,6 +602,7 @@ def	do_season(newpred,	year,	winprob	=	0.7,	header	=	nil, gap	=	Secondsinthreeda
 		thisrow	+=	wrap(mlo)		if		bbmlprz.nil?	or mlo.include?('No Opinion')	# if	mlo.nil?
 		thisrow	+=	wrap(mlo+" big bet >#{bbmlprz.commify}< Running total is #{ysh['mlbb'].commify}")		unless	(bbmlprz.nil? or mlo.include?('No Opinion'))	# if	mlo.nil?
 
+		
 		# end of row
 		trm	<<	'<tr>'+thisrow+'</tr>'
 		header	=	'<tr>'+theader+'</tr>'	if 	header.empty?
@@ -587,6 +611,7 @@ def	do_season(newpred,	year,	winprob	=	0.7,	header	=	nil, gap	=	Secondsinthreeda
 	trm		<<	ms(wsh, ysh, week, 'End of Year Stats')
 	returnme	<<	trm
 	returnme	<<	"</table>"
+#	raise "returnme length is #{returnme.length} #{returnme.inspect}"
 end
 def calcatsbet(g,	ysh,	wsh, winprob)
 	supick		=	nil
@@ -692,6 +717,12 @@ class Numeric
     sstr[0..sstr.index(".")+2]
   end
   def r2()
-	return ((self*100.0).to_i) / 100.00
+#	return self
+	begin
+		(((self+0.005)*100.0).to_i) / 100.00
+	rescue
+#		raise "r2 failed - self is #{self}"
+		return 0.0
+	end
   end
 end

@@ -58,7 +58,7 @@ def main
 			enddate	=	Time.local(year + 1, 'may', 1)
 			winprob	=	0.85	unless	year	==	2008
 			winprob	=	0.85	if		year	==	2008
-			header	=	"<h3>Joe Guy's #{year} NCAA Basketball Association Season - betting threshold is #{winprob}</h3>"
+			header	=	"<h3>Joe Guy's #{year} NCAA Basketball Season - betting threshold is #{winprob}</h3>"
 			gap		=	Secondsperday - 1
 			gaptitle	=	'Day'
 		else

@@ -1,9 +1,13 @@
- <% @heading = "Joe Guy's Sports Betting Web Site"-%>
-<% @content = "Opening Screen - here be found National Football League predictions && more to come" -%>
-<% @desc		= "Opening Screen - here be found National Football League predictions && more to come" %>
+<% @heading	=	"Joe Guy's Sports Betting Web Site"-%>
+<% @content	=	"Opening Screen - here be found National Football League predictions && more to come" -%>
+<% @desc	=	"Opening Screen - here be found National Football League predictions && more to come" %>
 
 <div id = "Originalcontent">
-<% @main.each{|l| %>
-	<%= l %>
-<% } %>
+<% begin %>
+	<% @main.each{|l| %>
+		<%= l %>
+	<% } %>
+<% rescue %>
+	<% logger.warn "wtf in view - l is #{l}" %>
+<% end %>
 </div>
