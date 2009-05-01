@@ -28,16 +28,12 @@ class GetSoccer < ActiveRecord::Migration
 				p["game_date_time"]	=	Time.local(2000+t[2].to_i, t[1], t[0])	if		t[2].to_i	<	10
 				p["game_date_time"]	=	Time.local(1900+t[2].to_i, t[1], t[0])	unless	t[2].to_i	<	10
 				if	sh.has_key?(league)
-					if	(p["game_date_time"]	-	sh[league][0])	>	3.months
-						sh[league][1]	+=	1
-						sh[league][0]	=	p["game_date_time"]
-					else
-						
-					end
+					sh[league][1]	+=	1	if	(p["game_date_time"]	-	sh[league][0])	>	3.months
+					sh[league][0]	=	p["game_date_time"]
 				else
 					sh[league]	=	[p["game_date_time"],	0]
 				end
-				season	=	sh[league][1]
+				p.season	=	sh[league][1]
 				begin
 					tid	=	Team.find_by_name(home).id
 				rescue
