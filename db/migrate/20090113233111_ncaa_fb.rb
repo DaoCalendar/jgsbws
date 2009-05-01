@@ -3,7 +3,7 @@ require "migration_helpers"
 extend MigrationHelpers
 def self.up                                                                                                      
 	ncaafba = IO.readlines('../../joe guy ncaa fb 2008/jgsbws ncaafb2008.dat')
-    puts ncaafba.length
+  #  puts ncaafba.length
 #    sleep 3
     ncaafba.reject!{|g|g.include?('*')}
     ncaafba.reject!{|g|g.empty?}
@@ -14,7 +14,7 @@ def self.up
     ncaafba = gs(ncaafba)
     ncaafba.each{|g|
       d=g.split(",")
-      puts "g.inspect #{g.inspect}"
+   #   puts "g.inspect #{g.inspect}"
       begin
         home_id = Team.find_by_name(d[2]).id
       rescue

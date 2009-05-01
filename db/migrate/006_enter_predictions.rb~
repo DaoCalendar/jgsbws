@@ -36,7 +36,7 @@ class EnterPredictions < ActiveRecord::Migration
       # check for week
       # puts "p is "
       puts p.inspect  if p.include?("Washington Redskins,Chicago Bears")
-      sleep 1 if p.include?("Washington Redskins,Chicago Bears")
+   #   sleep 1 if p.include?("Washington Redskins,Chicago Bears")
       next if p.include?("*note")
       weekv    = p[6..-1].to_i if p.include?("*week")
       # 0123456
@@ -62,7 +62,7 @@ class EnterPredictions < ActiveRecord::Migration
       #    0        1          2      3 4    5 
       # 16/9/07,Jacksonville,Atlanta,13,7,-10.5
       puts p.inspect  if p.include?("Washington Redskins,Chicago Bears")
-      sleep 1 if p.include?("Washington Redskins,Chicago Bears")
+  #    sleep 1 if p.include?("Washington Redskins,Chicago Bears")
       res    = p.split(",")
       # puts "split p"
       # puts res.inspect
@@ -104,7 +104,7 @@ class EnterPredictions < ActiveRecord::Migration
       winamt = 0  if                               (homescore + spread) == awayscore or pred.joe_guys_bet == 0
       pred.joe_guys_bet_amount_won = winamt
       puts pred.inspect  if p.include?("Washington Redskins,Chicago Bears")
-      sleep 30 if p.include?("Washington Redskins,Chicago Bears")
+  #    sleep 30 if p.include?("Washington Redskins,Chicago Bears")
       raise "no save" unless pred.save
     }
   end

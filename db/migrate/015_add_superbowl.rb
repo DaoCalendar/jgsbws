@@ -4,9 +4,9 @@ class AddSuperbowl < ActiveRecord::Migration
     #            g.date.year, g.date.month, g.date.day, hour, procname(g.home), procname(g.away), g.homescore, g.awayscore, g.spread, probhomewin, probhomelose, probhometie, probhomecover, probawaycover, probpush, alambda, hlambda, z[g.home"].offstrength, z[g.away"].defstrength, z[g.away"].offstrength, z[g.home"].defstrength, weeklimit, g.overunder, probtotalover
     dataa        = [[2008, 02, 03, 15, "New England Patriots", "N.Y. Giants", 14, 17, -14.5, 0.74671862076354, 0.205409182830117, 0.047872196406343, 0.222103080779298, 0.746266188373922, 0.0, 28.3181786206712, 19.1030222440234, 54.3697450470, -24.819325006, 48.6905363825, -27.433449220, 21, 53.5, 0.164783861795543]]
     teamleague   = League.find_by_name("National Football League")
-    betthreshold = 11.0 /21.0
+    betthreshold = 11.0 / 21.0
     dataa.each{|d|
-      puts d.inspect
+#      puts d.inspect
    #   sleep 10
       begin
         home_id = Team.find_by_name(d[4]).id

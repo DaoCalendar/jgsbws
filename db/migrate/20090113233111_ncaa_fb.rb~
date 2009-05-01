@@ -46,10 +46,10 @@ def self.up
       end
       p = Prediction.new
       p['week']=d[1].to_i
-      p['season']=0
-      p['season']=1 # if d[1].to_i>85
+      p['season']=1
       t=d[0].split("/")
       p["game_date_time"]          = Time.local(2000+t[2].to_i, t[1], t[0])
+      p['season']=2 if p["game_date_time"] > Time.local(2008,2,1)
       p["league"]                         = teamleague
       p["home_team_id"]            = home_id
       p["away_team_id"]            = away_id

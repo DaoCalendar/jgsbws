@@ -3,7 +3,7 @@ require "migration_helpers"
 extend MigrationHelpers
 def self.up                                                                                                      
 	ncaabba = IO.readlines('../../joe guy ncaa bb 2008/jgsbws ncaabb2008.dat')
-    puts ncaabba.length
+  #  puts ncaabba.length
 #    sleep 3
     ncaabba.reject!{|g|g.include?('*')}
     ncaabba.reject!{|g|g.empty?}
@@ -22,7 +22,7 @@ def self.up
 		when Seasonone..Futuretime then thisseason = 2
 		else raise "wonky date #{g.inspect}"
 	end
-      puts "g.inspect #{g.inspect}"
+    #  puts "g.inspect #{g.inspect}"
       begin
         home_id = Team.find_by_name(d[2]).id
       rescue

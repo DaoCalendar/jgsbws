@@ -41,7 +41,7 @@ class AddNflMoneyLines < ActiveRecord::Migration
 				p.save!
 			}
 		else
-			puts "no game found for #{dl}"
+	#		puts "no game found for #{dl}"
 		end
 	  end
 	  }

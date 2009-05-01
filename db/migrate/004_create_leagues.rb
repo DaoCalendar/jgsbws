@@ -23,7 +23,7 @@ class CreateLeagues < ActiveRecord::Migration
     League.create(:name=>"Italian First Division")
     League.create(:name=>"Italian Second Division")
     League.create(:name=>"Netherlands First Division")
-    League.create(:name=>"Polish First Division")
+    League.create(:name=>"Portuguies First Division")
     League.create(:name=>"Scottish Premier League")
     League.create(:name=>"Scottish First Division")
     League.create(:name=>"Scottish Second Division")

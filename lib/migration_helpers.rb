@@ -1,5 +1,11 @@
 module MigrationHelpers
 
+def getlid(findme)
+	lid		=	League.find_by_name(findme).id
+	raise "cant find #{findme}"	if	lid.nil?
+	return lid
+end
+	
   def foreign_key(from_table, from_column, to_table)
     constraint_name = "fk_#{from_table}_#{from_column}"
     execute %{alter table #{from_table}
@@ -121,7 +127,7 @@ module MigrationHelpers
            p["spread"]       = la[6].to_i
            p["joe_guys_bet_amount"]   = 20
            if la.length == 8
-             puts la.inspect
+#             puts la.inspect
              pick_id = Team.find_by_name(la[7].chomp).id
              p["joe_guys_bet"] = pick_id
            end

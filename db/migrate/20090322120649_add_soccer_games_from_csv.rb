@@ -1,8 +1,0 @@
-class AddSoccerGamesFromCsv < ActiveRecord::Migration
-  def self.up
-	fa	=	%w(B1.csv D1.csv D2.csv E0.csv E1.csv E2.csv E3.csv EC.csv F1.csv F2.csv G1.csv I1.csv I2.csv N1.csv P1.csv SC0.csv SC1.csv SC2.csv SC3.csv SP1.csv SP2.csv T1.csv)
-  end
-
-  def self.down
-  end
-end

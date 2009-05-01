@@ -3,7 +3,7 @@ class ImportNfl2009Season < ActiveRecord::Migration
 extend MigrationHelpers
 def self.up                                                                                                      
 	  nfl2008a = IO.readlines('../../joe guy nfl 2008/jgsbws nfl2008.dat')
-    puts nfl2008a.length
+ #   puts nfl2008a.length
 #    sleep 3
     nfl2008a.reject!{|g|g.include?('*')}
     teamleague   = League.find_by_name("National Football League")

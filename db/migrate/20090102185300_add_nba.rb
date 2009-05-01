@@ -4,7 +4,7 @@ extend MigrationHelpers
 # NBA season is october to june
 def self.up
 	nba2008a = IO.readlines('../../joe guy nba 2008/jgsbws nba2008.dat')
-		puts nba2008a.length
+#		puts nba2008a.length
 #		sleep 3
 		nba2008a.reject!{|g|g.include?('*')}
 		nba2008a.reject!{|g|g.empty?}
@@ -17,7 +17,7 @@ def self.up
 		prevdate		=	nil
 		nba2008a.each{|g|
 			d	=	g.split(",")
-			puts "g.inspect #{g.inspect}"
+		#	puts "g.inspect #{g.inspect}"
 			begin
 				home_id	=	Team.find_by_name(d[2]).id
 			rescue

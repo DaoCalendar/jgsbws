@@ -29,7 +29,7 @@ class AddNflChampionships < ActiveRecord::Migration
       p["predicted_away_score"]    = d[16]
       p["actual_home_score"]       = d[6]
       p["actual_away_score"]       = d[7]
-      p["joe_guys_bet"]            = 0
+      p["joe_guys_bet"]            = nil
       p["joe_guys_bet"]            = home_id if d[21]==1  or d[22]==1
       p["joe_guys_bet"]            = away_id if d[21]==-1  or d[22]==-1
       p["joe_guys_bet_amount"]     = 22

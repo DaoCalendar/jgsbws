@@ -18,9 +18,9 @@ class AddTotalstoPred < ActiveRecord::Migration
       next if i == 0
      # puts l
       la = l.split(",")
-      puts la[3]
+  #    puts la[3]
       home_id = Team.find_by_name(la[3]).id
-      puts "  "+la[4]
+    #  puts "  "+la[4]
       away_id = Team.find_by_name(la[4]).id
       sqlstr  = "SELECT * from predictions WHERE predictions.home_team_id = #{home_id} AND predictions.away_team_id = #{away_id}"
       @pred   = Prediction.find_by_sql(sqlstr)

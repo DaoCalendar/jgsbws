@@ -6,7 +6,7 @@ class AddNflChampionships < ActiveRecord::Migration
     #            g.date.year, g.date.month, g.date.day, hour, procname(g.home), procname(g.away), g.homescore, g.awayscore, g.spread, probhomewin, probhomelose, probhometie, probhomecover, probawaycover, probpush, alambda, hlambda, z[g.home"].offstrength, z[g.away"].defstrength, z[g.away"].offstrength, z[g.home"].defstrength, weeklimit, g.overunder, probtotalover
     dataa        = [[2008, 01, 20, 15, "New England Patriots", "San Diego Chargers", 21, 12, -14.5, 0.686873057339006, 0.260034038205111, 0.0530929044558831, 0.137863545765475, 0.862136454234524, 0.0, 29.2869528808627, 22.2869947869283, 55.1828434916, -23.466115073, 51.9876882542, -26.248552847, 20, 49.0, 0.435405276106059], [2008, 01, 20, 18, "Green Bay Packers", "N.Y. Giants", 20, 23, -7.0, 0.693448165355458, 0.253762153310129, 0.0527896813344127, 0.384804382425624, 0.554767625314688, 0.0604279922596872, 28.4897027975167, 21.2470986381971, 50.2659726222, -24.487476721, 46.0664236447, -24.819325006, 20, 42.0, 0.691970333646334]]
     teamleague   = League.find_by_name("National Football League")
-    betthreshold = 11.0 /21.0
+    betthreshold = 11.0 / 21.0
     dataa.each{|d|
       begin
         home_id = Team.find_by_name(d[4]).id

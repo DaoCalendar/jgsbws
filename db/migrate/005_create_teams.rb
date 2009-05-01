@@ -11,17 +11,17 @@ class CreateTeams < ActiveRecord::Migration
       t.column :updated_at, :datetime
     end
     foreign_key(:teams, :league_id, :leagues)
-    teama            = IO.readlines(File.dirname(__FILE__) + '/../../public/nflteams.txt')
-    teamleague       = League.find_by_name("National Football League")
+    teama		= IO.readlines(File.dirname(__FILE__) + '/../../public/nflteams.txt')
+    teamleague	= League.find_by_name("National Football League")
     teama.each{|line|
-      newteam        = Team.new
-      aa             = line
-      newteam.name   = aa.chomp
-      newteam.league = teamleague
+	newteam		=	Team.new
+	aa			=	line
+      newteam.name	=	aa.chomp
+      newteam.league	=	teamleague
       newteam.save
     }
     teama            = IO.readlines(File.dirname(__FILE__) + '/../../public/nbateams.txt')
-    teamleague       = League.find_by_name("National Basketball League")
+    teamleague       = League.find_by_name("National Basketball Association")
     teama.each{|line|
       newteam        = Team.new
       aa             = line
