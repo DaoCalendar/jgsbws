@@ -1,5 +1,60 @@
 module MigrationHelpers
 
+def fronthalf(sh,	tta)
+	p			=	Prediction.new
+	league		=	tta[0]
+	date			=	tta[1]
+	home		=	tta[2]
+	hscore		=	tta[3]
+	away			=	tta[4]
+	ascore		=	tta[5]
+	hwp			=	tta[6].to_f
+	awp			=	tta[7].to_f
+	dwp			=	tta[8].to_f
+	p.league		=	ShortLeague.find_by_shortname(league).league_id
+#	p.game_date_time		=	convdate(date)
+	t			=	date.split("/")
+	p.game_date_time		=	Time.local(2000+t[2].to_i, t[1], t[0])	if		t[2].to_i	<	10
+	p.game_date_time		=	Time.local(1900+t[2].to_i, t[1], t[0])	unless	t[2].to_i	<	10
+	if	sh.has_key?(league)
+		sh[league][1]		+=	1	if	(p.game_date_time	-	sh[league][0])	>	3.months
+		sh[league][0]		=	p.game_date_time
+	else
+		sh[league]		=	[p.game_date_time,	0]
+	end
+	p.season				=	sh[league][1]
+	begin
+		tid				=	Team.find_by_name(home).id
+	rescue
+		tid				=	nil
+	end
+	if	tid.nil?
+		p.home_team_id	=	Team.create(:name=>home, :league_id=>p.league).id
+	else
+		p.home_team_id	=	tid
+	end
+	begin
+		tid	=	Team.find_by_name(away).id
+	rescue
+		tid	=	nil
+	end
+	if	tid.nil?
+		p.away_team_id	=	Team.create(:name=>away, :league_id=>p.league).id
+	else
+		p.away_team_id	=	tid
+	end
+	p.actual_home_score	=	hscore
+	p.actual_away_score		=	ascore
+	p.prob_home_win_su	=	hwp
+	p.prob_away_win_su		=	awp
+	p.prob_push_su		=	dwp
+	p.save!
+	puts sh.inspect
+#		raise p.inspect
+	return	p,	sh
+end
+
+	
 def getlid(findme)
 	lid		=	League.find_by_name(findme).id
 	raise "cant find #{findme}"	if	lid.nil?
