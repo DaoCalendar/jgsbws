@@ -5,6 +5,7 @@ class GetSoccer < ActiveRecord::Migration
 	#	D2,31/07/93,F Koln,2,Wolfsburg,0,0.487945405691188,0.252207074068463,0.259847520240348, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
 	sh	=	{}
 	ta.each_with_index{|g,	i|
+		next if i < 42_374 # temp to get us to the bookie games fast
 		tta	=	g.chomp.split(',')
 		tta.pop	if	tta.last.strip.empty?
 		puts tta.length
@@ -62,6 +63,9 @@ class GetSoccer < ActiveRecord::Migration
 				p.save!
 				puts sh.inspect
 #				raise p.inspect
+			when 29
+				#  0         1           2         3    4      5         6                                 7                                      8 
+				# F1,28/07/00,Marseille,3,Troyes,1,0.625369598137193,0.202987853070863,0.171642548791942, 1.65->1.03, 3.3->0.56, 4.3->0.87, 1.45->0.9, 3.5->0.6, 5.0->1.01, 1.53->0.95, 3.5->0.6, 5.5->1.11, 1.45->0.9, 3.5->0.6, 6.0->1.21, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
 			else
 				raise "line #{i.commify} #{g} unknown length #{tta.length}"
 			end
