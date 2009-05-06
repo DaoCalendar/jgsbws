@@ -4,6 +4,48 @@ class MainController < ApplicationController
 def index
 end
 
+def soccer
+	sa		=	IO.readlines("public/soccer seasons.txt")
+#	puts sa.inspect
+#	raise
+	# build year list
+	years	=	[]
+	sa.each{|y|
+		ta		=	y.split(',')
+		years << ta[1].to_i
+	}
+	years.uniq!
+	years.sort!
+#	puts years.inspect
+#	raise
+	outstr	=	"<table>"
+	outstr	+=	"<th>"
+	years.each{|y|outstr	+=	"<td>"+y.to_s+"</td>"}
+	outstr	+=	"</th><br>"
+	
+	lh	=	{}
+	
+	sa.each{|s|
+		ta				=	s.split(',')
+		lname			=	''
+		lid				=	0
+		if lh.has_key?(ta[0])
+			lname		=	lh[ta[0]][0]
+			lid			=	lh[ta[0]][1]
+		else
+			@slo		=	ShortLeague.find_by_shortname(ta[0])
+			lname		=	@slo.league.name
+			lid			=	@slo.league.id
+			slo			=	nil
+			lh[ta[0]]	=	[lname,	lid]
+		end
+	}
+	puts lh.inspect
+	raise
+
+	outstr	=	"</table>"
+end
+
 def main
 	year		=	params[:id].to_i
 	logger.warn params.inspect

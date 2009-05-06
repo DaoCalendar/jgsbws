@@ -4,11 +4,9 @@ class CreateShortLeagues < ActiveRecord::Migration
 	def self.up # this is the intersection table between the small D1 type descs and the big German First Division type decs
 		begin
 			create_table :short_leagues do |t|
-				t.column :league_id,		:integer
 				t.column :shortname,	:text
 				t.timestamps
 			end
-			foreign_key(:short_leagues, :league_id, :leagues)
 		rescue
 		end
 		la	=	["Belgian First Division","German First Division","German Second Division","English Premier League","English First Division","English Second Division","English Third Division","English Championship","French First Division","French Second Division","Greek First Division","Italian First Division","Italian Second Division","Netherlands First Division","Portuguies First Division","Scottish Premier League","Scottish First Division","Scottish Second Division","Scottish Third Division","Spanish First Division","Spanish Second Division","Turkish First Division"]

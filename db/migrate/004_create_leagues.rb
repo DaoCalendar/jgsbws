@@ -1,7 +1,10 @@
+require "migration_helpers"
 class CreateLeagues < ActiveRecord::Migration
+  extend MigrationHelpers
   def self.up
     create_table :leagues do |t|
       t.column :name,  :string
+	t.column :short_league_id,		:integer
       t.column :created_at,   :timestamp
       t.column :updated_at,   :timestamp
     end

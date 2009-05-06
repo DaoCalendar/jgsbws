@@ -1,6 +1,17 @@
 module MigrationHelpers
 
-def fronthalf(sh,	tta)
+def	writeseasons(sh2)
+	ff2	=	File.new('seasons.txt','w')
+	sh2.sort!
+	sh2.each{|k|
+		ff2.write("#{k.inspect}\n")
+	}
+	ff2.close
+end
+	
+def fronthalf(sh,	tta,	sh2,	wh)
+#	$csh2			=	false
+#	puts 'set to fase'
 	p			=	Prediction.new
 	league		=	tta[0]
 	date			=	tta[1]
@@ -11,18 +22,47 @@ def fronthalf(sh,	tta)
 	hwp			=	tta[6].to_f
 	awp			=	tta[7].to_f
 	dwp			=	tta[8].to_f
-	p.league		=	ShortLeague.find_by_shortname(league).league_id
+	@sl			=	ShortLeague.find_by_shortname(league)
+	p.league		=	@sl.league.id
 #	p.game_date_time		=	convdate(date)
 	t			=	date.split("/")
-	p.game_date_time		=	Time.local(2000+t[2].to_i, t[1], t[0])	if		t[2].to_i	<	10
-	p.game_date_time		=	Time.local(1900+t[2].to_i, t[1], t[0])	unless	t[2].to_i	<	10
+	p.game_date_time			=	Time.local(2000+t[2].to_i, t[1], t[0])	if		t[2].to_i	<	10
+	p.game_date_time			=	Time.local(1900+t[2].to_i, t[1], t[0])	unless	t[2].to_i	<	10
+	if	wh.has_key?(league)
+		if	(p.game_date_time	-	wh[league][0])	>	7.days # count weeks
+			wh[league][1]		+=	1
+			if wh[league][1]	>=	52 # year has passed
+				sh[league][1]		+=	1
+				sh2				<<	[league,	p.game_date_time,	sh[league][1]]
+				$csh2			=	true
+				wh[league][1]		=	1
+			end
+			wh[league][0]		=	p.game_date_time # only update after week is changed.
+		end
+	else
+		wh[league]			=	[p.game_date_time,	0]
+	end
 	if	sh.has_key?(league)
-		sh[league][1]		+=	1	if	(p.game_date_time	-	sh[league][0])	>	3.months
+		if	(p.game_date_time	-	sh[league][0])	>	3.months # count seasons - looking for a three month gap
+			sh[league][1]		+=	1
+			$csh2			=	true
+			wh[league][1]		=	1	#	reset week for new season
+	#		puts "set to true"
+			begin
+				sh2	<<	[league,	p.game_date_time,	sh[league][1]]
+			rescue
+				raise "sh2 #{sh2.inspect} league #{league}  p.game_date_time #{p.game_date_time.inspect} sh[league][1] #{sh[league][1]}"
+			end
+		end
 		sh[league][0]		=	p.game_date_time
 	else
-		sh[league]		=	[p.game_date_time,	0]
+		sh[league]		=	[p.game_date_time,	1]
+		sh2				<<	[league,	p.game_date_time,	1]
+		$csh2				=	true
+	#	puts "true 2"
 	end
 	p.season				=	sh[league][1]
+	p.week				=	wh[league][1]
 	begin
 		tid				=	Team.find_by_name(home).id
 	rescue
@@ -49,9 +89,9 @@ def fronthalf(sh,	tta)
 	p.prob_away_win_su		=	awp
 	p.prob_push_su		=	dwp
 	p.save!
-	puts sh.inspect
+#	puts sh.inspect
 #		raise p.inspect
-	return	p,	sh
+	return	p,	sh,	sh2,	wh
 end
 
 	
