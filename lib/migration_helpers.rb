@@ -22,8 +22,17 @@ def fronthalf(sh,	tta,	sh2,	wh)
 	hwp			=	tta[6].to_f
 	awp			=	tta[7].to_f
 	dwp			=	tta[8].to_f
-	@sl			=	ShortLeague.find_by_shortname(league)
-	p.league		=	@sl.league.id
+	begin
+		@l		=	League.find_by_short_league(league)
+	rescue
+		raise "cant find #{league}"
+	end
+#	p.league		=	@sl.league.id
+#	p.league		=	League.ShortLeague(league).id
+#	puts	ShortLeague.methods.sort
+#	puts
+#	puts	League.methods.sort
+	p.league		=	@l.id
 #	p.game_date_time		=	convdate(date)
 	t			=	date.split("/")
 	p.game_date_time			=	Time.local(2000+t[2].to_i, t[1], t[0])	if		t[2].to_i	<	10
@@ -32,10 +41,10 @@ def fronthalf(sh,	tta,	sh2,	wh)
 		if	(p.game_date_time	-	wh[league][0])	>	7.days # count weeks
 			wh[league][1]		+=	1
 			if wh[league][1]	>=	52 # year has passed
-				sh[league][1]		+=	1
-				sh2				<<	[league,	p.game_date_time,	sh[league][1]]
-				$csh2			=	true
-				wh[league][1]		=	1
+				sh[league][1]	+=	1
+				sh2			<<	[league,	p.game_date_time,	sh[league][1]]
+				$csh2		=	true
+				wh[league][1]	=	1
 			end
 			wh[league][0]		=	p.game_date_time # only update after week is changed.
 		end
@@ -96,8 +105,6 @@ end
 
 	
 def getlid(findme)
-	lid		=	League.find_by_name(findme).id
-	raise "cant find #{findme}"	if	lid.nil?
 	return lid
 end
 	

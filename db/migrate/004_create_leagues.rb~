@@ -4,11 +4,10 @@ class CreateLeagues < ActiveRecord::Migration
   def self.up
     create_table :leagues do |t|
       t.column :name,  :string
-		t.column :short_league_id,		:integer
+	t.column :short_league_id,		:integer
       t.column :created_at,   :timestamp
       t.column :updated_at,   :timestamp
     end
-	foreign_key(:leagues, :short_league_id, :short_leagues)
     League.create(:name=>"National Football League")
     League.create(:name=>"National Basketball Association")
     League.create(:name=>"English Premier League")

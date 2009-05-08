@@ -9,11 +9,10 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 0) do
+ActiveRecord::Schema.define(:version => 28) do
 
-  create_table "leagues", :force => true do |t|
-    t.string   "name"
-    t.integer  "short_league_id"
+  create_table "short_leagues", :force => true do |t|
+    t.text     "shortname"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

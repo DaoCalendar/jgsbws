@@ -2,17 +2,16 @@ class GetSoccer < ActiveRecord::Migration
 	require "migration_helpers"
 	extend MigrationHelpers
   def self.up
-	foreign_key(:leagues, :short_league_id, :short_leagues)
-	ta	=	IO.readlines('public/unique soccer games.txt')
+	ta		=	IO.readlines('public/unique soccer games.txt')
 	#	 0       1           2       3      4          5                    6                         7                                 8
 	#	D2,31/07/93,F Koln,2,Wolfsburg,0,0.487945405691188,0.252207074068463,0.259847520240348, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
-	sh	=	{}
-	wh	=	{}
-	sh2	=	[]
+	sh		=	{}
+	wh		=	{}
+	sh2		=	[]
 	$csh2	=	false
 #	puts	'set to false'
-	st	=	Time.now
-	glen	=	ta.length.commify
+	st		=	Time.now
+	glen		=	ta.length.commify
 	ta.each_with_index{|g,	i|
 #		next if i < 42374 # temp to get us to the bookie games fast
 		if (Time.now	-	st)	>	10
