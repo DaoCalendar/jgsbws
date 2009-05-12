@@ -9,7 +9,7 @@ def	writeseasons(sh2)
 	ff2.close
 end
 	
-def fronthalf(sh,	tta,	sh2,	wh)
+def fronthalf(sh,	tta,	sh2,	wh,	save_pred	=	true)
 #	$csh2			=	false
 #	puts 'set to fase'
 	p			=	Prediction.new
@@ -97,7 +97,7 @@ def fronthalf(sh,	tta,	sh2,	wh)
 	p.prob_home_win_su	=	hwp
 	p.prob_away_win_su		=	awp
 	p.prob_push_su		=	dwp
-	p.save!
+	p.save!	if	save_pred
 #	puts sh.inspect
 #		raise p.inspect
 	return	p,	sh,	sh2,	wh
