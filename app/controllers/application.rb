@@ -706,11 +706,13 @@ def calcatsbet(g,	ysh,	wsh, winprob)
 end # class application
 
 class Numeric
-  def commify(dec='.', sep=',')
-    num = to_s.sub(/\./, dec)
-    dec = Regexp.escape dec
-    num.reverse.gsub(/(\d\d\d)(?=\d)(?!\d*#{dec})/, "\\1#{sep}").reverse
-  end
+  def commify()
+	  retme 	=	self.to_s.reverse.gsub(/(\d\d\d)(?=\d)(?!\d*\.)/,'\1,').reverse
+	  if retme.include?('.')
+		  retme	=	retme	+	'0' unless (retme.length - retme.index('.'))	==	3
+	  end
+	  return retme
+  end 
   def currency()
     sstr = to_s+".00"
     sstr.gsub!("..",".") if sstr.include?("..")
