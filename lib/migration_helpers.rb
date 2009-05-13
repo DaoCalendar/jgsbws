@@ -1,10 +1,11 @@
 module MigrationHelpers
 
 def	writeseasons(sh2)
-	ff2	=	File.new('seasons.txt','w')
+	ff2	=	File.new('public/soccer seasons.txt','w')
 	sh2.sort!
 	sh2.each{|k|
-		ff2.write("#{k.inspect}\n")
+#		ff2.write("#{k.inspect}\n")
+		ff2.write([k[0],	k[1].year,	k[2]].join(',')+"\n")
 	}
 	ff2.close
 end

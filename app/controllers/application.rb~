@@ -211,13 +211,13 @@ def ms(wsh, ysh, week, header=nil, gaptitle	=	'Week', gc	=	0)
 		ta	<<	"<td>#{wsudiv}SU wins -> #{wsuw} loses -> #{wsul} % win is #{wpcw}</div></td>"
 		ta	<<	"<td>#{watsdiv}ATS wins -> #{watsw} loses -> #{watsl} % win is #{(100.0 * watsw / (watst == 0 ? 1 : watst)).r2} profit is #{(watsw - 1.1 * watsl).r2}</div></td>"
 		ta	<<	"<td>#{woudiv}OU wins -> #{wouright} loses -> #{woul} % win is #{(100.0 * wouright / (wout == 0 ? 1 : wout)).r2} profit is #{(wouright - 1.1 * woul).r2}</div></td>"
-		ta	<<	"<td>#{wmldiv}Money Line wins -> #{wmlw} loses -> #{wmll} % win is #{(100.0 * wmlw / ((wmlw + wmll) == 0 ? 1 : wmlw + wmll))} profit is #{wmlp}</div></td>"
+		ta	<<	"<td>#{wmldiv}Money Line wins -> #{wmlw} loses -> #{wmll} % win is #{(100.0 * wmlw / ((wmlw + wmll) == 0 ? 1 : wmlw + wmll)).r2} profit is #{wmlp.r2}</div></td>"
 
 		# year
 		ta	<<	"<td>#{ysudiv}Year #{week} SU wins -> #{ysuw} loses -> #{ysul} % win is #{ypcw}</div></td>"
-		ta	<<	"<td>#{yatsdiv}ATS wins -> #{yatsw} loses -> #{yatsl} % win is #{(100.0 * yatsw / (yatst == 0 ? 1 : yatst)).r2} profit is #{yatsw - 1.1 * yatsl}</div></td>"
-		ta	<<	"<td>#{youdiv}OU wins -> #{youright} loses -> #{youl} % win is #{(100.0 * youright / (yout == 0 ? 1 : yout)).r2} profit is #{youright - 1.1 * youl}</div></td>"
-		ta	<<	"<td>#{ymldiv}Money Line wins -> #{ymlw} loses -> #{ymll} % win is #{100.0 * ymlw / ((ymlw+ymll) == 0 ? 1 : (ymlw+ymll))} profit is #{ymlp}</div></td>"
+		ta	<<	"<td>#{yatsdiv}ATS wins -> #{yatsw} loses -> #{yatsl} % win is #{(100.0 * yatsw / (yatst == 0 ? 1 : yatst)).r2} profit is #{(yatsw - 1.1 * yatsl).r2}</div></td>"
+		ta	<<	"<td>#{youdiv}OU wins -> #{youright} loses -> #{youl} % win is #{(100.0 * youright / (yout == 0 ? 1 : yout)).r2} profit is #{(youright - 1.1 * youl).r2}</div></td>"
+		ta	<<	"<td>#{ymldiv}Money Line wins -> #{ymlw} loses -> #{ymll} % win is #{(100.0 * ymlw / ((ymlw+ymll) == 0 ? 1 : (ymlw+ymll))).r2} profit is #{ymlp.r2}</div></td>"
 #		ta	<<	'</table></tr>' # turn off this table
 #		ta	<<	'<tr><table border="1">' # restart old table
 		ta	<<	'</tr>'
@@ -706,11 +706,13 @@ def calcatsbet(g,	ysh,	wsh, winprob)
 end # class application
 
 class Numeric
-  def commify(dec='.', sep=',')
-    num = to_s.sub(/\./, dec)
-    dec = Regexp.escape dec
-    num.reverse.gsub(/(\d\d\d)(?=\d)(?!\d*#{dec})/, "\\1#{sep}").reverse
-  end
+  def commify()
+	  retme 	=	self.to_s.reverse.gsub(/(\d\d\d)(?=\d)(?!\d*\.)/,'\1,').reverse
+	  if retme.include?('.')
+		  retme	=	retme	+	'0' unless (retme.length - retme.index('.'))	==	3
+	  end
+	  return retme
+  end 
   def currency()
     sstr = to_s+".00"
     sstr.gsub!("..",".") if sstr.include?("..")

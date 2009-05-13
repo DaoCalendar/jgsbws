@@ -6,7 +6,7 @@ class CreateSoccerBets < ActiveRecord::Migration
 #	Oua	=	%w(BbMxgt2p5 BbMxlt2p5 BbAvgt2p5 BbAvlt2p5 GBgt2p5 GBlt2p5 B365gt2p5 B365lt2p5)
 def self.up
 	create_table :soccer_bets do |t|
-		t.column :prediction_id,	:integer
+#		t.column :prediction_id,	:integer
 		t.column :B365H, :float
 		t.column :B365H_ev, :float
 		t.column :B365D, :float
@@ -87,10 +87,10 @@ def self.up
 		t.column :updated_at,   :timestamp
 	end
 	#	def foreign_key(from_table, from_column, to_table)
-	foreign_key(:soccer_bets,	:prediction_id,	:predictions)
+#	foreign_key(:soccer_bets,	:prediction_id,	:predictions)
   end
 
   def self.down
-	  drop_table :soccer_bets
+	drop_table :soccer_bets
   end
 end

@@ -1,7 +1,6 @@
 class MainController < ApplicationController
 # caches_page :index, :nfl, :notdone
 Betarray	=	%w(B365H B365D B365A BSH BSD BSA BWH BWD BWA GBH GBD GBA IWH IWD IWA LBH LBD LBA SBH SBD SBA WHH WHD WHA SJH SJD SJA VCH VCD VCA BbMxgt2p5 BbMxlt2p5 BbAvgt2p5 BbAvlt2p5 GBgt2p5 GBlt2p5 B365gt2p5 B365lt2p5)
-
 Betnames = ['Bet365 home win odds -> EV -> $bankroll', 'Bet365 draw odds -> EV -> $bankroll', 'Bet365 away win odds -> EV -> $bankroll',  'Blue Square home win odds -> EV -> $bankroll', 'Blue Square draw odds -> EV -> $bankroll', 'Blue Square away win odds -> EV -> $bankroll',  'Bet&Win home win odds -> EV -> $bankroll', 'Bet&Win draw odds -> EV -> $bankroll', 'Bet&Win away win odds -> EV -> $bankroll',  'Gamebookers home win odds -> EV -> $bankroll', 'Gamebookers draw odds -> EV -> $bankroll', 'Gamebookers away win odds -> EV -> $bankroll',  'Interwetten home win odds -> EV -> $bankroll', 'Interwetten draw odds -> EV -> $bankroll', 'Interwetten away win odds -> EV -> $bankroll',  'Ladbrokes home win odds -> EV -> $bankroll', 'Ladbrokes draw odds -> EV -> $bankroll', 'Ladbrokes away win odds -> EV -> $bankroll',  'Sporting Odds home win odds -> EV -> $bankroll', 'Sporting Odds draw odds -> EV -> $bankroll', 'Sporting Odds away win odds -> EV -> $bankroll',  'Sportingbet home win odds -> EV -> $bankroll', 'Sportingbet draw odds -> EV -> $bankroll', 'Sportingbet away win odds -> EV -> $bankroll',  'Stan James home win odds -> EV -> $bankroll', 'Stan James draw odds -> EV -> $bankroll', 'Stan James away win odds -> EV -> $bankroll',  'Stanleybet home win odds -> EV -> $bankroll', 'Stanleybet draw odds -> EV -> $bankroll', 'Stanleybet away win odds -> EV -> $bankroll',  'VC Bet home win odds -> EV -> $bankroll', 'VC Bet draw odds -> EV -> $bankroll', 'VC Bet away win odds -> EV -> $bankroll',  'William Hill home win odds -> EV -> $bankroll', 'William Hill draw odds -> EV -> $bankroll', 'William Hill away win odds -> EV -> $bankroll']
 
 def wrap(str, wrapper='td')
@@ -24,6 +23,7 @@ def makscr
 	lname	=	League.find_by_short_league(lid).name
 	preds	=	Prediction.find_all_by_league(sid)
 	pred		=	[]
+	puts 'filtering data for season'
 	preds.each{|p|
 		pred	<<	p	if	p.season	==	pid	&&	!p.soccer_bet.nil?
 	}
@@ -34,9 +34,13 @@ def makscr
 #	raise
 	beta		=	[]
 #	nc	=	0
-	sbh	=	{}
+	sbh		=	{}
+	th		=	{}
+	puts 'building team name hash, list of played bets and soccer hash'
 	pred.each{|p|
 #		nc	+=	1	if p.soccer_bet.nil?
+		th[p.home_team_id]		=	Team.find(p.home_team_id).name	unless	th.has_key?(p.home_team_id)
+		th[p.away_team_id]		=	Team.find(p.away_team_id).name	unless	th.has_key?(p.away_team_id)
 		next if p.soccer_bet.nil?
 #		puts p.soccer_bet
 		s	=	SoccerBet.find(p.soccer_bet)
@@ -63,18 +67,29 @@ def makscr
 	beta.each{|b|
 		outstr	+=	wrap(bth[b])
 	}
-	outstr		+=	'</th>'
-	pred.each_with_index{|p, pi|
+	outstr		+=	'</th><br>'
+	plen			=	pred.length.commify
+	sumhash		=	{}
+	oldweek		=	0
+	pred.each_with_index{|p,	pi|
+		sumhash,	outstr,	oldweek	=	summarytime(p.week,	oldweek,	sumhash,	beta,	outstr)
+		puts
+		puts "done #{pi.commify} of #{plen}"
+		puts 'building bets'
 		abotg	=	0.0	# amount bet on this game is zero - must bet max 4 % on any one game 
 		s		=	sbh[p.soccer_bet] # SoccerBet.find(p.soccer_bet)
-		ht		=	Team.find(p.home_team_id).name
-		awt		=	Team.find(p.away_team_id).name
-		outstr	+=	'<tr>'+wrap((pi+1).commify+' - '+p.game_date_time.strftime("%A %B %d %Y  ")+ht+' '+p.actual_home_score.to_s+' '+awt+' '+p.actual_away_score.to_s)
+		ht		=	th[p.home_team_id]
+		awt		=	th[p.away_team_id]
 		eva		=	[]
+		begin
+			outstr	+=	Tr+wrap(p.game_date_time.strftime("%B %d %Y  ")+' - '+ht+' '+p.actual_home_score.to_s+' - '+awt+' '+p.actual_away_score.to_s)
+		rescue
+			raise "outstr #{outstr.inspect}"
+		end
 		beta.each{|b|
-			eva		<<	[b,	(s[b+'_ev'].nil? ? 0.0 : s[b+'_ev'])]	# unless	s[b].nil?
+			eva	<<	[b,	(s[b+'_ev'].nil? ? 0.0 : s[b+'_ev'])]	# unless	s[b].nil?
 		}
-		puts eva.inspect
+#		puts eva.inspect
 		eva.sort!{|a,	b|	b[1]<=>a[1]}
 #		sleep 10
 		eva2		=	[]
@@ -82,23 +97,24 @@ def makscr
 			b	=	e[0]
 			begin
 #				if (s[b+'_ev']	>	1.0) && (abotg == 0 || ((abotg + bet) <= (bankroll * 0.04))) # never bet more than 4 % of bankroll on any one game but always make at least one bet if ev > 1.0
-				if (e[1]	>	1.0) && (abotg == 0 || ((abotg + bet) <= (bankroll * 0.04))) # never bet more than 4 % of bankroll on any one game but always make at least one bet if ev > 1.0
+				if (e[1]	>	1.0) && (abotg == 0 || ((abotg + bet) <= (bankroll * Fpc))) # never bet more than 4 % of bankroll on any one game but always make at least one bet if ev > 1.0
 					eva2		<<	e[0]
 					abotg	+=	bet
 				else
 					break
 				end
 			rescue
-				raise "b #{b} s.inspect #{s.inspect}"
+#				raise "b #{b} s.inspect #{s.inspect}"
 			end
 		}
-		puts
-		puts "eva.inspect #{eva.inspect}"
-		puts
-		puts "eva2.inspect #{eva2.inspect}"
-		puts
-		puts "beta.inspect #{beta.inspect}"
+#		puts
+#		puts "eva.inspect #{eva.inspect}"
+#		puts
+#		puts "eva2.inspect #{eva2.inspect}"
+#		puts
+#		puts "beta.inspect #{beta.inspect}"
 #		raise
+		puts 'playing bets'
 		beta.each{|b|
 			if	s[b].nil?
 				outstr	+=	wrap('')	# spacer
@@ -108,34 +124,39 @@ def makscr
 #				if (s[b+'_ev']	>	1.0) && (abotg == 0 || ((abotg + bet) <= (bankroll * 0.04))) # never bet more than 4 % of bankroll on any one game but always make at least one bet if ev > 1.0
 					# bet on this game - how did we do?
 					abotg	+=	bet
-					gres		=	'H'		if	p.actual_home_score	>	p.actual_away_score
-					gres		=	'A'		if	p.actual_home_score	<	p.actual_away_score
-					gres		=	'D'		if	p.actual_home_score	==	p.actual_away_score
+					gres		=	0		if	p.actual_home_score	>	p.actual_away_score
+					gres		=	1		if	p.actual_home_score	<	p.actual_away_score
+					gres		=	2		if	p.actual_home_score	==	p.actual_away_score
 					betdraw	=	false
 					bethome	=	nil
 					bookie	=	b
 					odds		=	s[b]
-					bethome	=	true		if	bookie.last	==	'H'
-					bethome	=	false	if	bookie.last	==	'A'
-					betdraw	=	true		if	bookie.last	==	'D'
+					bl		=	bookie.last
+					bethome	=	true		if	bl	==	'H'
+					bethome	=	false	if	bl	==	'A'
+					betdraw	=	true		if	bl	==	'D'
 					if (!betdraw	&&	bethome.nil?)
 						# maybe > < 2.5 bet
 						raise "bookie #{bookie}" if !bookie.include?('>')	&&	!bookie.include?('<')
-						gt25	=	((homescore+awayscore)	>	2.5)
+						gt25	=	((homescore+awayscore)	>	Tpf)
 						if	(gt25	&&	bookie.include?('>'))	||	(gt25	&&	bookie.include?('<'))
-							odiv		=	"<div id='green'>"
-							bankroll	+=	bet	*	odds	
+							odiv		=	Gdiv
+							bankroll	+=	bet	*	odds
+							sumhash	=	maintsh(sumhash,	bookie,	bet	*	odds)
 						else
-							odiv		=	"<div id='red'>"
+							odiv		=	Rdiv
 							bankroll	-=	bet
+							sumhash	=	maintsh(sumhash,	bookie,	-bet)
 						end
 					else
-						if	(gres	==	'H'	&&	bethome &&	!betdraw)	||	(gres	==	'A'	&&	!bethome &&	!betdraw)	||	(gres	==	'D'	&&	betdraw)
-							odiv		=	"<div id='green'>"
+						if	(gres	==	0	&&	bethome &&	!betdraw)	||	(gres	==	1	&&	!bethome &&	!betdraw)	||	(gres	==	2	&&	betdraw)
+							odiv		=	Gdiv
 							bankroll	+=	bet	*	odds	
+							sumhash	=	maintsh(sumhash,	bookie,	bet	*	odds)
 						else
-							odiv		=	"<div id='red'>"
+							odiv		=	Rdiv
 							bankroll	-=	bet
+							sumhash	=	maintsh(sumhash,	bookie,	-bet)
 						end
 					end
 					outstr	+=	wrap(odiv+s[b].to_s+' -> '+s[b+'_ev'].to_s+"<br> -> $#{bankroll.r2.commify}"+'</div>')
@@ -143,14 +164,26 @@ def makscr
 					outstr	+=	wrap(s[b].to_s+' -> '+s[b+'_ev'].to_s+"<br> -> $#{bankroll.r2.commify}")
 				end
 			end
-		}
-		outstr	+=	'</tr>'
+		}	#	next bet
+		outstr			+=	'</tr>'
+	}	#	next prediction
+	outstr		+=	Tr+"<td>Season Total</td>"
+	beta.each{|b|
+		begin
+			div		=	Gdiv	if	sumhash['year'+b]	>	0
+			div		=	Rdiv	if	sumhash['year'+b]	<	0
+			outstr	+=	wrap(div	+	sumhash['year'+b].r2.commify	+	'</div>')
+		rescue
+			outstr	+=	Na
+		end
 	}
+	outstr			+=	Tre
 	outstr			+=	'</table>'
 	@main			=	{}
 	@main['pad']		=	false
-	@main['desc']		=	"Joe Guy's Amazing Soccer Predictions"
-	@main['content']	=	"Joe Guy's Amazing Soccer Predictions"
+	@main['heading']	=	"Joe Guy's Soccer Betting - #{lname} - Season #{pid+1} - #{fdate.strftime("%B %d %Y  ")} to #{ldate.strftime("%B %d %Y  ")} Starting bankroll $100 - Ending Bankroll $#{bankroll.r2.commify} - Bet is $#{bet}"
+	@main['desc']		=	"Joe Guy's Soccer Betting - #{lname} - Season #{pid+1} - #{fdate.strftime("%B %d %Y  ")} to #{ldate.strftime("%B %d %Y  ")} Starting bankroll $100 - Ending Bankroll $#{bankroll.r2.commify} - Bet is $#{bet}"
+	@main['content']	=	"Joe Guy's Soccer Betting - #{lname} - Season #{pid+1} - #{fdate.strftime("%B %d %Y  ")} to #{ldate.strftime("%B %d %Y  ")} Starting bankroll $100 - Ending Bankroll $#{bankroll.r2.commify} - Bet is $#{bet}"
 	@main['rollwith']	=	outstr
 	render :template=>"main/main.rhtml"
 end
@@ -174,10 +207,10 @@ def soccer
 	years.sort!
 	puts years.inspect
 #	raise
-	outstr	=	'<table border = "1" wdith="100%">'
+	outstr	=	'<h2>Soccer Matrix<h2><br><table border = "1">'
 	outstr	+=	"<th>"
 	years.each{|y|outstr	+=	wrap(y)}
-	outstr	+=	"</th><br>"
+	outstr	+=	"</th>"
 	
 	lh	=	{}
 	
@@ -205,6 +238,7 @@ def soccer
 	la.each{|l|
 		outstr	+=	"<tr>#{wrap(l[1][0])}"
 #		puts l
+#		raise
 		years.each{|y|
 #			puts y
 			keyy	=	[l[0],	y.to_s]

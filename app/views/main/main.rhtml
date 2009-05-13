@@ -4,6 +4,7 @@
 
 <div id			=	"Originalcontent">
 <%	rw			=	@main['rollwith']	%>
+<%	@heading	=	@main['heading']	if@main.has_key?('heading')		-%>
 <%	@content	=	@main['content']	-%>
 <%	@desc		=	@main['desc']		%>
 <% begin %>

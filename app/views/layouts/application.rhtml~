@@ -9,6 +9,7 @@
 <meta http-equiv="Cache-Control" content="must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
   <head>
+	<link rel="shortcut icon" href="/favicon.ico" />
     <meta name="author" content="Terry Smith" />
     <meta name="keywords" content="<%= @content -%>" />
     <meta name="description" content="<%= @desc -%>" />
@@ -35,11 +36,13 @@
             (<%= link_to "Logout", :controller => "/account", :action => "logout" %>)
           <% else %>
             Welcome, Guest @ <%= request.env["REMOTE_ADDR"] %> !
+	    <% if 1 == 0 # turn off for now %>
             <% unless User.find(:first).nil? %>
               <%= link_to "Login", :controller => "/account", :action => "login" %>
               <!-- or  -->
             <% end %>
             <% link_to "Register", :controller => "/account", :action => "signup" %>
+	    <% end %>
           <% end %>
         </div>
       <% else %>

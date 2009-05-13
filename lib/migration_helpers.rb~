@@ -9,7 +9,7 @@ def	writeseasons(sh2)
 	ff2.close
 end
 	
-def fronthalf(sh,	tta,	sh2,	wh)
+def fronthalf(sh,	tta,	sh2,	wh,	save_pred	=	true)
 #	$csh2			=	false
 #	puts 'set to fase'
 	p			=	Prediction.new
@@ -23,16 +23,16 @@ def fronthalf(sh,	tta,	sh2,	wh)
 	awp			=	tta[7].to_f
 	dwp			=	tta[8].to_f
 	begin
-		@sl		=	ShortLeague.find_by_shortname(league)
+		@l		=	League.find_by_short_league(league)
 	rescue
 		raise "cant find #{league}"
 	end
 #	p.league		=	@sl.league.id
 #	p.league		=	League.ShortLeague(league).id
-	puts	ShortLeague.methods.sort
-	puts
-	puts	League.methods.sort
-	p.league		=	ShortLeague.league(league).id
+#	puts	ShortLeague.methods.sort
+#	puts
+#	puts	League.methods.sort
+	p.league		=	@l.id
 #	p.game_date_time		=	convdate(date)
 	t			=	date.split("/")
 	p.game_date_time			=	Time.local(2000+t[2].to_i, t[1], t[0])	if		t[2].to_i	<	10
@@ -41,10 +41,10 @@ def fronthalf(sh,	tta,	sh2,	wh)
 		if	(p.game_date_time	-	wh[league][0])	>	7.days # count weeks
 			wh[league][1]		+=	1
 			if wh[league][1]	>=	52 # year has passed
-				sh[league][1]		+=	1
-				sh2				<<	[league,	p.game_date_time,	sh[league][1]]
-				$csh2			=	true
-				wh[league][1]		=	1
+				sh[league][1]	+=	1
+				sh2			<<	[league,	p.game_date_time,	sh[league][1]]
+				$csh2		=	true
+				wh[league][1]	=	1
 			end
 			wh[league][0]		=	p.game_date_time # only update after week is changed.
 		end
@@ -97,7 +97,7 @@ def fronthalf(sh,	tta,	sh2,	wh)
 	p.prob_home_win_su	=	hwp
 	p.prob_away_win_su		=	awp
 	p.prob_push_su		=	dwp
-	p.save!
+	p.save!	if	save_pred
 #	puts sh.inspect
 #		raise p.inspect
 	return	p,	sh,	sh2,	wh

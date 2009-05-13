@@ -23,17 +23,17 @@
    Not all my work has been brought to this site yet, but it will be shortly.<br>
 <% # <!--   You can look around all the league pages and the forums. But as an unpaid member you can't read the latest messages and you can't post.<br> --> %>
    <br>
-   <%= link_to "Joe Guy's 2008 National Football League Season", :action => :nfl, :id=>2008, :league => :nfl; %><br>
-   <%= link_to ".....Joe Guy's 2007 National Football League Season", :action => :nfl, :id=>2007, :league => :nfl %><br>
-   <%= link_to "Joe Guy's 2008 National Basketball Association Season", :action => :nfl, :league=>2, :id=>1 %><br>
-   <%= link_to "..Joe Guy's 2007 National Basketball Association Season", :action => :nfl, :league=>2, :id=>0 %><br>
-   <%= link_to "Joe Guy's 2008 NCAA Football League Season", :action => :nfl, :league=>4, :id=>2 %><br>
-   <%= link_to "...Joe Guy's 2007 NCAA Football League Season", :action => :nfl, :league=>4, :id=>1 %><br>
-   <%= link_to "Joe Guy's 2008 NCAA Basketball Season", :action => :nfl, :league=>5, :id=>2 %><br>
-   <%= link_to "...Joe Guy's 2007 NCAA Basketball Season", :action => :nfl, :league=>5, :id=>1 %><br>
-   <%= link_to "Joe Guy's 2007 English Premier League Season", :action => :notdone %>
+   <%= link_to "Joe Guy's 2008 National Football League Season", :action => :main, :id=>2008, :league => 1 %><br>
+   <%= link_to ".....Joe Guy's 2007 National Football League Season", :action => :main, :id=>2007, :league => 1 %><br>
+   <%= link_to "Joe Guy's 2008 National Basketball Association Season", :action => :main, :league=>2, :id=>2008 %><br>
+   <%= link_to "..Joe Guy's 2007 National Basketball Association Season", :action => :main, :league=>2, :id=>2007 %><br>
+   <%= link_to "Joe Guy's 2008 NCAA Football League Season", :action => :main, :league=>4, :id=>2008 %><br>
+   <%= link_to "...Joe Guy's 2007 NCAA Football League Season", :action => :main, :league=>4, :id=>2007 %><br>
+   <%= link_to "Joe Guy's 2008 NCAA Basketball Season", :action => :main, :league=>5, :id=>2008 %><br>
+   <%= link_to "...Joe Guy's 2007 NCAA Basketball Season", :action => :main, :league=>5, :id=>2007 %><br>
+   <%= link_to "Joe Guy's SOCCER!", :action => :soccer %>
 <!--   <%= link_to "Joe Guy's 2008 National Basketball Association Season", :action => :notdone %><br>
    <%= link_to "Joe Guy's 2008 NCAA Football League Season", :action => :notdone %><br>
    <%= link_to "Joe Guy's 2008 NCAA Basketball Season", :action => :notdone %><br>
-   <%= link_to "Joe Guy's 2008 English Premier League Season", :action => :notdone %> -->
+   <%= link_to "Joe Guy's 2007 English Premier League Season", :action => :notdone %> -->
 </div>
