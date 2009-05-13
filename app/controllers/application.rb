@@ -5,7 +5,16 @@ Seasonone		=	Time.local(2_008,4,7)
 Futuretime		=	Time.local(2_012,1,1)
 Secondsperday		=	24	*	3_600
 Secondsinthreedays	=	2.5	*	24	*	3600	#	days*hour/day*seconds/hour
-NO					=	"No Opinion"
+NO				=	"No Opinion"
+Gdiv				=	"<div id='green'>"
+Rdiv				=	"<div id='red'>"
+Fpc				=	0.04
+Tpf				=	2.5
+Td				=	"<td>"
+Tde				=	"</td>"
+Tr				=	"<tr>"
+Tre				=	"</tr>"
+Na				=	'<td>No Action</td>'
 class ApplicationController < ActionController::Base
 	# Be sure to include AuthenticationSystem in Application Controller instead
 	include AuthenticatedSystem
@@ -703,6 +712,54 @@ def calcatsbet(g,	ysh,	wsh, winprob)
 	end
 =begin
 =end
+
+def summarytime(pweek,	oldweek,	sumhash,	beta,	outstr)
+	# check for summary time
+	unless oldweek	==	pweek
+		puts "sumhash.inspect #{sumhash.inspect}"
+		puts "beta.inspect #{beta.inspect}"
+#		raise
+		puts "oldweek #{oldweek} pweek #{pweek}"
+		oldweek		=	pweek
+		st			=	0.0
+		beta.each{|b|
+			begin
+				st	+=	sumhash['week'+b].r2
+			rescue
+			end
+		}
+		div		=	Gdiv	if	st	>	0
+		div		=	Rdiv	if	st	<	0
+		outstr		+=	Tr+"<td>#{div}Week #{oldweek} Total -> $#{st.r2.commify}</div></td>"
+		beta.each{|b|
+			begin
+				div		=	Gdiv	if	sumhash['week'+b]	>	0
+				div		=	Rdiv	if	sumhash['week'+b]	<	0
+				outstr	+=	wrap(div	+	sumhash['week'+b].r2.commify	+	'</div>')
+				sumhash['week'+b]	=	nil
+			rescue
+				outstr	+=	Na
+			end
+		}
+		outstr			+=	Tre
+	end
+	return sumhash,	outstr,	oldweek
+end	#	summarytime
+
+def maintsh(sumhash, bookie,	prize)
+	begin
+		sumhash['year'+bookie]	+=	prize
+	rescue
+		sumhash['year'+bookie]	=	prize	
+	end
+	begin
+		sumhash['week'+bookie]	+=	prize
+	rescue
+		sumhash['week'+bookie]	=	prize
+	end
+	return sumhash
+end	#maintsh
+
 end # class application
 
 class Numeric
