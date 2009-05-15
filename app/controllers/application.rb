@@ -8,6 +8,7 @@ Secondsinthreedays	=	2.5	*	24	*	3600	#	days*hour/day*seconds/hour
 NO				=	"No Opinion"
 Gdiv				=	"<div id='green'>"
 Rdiv				=	"<div id='red'>"
+Ydiv				=	"<div id='yellow'>"
 Fpc				=	0.04
 Tpf				=	2.5
 Td				=	"<td>"
@@ -713,29 +714,31 @@ def calcatsbet(g,	ysh,	wsh, winprob)
 =begin
 =end
 
-def summarytime(pweek,	oldweek,	sumhash,	beta,	outstr)
+def summarytime(pweek,	oldweek,	sumhash,	beta,	outstr,	forced	=	false)
 	# check for summary time
-	unless oldweek	==	pweek
+	if	!(oldweek	==	pweek)	or forced
 		puts "sumhash.inspect #{sumhash.inspect}"
 		puts "beta.inspect #{beta.inspect}"
 #		raise
 		puts "oldweek #{oldweek} pweek #{pweek}"
 		oldweek		=	pweek
 		st			=	0.0
+		wc			=	0
 		beta.each{|b|
 			begin
+				wc	+=	sumhash['weekcount'+b]
 				st	+=	sumhash['week'+b].r2
 			rescue
 			end
 		}
 		div		=	Gdiv	if	st	>	0
 		div		=	Rdiv	if	st	<	0
-		outstr		+=	Tr+"<td>#{div}Week #{oldweek} Total -> $#{st.r2.commify}</div></td>"
+		outstr		+=	Tr+"<td>#{div}Week #{oldweek} - #{wc} bets Total -> $#{st.r2.commify}</div></td>"
 		beta.each{|b|
 			begin
 				div		=	Gdiv	if	sumhash['week'+b]	>	0
 				div		=	Rdiv	if	sumhash['week'+b]	<	0
-				outstr	+=	wrap(div	+	sumhash['week'+b].r2.commify	+	'</div>')
+				outstr	+=	wrap(div	+	sumhash['weekcount'+b].commify+(sumhash['weekcount'+b] > 1 ? ' bets -> $' : ' bet -> $' )+	sumhash['week'+b].r2.commify	+	'</div>')
 				sumhash['week'+b]	=	nil
 			rescue
 				outstr	+=	Na
@@ -748,14 +751,18 @@ end	#	summarytime
 
 def maintsh(sumhash, bookie,	prize)
 	begin
-		sumhash['year'+bookie]	+=	prize
+		sumhash['year'+bookie]		+=	prize
+		sumhash['yearcount'+bookie]	+=	1
 	rescue
-		sumhash['year'+bookie]	=	prize	
+		sumhash['year'+bookie]		=	prize	
+		sumhash['yearcount'+bookie]	=	1
 	end
 	begin
-		sumhash['week'+bookie]	+=	prize
+		sumhash['week'+bookie]			+=	prize
+		sumhash['weekcount'+bookie]	+=	1
 	rescue
-		sumhash['week'+bookie]	=	prize
+		sumhash['week'+bookie]			=	prize
+		sumhash['weekcount'+bookie]	=	1
 	end
 	return sumhash
 end	#maintsh
