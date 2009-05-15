@@ -2,15 +2,6 @@ class MainController < ApplicationController
 # caches_page :index, :nfl, :notdone
 Betarray	=	%w(B365H B365D B365A BSH BSD BSA BWH BWD BWA GBH GBD GBA IWH IWD IWA LBH LBD LBA SBH SBD SBA WHH WHD WHA SJH SJD SJA VCH VCD VCA BbMxgt2p5 BbMxlt2p5 BbAvgt2p5 BbAvlt2p5 GBgt2p5 GBlt2p5 B365gt2p5 B365lt2p5)
 Betnames = ['Bet365 home win odds -> EV -> $bankroll', 'Bet365 draw odds -> EV -> $bankroll', 'Bet365 away win odds -> EV -> $bankroll',  'Blue Square home win odds -> EV -> $bankroll', 'Blue Square draw odds -> EV -> $bankroll', 'Blue Square away win odds -> EV -> $bankroll',  'Bet&Win home win odds -> EV -> $bankroll', 'Bet&Win draw odds -> EV -> $bankroll', 'Bet&Win away win odds -> EV -> $bankroll',  'Gamebookers home win odds -> EV -> $bankroll', 'Gamebookers draw odds -> EV -> $bankroll', 'Gamebookers away win odds -> EV -> $bankroll',  'Interwetten home win odds -> EV -> $bankroll', 'Interwetten draw odds -> EV -> $bankroll', 'Interwetten away win odds -> EV -> $bankroll',  'Ladbrokes home win odds -> EV -> $bankroll', 'Ladbrokes draw odds -> EV -> $bankroll', 'Ladbrokes away win odds -> EV -> $bankroll',  'Sporting Odds home win odds -> EV -> $bankroll', 'Sporting Odds draw odds -> EV -> $bankroll', 'Sporting Odds away win odds -> EV -> $bankroll',  'Sportingbet home win odds -> EV -> $bankroll', 'Sportingbet draw odds -> EV -> $bankroll', 'Sportingbet away win odds -> EV -> $bankroll',  'Stan James home win odds -> EV -> $bankroll', 'Stan James draw odds -> EV -> $bankroll', 'Stan James away win odds -> EV -> $bankroll',  'Stanleybet home win odds -> EV -> $bankroll', 'Stanleybet draw odds -> EV -> $bankroll', 'Stanleybet away win odds -> EV -> $bankroll',  'VC Bet home win odds -> EV -> $bankroll', 'VC Bet draw odds -> EV -> $bankroll', 'VC Bet away win odds -> EV -> $bankroll',  'William Hill home win odds -> EV -> $bankroll', 'William Hill draw odds -> EV -> $bankroll', 'William Hill away win odds -> EV -> $bankroll']
-Fpc		=	0.04
-Tpf		=	2.5
-Gdiv		=	"<div id='green'>"
-Rdiv		=	"<div id='red'>"
-Td		=	"<td>"
-Tde		=	"</td>"
-Tr		=	"<tr>"
-Tre		=	"</tr>"
-Na		=	'<td>No Action</td>'
 
 def wrap(str, wrapper='td')
 	return "<#{wrapper}>#{str}</#{wrapper}>"
@@ -76,11 +67,12 @@ def makscr
 	beta.each{|b|
 		outstr	+=	wrap(bth[b])
 	}
-	outstr		+=	'</th>'
+	outstr		+=	'</th><br>'
 	plen			=	pred.length.commify
 	sumhash		=	{}
-	oldweek		=	1
+	oldweek		=	pred.first.week
 	pred.each_with_index{|p,	pi|
+		sumhash,	outstr,	oldweek	=	summarytime(p.week,	oldweek,	sumhash,	beta,	outstr)
 		puts
 		puts "done #{pi.commify} of #{plen}"
 		puts 'building bets'
@@ -89,6 +81,13 @@ def makscr
 		ht		=	th[p.home_team_id]
 		awt		=	th[p.away_team_id]
 		eva		=	[]
+		tmpstr		=	''
+		begin
+			outstr	+=	'zzzzzzzzzzzzzzzzz' # for replacement later
+			tmpstr	=	Tr+wrap('aaaaaaaaaaaa'+p.game_date_time.strftime("%B %d %Y  ")+' - '+ht+' '+p.actual_home_score.to_s+' - '+awt+' '+p.actual_away_score.to_s+' -> $bbbbbbbbbbb')
+		rescue
+			raise "outstr #{outstr.inspect}"
+		end
 		beta.each{|b|
 			eva	<<	[b,	(s[b+'_ev'].nil? ? 0.0 : s[b+'_ev'])]	# unless	s[b].nil?
 		}
@@ -96,6 +95,11 @@ def makscr
 		eva.sort!{|a,	b|	b[1]<=>a[1]}
 #		sleep 10
 		eva2		=	[]
+		
+#		bet		=	bankroll	*	Fpc
+#		bet		=	4.0	if	bet	<	4.0
+#		bet		=	100	if	bet	>	100
+		
 		eva.each{|e|	#	now do from best down
 			b	=	e[0]
 			begin
@@ -118,6 +122,7 @@ def makscr
 #		puts "beta.inspect #{beta.inspect}"
 #		raise
 		puts 'playing bets'
+		gt				=	0.0	#	game total
 		beta.each{|b|
 			if	s[b].nil?
 				outstr	+=	wrap('')	# spacer
@@ -145,37 +150,25 @@ def makscr
 						if	(gt25	&&	bookie.include?('>'))	||	(gt25	&&	bookie.include?('<'))
 							odiv		=	Gdiv
 							bankroll	+=	bet	*	odds
-							begin
-								sumhash['year'][bookie]	+=	bet	*	odds
-							rescue
-								sumhash['year'][bookie]	=	bet	*	odds
-							end
-							begin
-								sumhash['week'][bookie]	+=	bet	*	odds
-							rescue
-								sumhash['week'][bookie]	=	bet	*	odds
-							end
+							sumhash	=	maintsh(sumhash,	bookie,	bet	*	odds)
+							gt		+=	bet	*	odds
 						else
 							odiv		=	Rdiv
 							bankroll	-=	bet
-							begin
-								sumhash['year'][bookie]	-=	bet
-							rescue
-								sumhash['year'][bookie]	-=	bet
-							end
-							begin
-								sumhash['week'][bookie]	-=	bet
-							rescue
-								sumhash['week'][bookie]	-=	bet
-							end
+							gt		-=	bet
+							sumhash	=	maintsh(sumhash,	bookie,	-bet)
 						end
 					else
 						if	(gres	==	0	&&	bethome &&	!betdraw)	||	(gres	==	1	&&	!bethome &&	!betdraw)	||	(gres	==	2	&&	betdraw)
 							odiv		=	Gdiv
 							bankroll	+=	bet	*	odds	
+							gt		+=	bet	*	odds
+							sumhash	=	maintsh(sumhash,	bookie,	bet	*	odds)
 						else
 							odiv		=	Rdiv
 							bankroll	-=	bet
+							gt		-=	bet
+							sumhash	=	maintsh(sumhash,	bookie,	-bet)
 						end
 					end
 					outstr	+=	wrap(odiv+s[b].to_s+' -> '+s[b+'_ev'].to_s+"<br> -> $#{bankroll.r2.commify}"+'</div>')
@@ -184,28 +177,32 @@ def makscr
 				end
 			end
 		}	#	next bet
-		outstr	+=	'</tr>'
-		# check for summary time
-		unless oldweek	==	p.week
-			puts "oldweek #{oldweek} p.week #{p.week}"
-			oldweek		=	p.week
-			outstr		+=	Tr+"<td>Week #{oldweek} Total</td>"
-			beta.each{|b|
-				begin
-					outstr	+=	wrap(sumhash['week'][b].r2.commify)
-					sumhash['week'][b]	=	0.0
-				rescue
-					outstr	+=	Na
-				end
-			}
-			outstr			+=	Tre
-		end
+		outstr			+=	'</tr>'
+		# now to process the game total
+		tmpstr.gsub!('aaaaaaaaaaaa',	Gdiv)	if	gt	>	0.0
+		tmpstr.gsub!('aaaaaaaaaaaa',	Rdiv)	if	gt	<	0.0
+		tmpstr.gsub!('aaaaaaaaaaaa',	Ydiv)	if	gt	==	0.0
+		outstr.gsub!('zzzzzzzzzzzzzzzzz',	tmpstr)
+		outstr.gsub!('bbbbbbbbbbb',	gt.r2.commify)
 	}	#	next prediction
-	outstr		+=	Tr+"<td>Season Total</td>"
+	sumhash,	outstr,	oldweek	=	summarytime(oldweek+1,	oldweek,	sumhash,	beta,	outstr,	true)
+	yt			=	0.0
+	yc			=	0
 	beta.each{|b|
-		outstr	+=	wrap(sumhash['year'][b].r2.commify)
+		yt	+=	sumhash['year'+b]
+		yc	+=	sumhash['yearcount'+b]
 	}
-	outstr		+=	Tre
+	outstr		+=	Tr+"<td>Season Total - #{yc.commify} bets -> $#{yt.r2.commify} </td>"
+	beta.each{|b|
+		begin
+			div		=	Gdiv	if	sumhash['year'+b]	>	0
+			div		=	Rdiv	if	sumhash['year'+b]	<	0
+			outstr	+=	wrap(div	+	sumhash['yearcount'+b].commify	+	((sumhash['yearcount'+b] > 1) ? ' bets -> $' : ' bet -> $' )	+	sumhash['year'+b].r2.commify	+	'</div>')
+		rescue
+			outstr	+=	Na
+		end
+	}
+	outstr			+=	Tre
 	outstr			+=	'</table>'
 	@main			=	{}
 	@main['pad']		=	false
@@ -238,7 +235,7 @@ def soccer
 	outstr	=	'<h2>Soccer Matrix<h2><br><table border = "1">'
 	outstr	+=	"<th>"
 	years.each{|y|outstr	+=	wrap(y)}
-	outstr	+=	"</th><br>"
+	outstr	+=	"</th>"
 	
 	lh	=	{}
 	
@@ -266,6 +263,7 @@ def soccer
 	la.each{|l|
 		outstr	+=	"<tr>#{wrap(l[1][0])}"
 #		puts l
+#		raise
 		years.each{|y|
 #			puts y
 			keyy	=	[l[0],	y.to_s]

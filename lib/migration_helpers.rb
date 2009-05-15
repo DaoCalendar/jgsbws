@@ -1,5 +1,8 @@
 module MigrationHelpers
 
+Cok	=	'^changeok'
+Sea	=	'^season'
+
 def	writeseasons(sh2)
 	ff2	=	File.new('public/soccer seasons.txt','w')
 	sh2.sort!
@@ -42,8 +45,8 @@ def fronthalf(sh,	tta,	sh2,	wh,	save_pred	=	true)
 		if	(p.game_date_time	-	wh[league][0])	>	7.days # count weeks
 			wh[league][1]		+=	1
 			if wh[league][1]	>=	52 # year has passed
-				sh[league][1]	+=	1
-				sh2			<<	[league,	p.game_date_time,	sh[league][1]]
+				sh[league+Sea]	+=	1
+				sh2			<<	[league,	p.game_date_time,	sh[league+Sea]]
 				$csh2		=	true
 				wh[league][1]	=	1
 			end
@@ -52,26 +55,43 @@ def fronthalf(sh,	tta,	sh2,	wh,	save_pred	=	true)
 	else
 		wh[league]			=	[p.game_date_time,	0]
 	end
-	if	sh.has_key?(league)
-		if	(p.game_date_time	-	sh[league][0])	>	3.months # count seasons - looking for a three month gap
-			sh[league][1]		+=	1
-			$csh2			=	true
-			wh[league][1]		=	1	#	reset week for new season
+	if	sh.has_key?(league+Sea)
+#		puts p.game_date_time.month
+#		if	(p.game_date_time	-	sh[league][0])	>	3.months # count seasons - looking for a three month gap
+		if	(p.game_date_time.month	>=	10)	&&	(p.game_date_time.month	<=	12)	&&	!sh[league+Cok]
+#			puts "sh[league+Cok]	==	true sh.inspect #{sh.inspect}"
+#			sleep 1
+			sh[league+Cok]	=	true	
+#			puts "sh.inspect #{sh.inspect}"
+		end
+		if	(p.game_date_time.month	>=	8)	&&	(p.game_date_time.month	<=	9)	&&	sh[league+Cok]
+#		if	(p.game_date_time.month	==	8)	&&	(p.game_date_time.month	<=	9)	&&	sh[league+Cok]
+#			puts "sh[league+Cok]	=	false"
+			sh[league+Cok]	=	false
+			sh[league+Sea]	+=	1
+			puts "changed season to #{sh[league+Sea]} - #{p.game_date_time} #{league}"
+#			sleep 1
+			$csh2				=	true
+			wh[league][1]			=	1	#	reset week for new season
 	#		puts "set to true"
 			begin
-				sh2	<<	[league,	p.game_date_time,	sh[league][1]]
+				sh2	<<	[league,	p.game_date_time,	sh[league+Sea]]
 			rescue
-				raise "sh2 #{sh2.inspect} league #{league}  p.game_date_time #{p.game_date_time.inspect} sh[league][1] #{sh[league][1]}"
+				raise "sh2 #{sh2.inspect} league #{league}  p.game_date_time #{p.game_date_time.inspect} sh[league+Sea] #{sh[league+Sea]}"
 			end
 		end
-		sh[league][0]		=	p.game_date_time
+#		sh[league][0]		=	p.game_date_time
 	else
-		sh[league]		=	[p.game_date_time,	1]
+		puts "setting up #{league}"
+		sleep 1
+		sh[league+Cok]	==	false
+#		sh[league]		=	[p.game_date_time,	1]
+		sh[league+Sea]	=	1
 		sh2				<<	[league,	p.game_date_time,	1]
 		$csh2				=	true
 	#	puts "true 2"
 	end
-	p.season				=	sh[league][1]
+	p.season				=	sh[league+Sea]
 	p.week				=	wh[league][1]
 	begin
 		tid				=	Team.find_by_name(home).id
