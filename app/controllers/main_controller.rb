@@ -70,7 +70,7 @@ def makscr
 	outstr		+=	'</th><br>'
 	plen			=	pred.length.commify
 	sumhash		=	{}
-	oldweek		=	0
+	oldweek		=	pred.first.week
 	pred.each_with_index{|p,	pi|
 		sumhash,	outstr,	oldweek	=	summarytime(p.week,	oldweek,	sumhash,	beta,	outstr)
 		puts
@@ -81,8 +81,10 @@ def makscr
 		ht		=	th[p.home_team_id]
 		awt		=	th[p.away_team_id]
 		eva		=	[]
+		tmpstr		=	''
 		begin
-			outstr	+=	Tr+wrap(p.game_date_time.strftime("%B %d %Y  ")+' - '+ht+' '+p.actual_home_score.to_s+' - '+awt+' '+p.actual_away_score.to_s)
+			outstr	+=	'zzzzzzzzzzzzzzzzz' # for replacement later
+			tmpstr	=	Tr+wrap("aaaaaaaaaaaaGame #{(pi+1).commify} - "+p.game_date_time.strftime("%B %d %Y  ")+' - '+ht+' '+p.actual_home_score.to_s+' - '+awt+' '+p.actual_away_score.to_s+' -> $bbbbbbbbbbb' + (bet == 4 ? '' : " Bet is $#{bet.r2}"))
 		rescue
 			raise "outstr #{outstr.inspect}"
 		end
@@ -93,6 +95,11 @@ def makscr
 		eva.sort!{|a,	b|	b[1]<=>a[1]}
 #		sleep 10
 		eva2		=	[]
+		
+#		bet		=	bankroll	*	Fpc
+#		bet		=	4.0	if	bet	<	4.0
+#		bet		=	100	if	bet	>	100
+		
 		eva.each{|e|	#	now do from best down
 			b	=	e[0]
 			begin
@@ -115,6 +122,7 @@ def makscr
 #		puts "beta.inspect #{beta.inspect}"
 #		raise
 		puts 'playing bets'
+		gt				=	0.0	#	game total
 		beta.each{|b|
 			if	s[b].nil?
 				outstr	+=	wrap('')	# spacer
@@ -143,19 +151,23 @@ def makscr
 							odiv		=	Gdiv
 							bankroll	+=	bet	*	odds
 							sumhash	=	maintsh(sumhash,	bookie,	bet	*	odds)
+							gt		+=	bet	*	odds
 						else
 							odiv		=	Rdiv
 							bankroll	-=	bet
+							gt		-=	bet
 							sumhash	=	maintsh(sumhash,	bookie,	-bet)
 						end
 					else
 						if	(gres	==	0	&&	bethome &&	!betdraw)	||	(gres	==	1	&&	!bethome &&	!betdraw)	||	(gres	==	2	&&	betdraw)
 							odiv		=	Gdiv
 							bankroll	+=	bet	*	odds	
+							gt		+=	bet	*	odds
 							sumhash	=	maintsh(sumhash,	bookie,	bet	*	odds)
 						else
 							odiv		=	Rdiv
 							bankroll	-=	bet
+							gt		-=	bet
 							sumhash	=	maintsh(sumhash,	bookie,	-bet)
 						end
 					end
@@ -166,13 +178,34 @@ def makscr
 			end
 		}	#	next bet
 		outstr			+=	'</tr>'
+		# now to process the game total
+		tmpstr.gsub!('aaaaaaaaaaaa',	Gdiv)	if	gt	>	0.0
+		tmpstr.gsub!('aaaaaaaaaaaa',	Rdiv)	if	gt	<	0.0
+		tmpstr.gsub!('aaaaaaaaaaaa',	Ydiv)	if	gt	==	0.0
+		outstr.gsub!('zzzzzzzzzzzzzzzzz',	tmpstr)
+		outstr.gsub!('bbbbbbbbbbb',	gt.r2.commify)
 	}	#	next prediction
-	outstr		+=	Tr+"<td>Season Total</td>"
+	sumhash,	outstr,	oldweek	=	summarytime(oldweek+1,	oldweek,	sumhash,	beta,	outstr,	true)
+	yt			=	0.0
+	yc			=	0
+	beta.each{|b|
+		begin
+			yt	+=	sumhash['year'+b]
+		rescue
+#			raise "b is #{b}"
+		end
+		begin
+			yc	+=	sumhash['yearcount'+b]
+		rescue
+#			raise "b is #{b}"
+		end
+	}
+	outstr		+=	Tr+"<td>Season Total - #{yc.commify} bets -> $#{yt.r2.commify} </td>"
 	beta.each{|b|
 		begin
 			div		=	Gdiv	if	sumhash['year'+b]	>	0
 			div		=	Rdiv	if	sumhash['year'+b]	<	0
-			outstr	+=	wrap(div	+	sumhash['year'+b].r2.commify	+	'</div>')
+			outstr	+=	wrap(div	+	sumhash['yearcount'+b].commify	+	((sumhash['yearcount'+b] > 1) ? ' bets -> $' : ' bet -> $' )	+	sumhash['year'+b].r2.commify	+	'</div>')
 		rescue
 			outstr	+=	Na
 		end
@@ -183,7 +216,15 @@ def makscr
 	@main['pad']		=	false
 	@main['heading']	=	"Joe Guy's Soccer Betting - #{lname} - Season #{pid+1} - #{fdate.strftime("%B %d %Y  ")} to #{ldate.strftime("%B %d %Y  ")} Starting bankroll $100 - Ending Bankroll $#{bankroll.r2.commify} - Bet is $#{bet}"
 	@main['desc']		=	"Joe Guy's Soccer Betting - #{lname} - Season #{pid+1} - #{fdate.strftime("%B %d %Y  ")} to #{ldate.strftime("%B %d %Y  ")} Starting bankroll $100 - Ending Bankroll $#{bankroll.r2.commify} - Bet is $#{bet}"
-	@main['content']	=	"Joe Guy's Soccer Betting - #{lname} - Season #{pid+1} - #{fdate.strftime("%B %d %Y  ")} to #{ldate.strftime("%B %d %Y  ")} Starting bankroll $100 - Ending Bankroll $#{bankroll.r2.commify} - Bet is $#{bet}"
+	uta				=	[]
+	th.each{|k,	v|
+		uta			<<	v
+	}
+	bma				=	[]
+	beta.each{|b|
+		bma			<<	bth[b]
+	}
+	@main['content']	=	"#{lname} Starting bankroll $100 - Ending Bankroll $#{bankroll.r2.commify} - Bet is $#{bet} - #{uta.sort.join(',')} - #{bma.sort.join(',')}"
 	@main['rollwith']	=	outstr
 	render :template=>"main/main.rhtml"
 end
