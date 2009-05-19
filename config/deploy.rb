@@ -2,7 +2,8 @@
 set :application, "jgsbws"
 
 # The URL to your applications repository
-set :repository,  "SVN URL"
+set :repository,  "terry@beauty:~/Dropbox/My Work/rails/njg"
+set :scm, "git"
 
 # Uncomment this line if you're using SVN.  It makes deployments much faster
 set :deploy_via, :remote_cache
@@ -11,13 +12,13 @@ set :deploy_via, :remote_cache
 set :checkout, 'export'
 
 # The user you are using to deploy with (This user should have SSH access to your server)
-set :user, "Your SSH User"
+set :user, "tjlsmith"
 
 # We want to deploy everything under your user, and we don't want to use sudo
 set :use_sudo, false
 
 # Where to deploy your application to.
-set :deploy_to, "/domains/Your Domain/"
+set :deploy_to, "/domains/jgsbws.com/"
 
 # -------------------------------- Server Definitions --------------------------------
 # Define the hostname of your server.  If you have multiple servers for multiple purposes, we can define those below as well.
