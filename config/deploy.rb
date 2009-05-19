@@ -1,5 +1,5 @@
 # Your Applications "Name"
-set :application, "Application Name"
+set :application, "jgsbws"
 
 # The URL to your applications repository
 set :repository,  "SVN URL"
