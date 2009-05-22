@@ -2,7 +2,7 @@
 class MainController < ApplicationController
 # caches_page :index, :nfl, :notdone
 
-def wrap(str, wrapper='td')
+def mc_wrap(str, wrapper='td')
 	return "<#{wrapper}>#{str}</#{wrapper}>"
 end
 
@@ -124,6 +124,7 @@ def main
 #	logger.warn pred.inspect
 	pred.sort!{|a,b|a["game_date_time"]<=>b["game_date_time"]}
 	proba	=	[]
+	lname	=	nil
 	pred.each{|g|
 		proba	<<	g.prob_home_win_ats.r2 unless proba.include?(g.prob_home_win_ats.r2)
 		proba	<<	g.prob_away_win_ats.r2 unless proba.include?(g.prob_away_win_ats.r2)
@@ -137,6 +138,7 @@ def main
 	@main	=	[]
 	winprob	=	0.7
 	header	=	''
+	sport	=	nil
 	case leagueid
 		when 1 # nfl
 			# games run from sept to febuary
@@ -145,6 +147,8 @@ def main
 			header	=	"<h3>Joe Guy's #{year} National Football League Season - betting threshold is #{winprob}</h3>"
 			gap		=	Secondsinthreedays
 			gaptitle	=	'Week'
+			sport	=	'National Football League'
+			lname	=	'National Football League'
 		when 2 # nba
 			# games run from Nov to April
 			startdate	=	Time.local(year, 'nov', 1) 
@@ -155,6 +159,8 @@ def main
 			header	=	"<h3>Joe Guy's #{year} National Basketball Association Season - betting threshold is #{winprob}</h3>"
 			gap		=	Secondsperday - 1
 			gaptitle	=	'Day'
+			sport	=	'National Basketball Association'
+			lname	=	'National Basketball Association'
 		when 4 # ncaa football
 			# games run from aug to feb
 			startdate	=	Time.local(year, 'aug', 1) 
@@ -164,6 +170,8 @@ def main
 			header	=	"<h3>Joe Guy's #{year} NCAA Football Season - betting threshold is #{winprob}</h3>"
 			gap		=	Secondsinthreedays - 1
 			gaptitle	=	'Week'
+			sport	=	'NCAA Football'
+			lname	=	'NCAA Football'
 		when 5 # ncaa bb
 			# games run from Nov to April
 			startdate	=	Time.local(year, 'nov', 1) 
@@ -173,6 +181,8 @@ def main
 			header	=	"<h3>Joe Guy's #{year} NCAA Basketball Season - betting threshold is #{winprob}</h3>"
 			gap		=	Secondsperday - 1
 			gaptitle	=	'Day'
+			sport	=	'NCAA Basketball'
+			lname	=	'NCAA Basketball'
 		else
 #			logger.warn "main inspect"
 #			logger.warn(@main.inspect)
@@ -184,7 +194,7 @@ def main
 	pred.each{|g|
 		newpred	<<	g	if	g.game_date_time	>=	startdate	&&	g.game_date_time	<=	enddate
 	}
-	@main	=	do_season(newpred,	year,	winprob,	header,	gap,	gaptitle, (leagueid	==	5))
+	@main	=	do_season(newpred,	year,	winprob,	header,	gap,	gaptitle, (leagueid	==	5),	sport,	lname)
 end
 =begin
 =end

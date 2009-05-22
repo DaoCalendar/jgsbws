@@ -2,8 +2,11 @@
 set :application, "jgsbws"
 
 # The URL to your applications repository
-set :repository,  "terry@beauty:~/Dropbox/My Work/rails/njg"
+default_run_options[:pty] = true
+set :repository,  "git@github.com:tjlheartgit/jgsbws.git"
 set :scm, "git"
+set :scm_passphrase, "ujmjw0ck" #This is your custom users password
+set :user, "tjlheartgit"
 
 # Uncomment this line if you're using SVN.  It makes deployments much faster
 set :deploy_via, :remote_cache
@@ -28,7 +31,6 @@ set :server_name, "sh01.blueboxgrid.com"
 role :app, server_name
 role :web, server_name
 role :db,  server_name, :primary => true
-
 
 # -------------------------------- Final Config --------------------------------
 # This configuration option is helpful when using svn+ssh but doesn't hurt anything to leave it enabled always.

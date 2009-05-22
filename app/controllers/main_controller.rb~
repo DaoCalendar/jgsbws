@@ -95,7 +95,7 @@ def soccer
 				div		=	"<div id='red'>$"	if	!ss.nil?	&&	ss.amount	<	0.0
 				div		=	"<div id='green'>$"	if	!ss.nil?	&&	ss.amount	>	0.0
 				outstr2	=	div+ss.amount.r2.commify+'</div>'	unless	ss.nil?
-				#	 <a href="/main/main/2008?league=5">Joe Guy's 2008 NCAA Basketball Season</a><br>
+				#		<a href="/main/main/2008?league=5">Joe Guy's 2008 NCAA Basketball Season</a><br>
 				ls		=	'<a href="/main/makscr/'+"#{yh[keyy].chomp}?league=#{l[0]}"+'"'+">"+outstr2+'</a>'
 				outstr	+=	wrap(ls)
 			else

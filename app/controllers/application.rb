@@ -18,6 +18,29 @@ Tre				=	"</tr>"
 Na				=	'<td>No Action</td>'
 Betarray			=	%w(B365H B365D B365A BSH BSD BSA BWH BWD BWA GBH GBD GBA IWH IWD IWA LBH LBD LBA SBH SBD SBA WHH WHD WHA SJH SJD SJA VCH VCD VCA BbMxgt2p5 BbMxlt2p5 BbAvgt2p5 BbAvlt2p5 GBgt2p5 GBlt2p5 B365gt2p5 B365lt2p5)
 Betnames			= ['Bet365 home win odds -> EV -> $bankroll', 'Bet365 draw odds -> EV -> $bankroll', 'Bet365 away win odds -> EV -> $bankroll',  'Blue Square home win odds -> EV -> $bankroll', 'Blue Square draw odds -> EV -> $bankroll', 'Blue Square away win odds -> EV -> $bankroll',  'Bet&Win home win odds -> EV -> $bankroll', 'Bet&Win draw odds -> EV -> $bankroll', 'Bet&Win away win odds -> EV -> $bankroll',  'Gamebookers home win odds -> EV -> $bankroll', 'Gamebookers draw odds -> EV -> $bankroll', 'Gamebookers away win odds -> EV -> $bankroll',  'Interwetten home win odds -> EV -> $bankroll', 'Interwetten draw odds -> EV -> $bankroll', 'Interwetten away win odds -> EV -> $bankroll',  'Ladbrokes home win odds -> EV -> $bankroll', 'Ladbrokes draw odds -> EV -> $bankroll', 'Ladbrokes away win odds -> EV -> $bankroll',  'Sporting Odds home win odds -> EV -> $bankroll', 'Sporting Odds draw odds -> EV -> $bankroll', 'Sporting Odds away win odds -> EV -> $bankroll',  'Sportingbet home win odds -> EV -> $bankroll', 'Sportingbet draw odds -> EV -> $bankroll', 'Sportingbet away win odds -> EV -> $bankroll',  'Stan James home win odds -> EV -> $bankroll', 'Stan James draw odds -> EV -> $bankroll', 'Stan James away win odds -> EV -> $bankroll',  'Stanleybet home win odds -> EV -> $bankroll', 'Stanleybet draw odds -> EV -> $bankroll', 'Stanleybet away win odds -> EV -> $bankroll',  'VC Bet home win odds -> EV -> $bankroll', 'VC Bet draw odds -> EV -> $bankroll', 'VC Bet away win odds -> EV -> $bankroll',  'William Hill home win odds -> EV -> $bankroll', 'William Hill draw odds -> EV -> $bankroll', 'William Hill away win odds -> EV -> $bankroll']
+class Numeric
+  def commify()
+	  retme 	=	self.to_s.reverse.gsub(/(\d\d\d)(?=\d)(?!\d*\.)/,'\1,').reverse
+	  if retme.include?('.')
+		  retme	=	retme	+	'0' unless (retme.length - retme.index('.'))	==	3
+	  end
+	  return retme
+  end 
+  def currency()
+    sstr = to_s+".00"
+    sstr.gsub!("..",".") if sstr.include?("..")
+    sstr[0..sstr.index(".")+2]
+  end
+  def r2()
+#	return self
+	begin
+		return ((((self+0.005)*100.0).to_i) / 100.00)
+	rescue
+#		raise "r2 failed - self is #{self}"
+		return 0.0
+	end
+  end
+end
 class ApplicationController < ActionController::Base
 	# Be sure to include AuthenticationSystem in Application Controller instead
 	include AuthenticatedSystem
@@ -157,6 +180,7 @@ def hi
 	return ysh,	wsh
 end
 def ms(wsh, ysh, week, header=nil, gaptitle	=	'Week', gc	=	0)
+		summ	=	0.0
 		ta	=	[]
 		#week first
 #		ta	<<	'</table></td></tr>' # turn off previous table - tr is for wrapping table
@@ -228,8 +252,11 @@ def ms(wsh, ysh, week, header=nil, gaptitle	=	'Week', gc	=	0)
 		# year
 		ta	<<	"<td>#{ysudiv}Year #{week} SU wins -> #{ysuw} loses -> #{ysul} % win is #{ypcw}</div></td>"
 		ta	<<	"<td>#{yatsdiv}ATS wins -> #{yatsw} loses -> #{yatsl} % win is #{(100.0 * yatsw / (yatst == 0 ? 1 : yatst)).r2} profit is #{(yatsw - 1.1 * yatsl).r2}</div></td>"
+		summ	+=	yatsw - 1.1 * yatsl
 		ta	<<	"<td>#{youdiv}OU wins -> #{youright} loses -> #{youl} % win is #{(100.0 * youright / (yout == 0 ? 1 : yout)).r2} profit is #{(youright - 1.1 * youl).r2}</div></td>"
+		summ	+=	youright - 1.1 * youl
 		ta	<<	"<td>#{ymldiv}Money Line wins -> #{ymlw} loses -> #{ymll} % win is #{(100.0 * ymlw / ((ymlw+ymll) == 0 ? 1 : (ymlw+ymll))).r2} profit is #{ymlp.r2}</div></td>"
+		summ	+=	ymlp
 #		ta	<<	'</table></tr>' # turn off this table
 #		ta	<<	'<tr><table border="1">' # restart old table
 		ta	<<	'</tr>'
@@ -260,8 +287,9 @@ def ms(wsh, ysh, week, header=nil, gaptitle	=	'Week', gc	=	0)
 		sd		=	p	>	0.0	?	"<div id='green'>" : (p	==	0.0	?	"<div id='yellow'>" : "<div id='red'>")
 		outstr	+=	"<td>#{sd}Yearly Road Fav Stats - #{ysh['af'][0].commify} wins #{ysh['af'][1].commify} loses - Profit is #{p.commify}</div></td>"
 		outstr	+=	"</tr>"
+#		raise "summ #{summ} outstr #{outstr.inspect}"
 		ta	<<	outstr
-		return ta
+		return [ta,	summ]
 	end
 
 	def nameconv(name, league)
@@ -531,8 +559,13 @@ def ms(wsh, ysh, week, header=nil, gaptitle	=	'Week', gc	=	0)
 	end # case
 end # def nameconv
 
-def	do_season(newpred,	year,	winprob	=	0.7,	header	=	nil, gap	=	Secondsinthreedays,	gaptitle	=	"Week", mm = false)
+def	do_season(newpred,	year,	winprob	=	0.7,	header	=	nil, gap	=	Secondsinthreedays,	gaptitle	=	"Week", mm = false, sport	=	nil,	lname	=	nil)
+	raise 'need a sport'		if	sport.nil?
+	raise 'need a league'		if	lname.nil?
+	fdate			=	newpred.first.game_date_time
+	ldate				=	newpred.last.game_date_time
 	week			=	0
+	bet				=	4
 	currentdate		=	nil
 	weeklysummary	=	nil
 	returnme			=	[]
@@ -545,9 +578,16 @@ def	do_season(newpred,	year,	winprob	=	0.7,	header	=	nil, gap	=	Secondsinthreeda
 	theader			=	''
 	gamecount		=	1
 	gapcount			=	1
+	bankroll			=	0.0
+	utl				=	[]	#	unique team list
+	utlid				=	[]	#	unique team list ids
 	newpred.each{|g|
 		next if g.actual_home_score	<=	0	or g.actual_away_score	<=	0	or	g.game_total	==	0
-		winprob	=	0.65	if	mm	and g.game_date_time	>=	Time.local(2_009,3,20)
+		unless utlid.include?(g.home_team_id)
+			utl	<<	Team.find(g.home_team_id).name
+			utlid	<<	g.home_team_id
+		end
+		winprob		=	0.65	if	mm	and g.game_date_time	>=	Time.local(2_009,3,20)
 		currentdate	=	g.game_date_time	if	currentdate.nil?
 		if (g.game_date_time	-	currentdate)	>	gap
 			logger.warn("(g.game_date_time	-	currentdate) #{(g.game_date_time	-	currentdate)}")
@@ -555,7 +595,9 @@ def	do_season(newpred,	year,	winprob	=	0.7,	header	=	nil, gap	=	Secondsinthreeda
 #			raise
 			week	+=	1
 			#	render partial here if any data for it
-			trm		<<	ms(wsh, ysh, week,	gaptitle,nil,	gapcount)
+			trma		=	nil
+			trma,	bankroll	=	ms(wsh, ysh, week,	gaptitle,nil,	gapcount)
+			trm		<<	trma.dup
 			gapcount	+=	1
 			dummy,	wsh		=	hi()
 		end
@@ -616,15 +658,31 @@ def	do_season(newpred,	year,	winprob	=	0.7,	header	=	nil, gap	=	Secondsinthreeda
 
 		
 		# end of row
-		trm	<<	'<tr>'+thisrow+'</tr>'
+		trm		<<	'<tr>'+thisrow+'</tr>'
 		header	=	'<tr>'+theader+'</tr>'	if 	header.empty?
 	}
 	returnme	<<	header
-	trm		<<	ms(wsh, ysh, week, 'End of Year Stats')
+	trma		=	nil
+	trma,	bankroll		=	ms(wsh, ysh, week, 'End of Year Stats')
+	trm		<<	trma.dup
 	returnme	<<	trm
 	returnme	<<	"</table>"
 #	raise "returnme length is #{returnme.length} #{returnme.inspect}"
-end
+	rm			=	{}
+	rm['rollwith']	=	returnme
+	bankroll		=	bankroll.to_f
+#	<%	rw			=	@main['rollwith']	%>
+#	<%	@heading		=	@main['heading']	if@main.has_key?('heading')		-%>
+#	<%	@content		=	@main['content']	-%>
+#	<%	@desc		=	@main['desc']		%>
+#	@main['heading']	=	"Joe Guy's Soccer Betting - #{lname} - Season #{pid+1} - #{fdate.strftime("%B %d %Y  ")} to #{ldate.strftime("%B %d %Y  ")} Starting bankroll $100 - Ending Bankroll $#{bankroll.r2.commify} - Bet is $#{bet}"
+#	@main['desc']		=	"Joe Guy's Soccer Betting - #{lname} - Season #{pid+1} - #{fdate.strftime("%B %d %Y  ")} to #{ldate.strftime("%B %d %Y  ")} Starting bankroll $100 - Ending Bankroll $#{bankroll.r2.commify} - Bet is $#{bet}"
+	rm['heading']	=	"Joe Guy's #{sport} Betting - #{lname} - #{year} - #{fdate.strftime("%B %d %Y  ")} to #{ldate.strftime("%B %d %Y  ")} Starting bankroll $100 - Ending Bankroll $#{bankroll.r2.commify} - Bet is $#{bet}"
+	rm['content']	=	"Joe Guy's #{sport} Betting - #{lname} - #{year} - #{fdate.strftime("%B %d %Y  ")} to #{ldate.strftime("%B %d %Y  ")} Starting bankroll $100 - Ending Bankroll $#{bankroll.r2.commify} - Bet is $#{bet} - spread, moneyline , money line - #{utl.sort.join(',')}"
+	rm['desc']	=	"Joe Guy's #{sport} Betting - #{lname} - #{year} - #{fdate.strftime("%B %d %Y  ")} to #{ldate.strftime("%B %d %Y  ")} Starting bankroll $100 - Ending Bankroll $#{bankroll.r2.commify} - Bet is $#{bet} - spread, moneyline , money line - #{utl.sort.join(',')}"
+	@main		=	rm.dup
+end	#	do_season
+
 def calcatsbet(g,	ysh,	wsh, winprob)
 	supick		=	nil
 	supick		=	g.home_team_id	if	g.prob_home_win_su			>=	winprob
@@ -723,9 +781,8 @@ def summarytime(pweek,	oldweek,	sumhash,	beta,	outstr,	bph,	forced	=	false)
 #		puts "beta.inspect #{beta.inspect}"
 #		raise
 		puts "oldweek #{oldweek} pweek #{pweek}"
-		oldweek		=	pweek
-		st			=	0.0
-		wc			=	0
+		st		=	0.0
+		wc		=	0
 		beta.each{|b|
 			begin
 				wc	+=	sumhash['weekcount'+b]
@@ -735,7 +792,8 @@ def summarytime(pweek,	oldweek,	sumhash,	beta,	outstr,	bph,	forced	=	false)
 		}
 		div		=	Gdiv	if	st	>	0
 		div		=	Rdiv	if	st	<	0
-		outstr		+=	Tr+"<td>#{div}Week #{oldweek} - #{wc} bets Total -> $#{st.r2.commify}</div></td>"
+		outstr	+=	Tr+"<td>#{div}Week #{oldweek} - #{wc} bets Total -> $#{st.r2.commify}</div></td>"
+		oldweek	=	pweek
 		oldleague	=	''
 		beta.each{|b|
 			begin
@@ -749,10 +807,11 @@ def summarytime(pweek,	oldweek,	sumhash,	beta,	outstr,	bph,	forced	=	false)
 				unless	oldleague	==	b[0,	2]
 					nl		=	b[0,	2]
 #					puts "nl #{nl}"
-					tstr		=	"Total Won from #{nl} -> $#{bph[nl].r2.commify}"
+					tstr		=	"Total Profit from #{nl} -> $#{bph[nl].r2.commify}"	if	bph[nl]	>	0.0
+					tstr		=	Rdiv+"Total Loss from #{nl} -> $#{bph[nl].r2.commify}</div>"	if	bph[nl]	<	0.0
 					oldleague	=	nl
 				end
-				outstr	+=	wrap(div	+	tstr+	wc.commify+(wc > 1 ? ' bets -> $' : ' bet -> $' )+	profit.r2.commify	+	'</div>')
+				outstr	+=	wrap(div	+	tstr+	wc.commify+' '+b+' '+(wc > 1 ? ' bets -> $' : ' bet -> $' )+	profit.r2.commify	+	'</div>')
 				profit	=	nil
 			rescue
 				outstr	+=	Na
@@ -788,18 +847,21 @@ def makeswp(lid,	pid)
 	}
 	puts params
 #	raise
-	lid			=	params['league']
-	pid			=	params['id'].to_i
-	sid			=	League.find_by_short_league(lid).id
-	lname		=	League.find_by_short_league(lid).name
-	preds		=	Prediction.find_all_by_league(sid)
-	pred			=	[]
-	bph			=	{}
+	lid		=	params['league']
+	pid		=	params['id'].to_i
+	sid		=	League.find_by_short_league(lid).id
+	lname	=	League.find_by_short_league(lid).name
+	preds	=	nil
+	preds	=	Prediction.find_all_by_league(sid)
+	raise "no predictions for league >#{sid}< params #{params.inspect} lname #{lname} preds #{preds.inspect}"	if	preds.nil?
+	pred		=	[]
+	bph		=	{}
 	puts 'filtering data for season'
 	preds.each{|p|
 		pred	<<	p	if	p.season	==	pid	&&	!p.soccer_bet.nil?
 	}
-	puts "season #{pid} league id #{sid} pred length #{pred.length}"
+	raise "season #{pid} league id #{sid} pred length #{pred.length} preds length #{preds.length}"	if	pred.empty?
+#	sleep 5
 	puts 'building team name hash, list of played bets and soccer hash'
 	beta		=	[]
 #	nc	=	0
@@ -811,8 +873,8 @@ def makeswp(lid,	pid)
 		th[p.away_team_id]		=	Team.find(p.away_team_id).name	unless	th.has_key?(p.away_team_id)
 		next if p.soccer_bet.nil?
 #		puts p.soccer_bet
-		s	=	SoccerBet.find(p.soccer_bet)
-		sbh[p.soccer_bet]	=	s
+		s					=	SoccerBet.find(p.soccer_bet)
+		sbh[p.soccer_bet]		=	s
 		raise if s.nil?
 #		puts s.inspect
 #		puts s.to_a.inspect
@@ -999,32 +1061,9 @@ def makeswp(lid,	pid)
 	beta.each{|b|
 		bma			<<	bth[b]
 	}
-	@main['content']	=	"#{lname} Starting bankroll $100 - Ending Bankroll $#{bankroll.r2.commify} - Bet is $#{bet} - #{uta.sort.join(',')} - #{bma.sort.join(',')}"
+	@main['content']	=	"#{lname} Betting starting bankroll $100 - Ending Bankroll $#{bankroll.r2.commify} - Bet is $#{bet} - #{uta.sort.join(',')} - #{bma.sort.join(',')}"
 	@main['rollwith']	=	outstr
 #	return @main
   end	#	makeswp
 end # class ApplicationController
 
-class Numeric
-  def commify()
-	  retme 	=	self.to_s.reverse.gsub(/(\d\d\d)(?=\d)(?!\d*\.)/,'\1,').reverse
-	  if retme.include?('.')
-		  retme	=	retme	+	'0' unless (retme.length - retme.index('.'))	==	3
-	  end
-	  return retme
-  end 
-  def currency()
-    sstr = to_s+".00"
-    sstr.gsub!("..",".") if sstr.include?("..")
-    sstr[0..sstr.index(".")+2]
-  end
-  def r2()
-#	return self
-	begin
-		(((self+0.005)*100.0).to_i) / 100.00
-	rescue
-#		raise "r2 failed - self is #{self}"
-		return 0.0
-	end
-  end
-end
