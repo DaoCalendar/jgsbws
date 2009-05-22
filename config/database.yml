@@ -30,7 +30,7 @@ test:
 
 production:
   adapter: mysql
-  database: jgsbws_production
-  username: root
+  database: tjlsmith_production
+  username: tjlsmith_jg
   password: ujmjw0ck
-  host: localhost
+  host: 127.0.0.1

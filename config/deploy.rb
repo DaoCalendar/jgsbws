@@ -4,7 +4,7 @@ set :application, "jgsbws"
 # The URL to your applications repository
 default_run_options[:pty] = true
 set :repository,  "git@github.com:tjlheartgit/jgsbws.git"
-set :scm, "git"
+set :scm, :git
 set :scm_passphrase, "ujmjw0ck" #This is your custom users password
 set :user, "tjlheartgit"
 
@@ -59,7 +59,7 @@ namespace :deploy do
   task :stop do
     run "rm #{deploy_to}public_html"
   end
-
+  
   namespace :web do
     task :disable do
       run "cd #{deploy_to} && rm public_html && ln -s static_site public_html"
