@@ -38,24 +38,26 @@ def soccer
 	years	=	[]
 	sa.each{|y|
 		ta	=	y.split(',')
-		yh[[ta[0],	ta[2]]]	=	ta[2]
+		yh[[ta[0],	ta[1]]]	=	ta[2]
 		years	<<	[ta[1],	ta[2]]
 	}
 	puts "yh.inspect #{yh.inspect}"
 #	raise
 	years.uniq!
-	years.sort!
-	puts years.inspect
+	years.sort!{|a,b|ysort(a,	b)}
+#	raise years.inspect
 #	raise
-	outstr	=	'<h2>Soccer Matrix<h2><br><h3>The Rules:</h3><br>Start with $100, compute prob of home win, away win or draw via my propriatary method, compute EV (expected value of bet - just prob of event times odds - anything over 1.0 is good) bet 4 percent of bankroll in $4 increments (OR one $4 bet if bankroll is less than $100) on bets sorted by best EV on down!<br><table border = "1">'
+	outstr	=	'<h2>Soccer Matrix<h2><br><h3>The Rules:</h3><br>Start with $100, compute prob of home win, away win or draw via my propriatary method, compute EV (expected value of bet - just prob of event times odds - anything over 1.0 is good) bet 4 percent of bankroll in $4 increments (OR one $4 bet if bankroll is less than $100) on bets sorted by best EV on down! (Provided it is greater then 1.0 - when there is no good EV - there is no bet!)<br><table border = "1">'
 	outstr	+=	"<th>"
 	years.each{|y|outstr	+=	wrap("Season "+y[1]+' '+y[0])}
 	outstr	+=	"</th>"
-	
-	lh	=	{}
-	
+
+	lh		=	{}
+#	ch		=	{}
+
 	sa.each{|s|
 		ta				=	s.split(',')
+#		ch[ta[0],ta[1] .to_i]	=	ta[2].to_i	# D1,1997,5
 		lname			=	''
 		lid				=	0
 		if lh.has_key?(ta[0])
@@ -76,14 +78,17 @@ def soccer
 	puts la.inspect
 #	raise
 	la.each{|l|
+#		raise l.inspect
 		outstr	+=	"<tr>#{wrap(l[1][0])}"
 #		puts l
 #		raise
 		years.each{|y|
+			# y0 is year y1 is season
 			puts "y.inspect #{y.inspect}"
-			keyy	=	[l[0],	y[1].to_s]
+			keyy	=	[l[0],	y[0].to_s]	#	keyy	is league plus year
 			puts "keyy #{keyy.inspect}"
-			if yh.has_key?(keyy)
+#			if yh.has_key?(keyy)
+			if yh[keyy]	==	y[1]	#	league and year match season?
 				puts yh[keyy].inspect
 				keyy2	=	l[0]+'^'+y[1].to_s.chomp
 				puts "keyy2 >#{keyy2}<"
@@ -96,7 +101,8 @@ def soccer
 				div		=	"<div id='green'>$"	if	!ss.nil?	&&	ss.amount	>	0.0
 				outstr2	=	div+ss.amount.r2.commify+'</div>'	unless	ss.nil?
 				#		<a href="/main/main/2008?league=5">Joe Guy's 2008 NCAA Basketball Season</a><br>
-				ls		=	'<a href="/main/makscr/'+"#{yh[keyy].chomp}?league=#{l[0]}"+'"'+">"+outstr2+'</a>'
+				title		=	"#{l[1][0]} - Season #{yh[keyy].chomp} - #{y[0]}"
+				ls		=	'<a href="/main/makscr/'+"#{yh[keyy].chomp}?league=#{l[0]}"+'"'+"title='#{title}'>"+outstr2+'</a>'
 				outstr	+=	wrap(ls)
 			else
 				outstr	+=	wrap('')

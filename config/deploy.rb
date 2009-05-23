@@ -3,10 +3,11 @@ set :application, "jgsbws"
 
 # The URL to your applications repository
 default_run_options[:pty] = true
-set :repository,  "git@github.com:tjlheartgit/jgsbws.git"
+set :repository,  "git@github.com:tjlsmith/jgsbws.git"
 set :scm, :git
 set :scm_passphrase, "ujmjw0ck" #This is your custom users password
-set :user, "tjlheartgit"
+set :user, "tjlsmith"
+#set :user, "git"
 
 # Uncomment this line if you're using SVN.  It makes deployments much faster
 set :deploy_via, :remote_cache
@@ -15,7 +16,8 @@ set :deploy_via, :remote_cache
 set :checkout, 'export'
 
 # The user you are using to deploy with (This user should have SSH access to your server)
-set :user, "tjlsmith"
+set :user, "tjlsmith"	# has to be this or 'connection failed for: sh01.blueboxgrid.com (Net::SSH::AuthenticationFailed: git)'
+#	set :user, "git"
 
 # We want to deploy everything under your user, and we don't want to use sudo
 set :use_sudo, false

@@ -48,6 +48,12 @@ class ApplicationController < ActionController::Base
 	before_filter :login_from_cookie
 	# Pick a unique cookie name to distinguish our session data from others'
 	session :session_key => '_jgsbws_session_id'
+	def	ysort(a,	b)
+#		raise "a #{a.inspect} b #{b.inspect} a[1].chomp.to_i #{a[1].chomp.to_i} a[1].to_i #{a[1].to_i}"
+		#	[year,	season]
+		return a[1].to_i<=>b[1].to_i	if	a[0].to_i	==	b[0].to_i
+		return a[0].to_i<=>b[0].to_i
+	end
 	def mlhlpr(p)
 		# process moneyline
 		return ["No Moneyline", 0.0, nil, 0.0, 0.0, 0.0, false] if p.moneyline_home == -110 and p.moneyline_away == -110 or (p.moneyline_home == 0 or p.moneyline_away == 0)
@@ -893,7 +899,7 @@ def makeswp(lid,	pid)
 	fdate	=	pred[0].game_date_time
 	ldate		=	pred.last.game_date_time
 	outstr	=	''
-	outstr	=	"<h2>#{lname} - Season #{pid+1} - #{fdate.strftime("%B %d %Y  ")} to #{ldate.strftime("%B %d %Y  ")}</h2> Starting bankroll $#{bankroll.commify} - Bet is $#{bet}<br>"
+	outstr	=	"<h2>#{lname} - Season #{pid} - #{fdate.strftime("%B %d %Y  ")} to #{ldate.strftime("%B %d %Y  ")}</h2> Starting bankroll $#{bankroll.commify} - Bet is $#{bet}<br>"
 	outstr	+=	'<table border="1"><th>'
 	beta.each{|b|
 		outstr	+=	wrap(bth[b])
