@@ -18,6 +18,21 @@ Tre				=	"</tr>"
 Na				=	'<td>No Action</td>'
 Betarray			=	%w(B365H B365D B365A BSH BSD BSA BWH BWD BWA GBH GBD GBA IWH IWD IWA LBH LBD LBA SBH SBD SBA WHH WHD WHA SJH SJD SJA VCH VCD VCA BbMxgt2p5 BbMxlt2p5 BbAvgt2p5 BbAvlt2p5 GBgt2p5 GBlt2p5 B365gt2p5 B365lt2p5)
 Betnames			= ['Bet365 home win odds -> EV -> $bankroll', 'Bet365 draw odds -> EV -> $bankroll', 'Bet365 away win odds -> EV -> $bankroll',  'Blue Square home win odds -> EV -> $bankroll', 'Blue Square draw odds -> EV -> $bankroll', 'Blue Square away win odds -> EV -> $bankroll',  'Bet&Win home win odds -> EV -> $bankroll', 'Bet&Win draw odds -> EV -> $bankroll', 'Bet&Win away win odds -> EV -> $bankroll',  'Gamebookers home win odds -> EV -> $bankroll', 'Gamebookers draw odds -> EV -> $bankroll', 'Gamebookers away win odds -> EV -> $bankroll',  'Interwetten home win odds -> EV -> $bankroll', 'Interwetten draw odds -> EV -> $bankroll', 'Interwetten away win odds -> EV -> $bankroll',  'Ladbrokes home win odds -> EV -> $bankroll', 'Ladbrokes draw odds -> EV -> $bankroll', 'Ladbrokes away win odds -> EV -> $bankroll',  'Sporting Odds home win odds -> EV -> $bankroll', 'Sporting Odds draw odds -> EV -> $bankroll', 'Sporting Odds away win odds -> EV -> $bankroll',  'Sportingbet home win odds -> EV -> $bankroll', 'Sportingbet draw odds -> EV -> $bankroll', 'Sportingbet away win odds -> EV -> $bankroll',  'Stan James home win odds -> EV -> $bankroll', 'Stan James draw odds -> EV -> $bankroll', 'Stan James away win odds -> EV -> $bankroll',  'Stanleybet home win odds -> EV -> $bankroll', 'Stanleybet draw odds -> EV -> $bankroll', 'Stanleybet away win odds -> EV -> $bankroll',  'VC Bet home win odds -> EV -> $bankroll', 'VC Bet draw odds -> EV -> $bankroll', 'VC Bet away win odds -> EV -> $bankroll',  'William Hill home win odds -> EV -> $bankroll', 'William Hill draw odds -> EV -> $bankroll', 'William Hill away win odds -> EV -> $bankroll']
+
+Bookienamehash	= {}
+Bookienamehash['B3']	=	'Bet365'
+Bookienamehash['BS']	=	'Blue Square'
+Bookienamehash['BW']	=	'Bet & Win'
+Bookienamehash['GB']	=	'Gamebookers'
+Bookienamehash['IW']	=	'Interwetten'
+Bookienamehash['LB']	=	'Ladbrokes'
+Bookienamehash['SO']	=	'Sporting Odds'
+Bookienamehash['SB']	=	'Sportingbet'
+Bookienamehash['SJ']	=	'Stan James'
+Bookienamehash['SY']	=	'Stanleybet'
+Bookienamehash['VC']	=	'VC Bet'
+Bookienamehash['WH']	=	'William Hill'
+
 class Numeric
   def commify()
 	  retme 	=	self.to_s.reverse.gsub(/(\d\d\d)(?=\d)(?!\d*\.)/,'\1,').reverse
@@ -813,8 +828,8 @@ def summarytime(pweek,	oldweek,	sumhash,	beta,	outstr,	bph,	forced	=	false)
 				unless	oldleague	==	b[0,	2]
 					nl		=	b[0,	2]
 #					puts "nl #{nl}"
-					tstr		=	"Total Profit from #{nl} -> $#{bph[nl].r2.commify}"	if	bph[nl]	>	0.0
-					tstr		=	Rdiv+"Total Loss from #{nl} -> $#{bph[nl].r2.commify}</div>"	if	bph[nl]	<	0.0
+					tstr		=	"Total Profit from #{Bookienamehash[nl]} -> $#{bph[nl].r2.commify}"	if	bph[nl]	>	0.0
+					tstr		=	Rdiv+"Total Loss from #{Bookienamehash[nl]} -> $#{bph[nl].r2.commify}</div>"	if	bph[nl]	<	0.0
 					oldleague	=	nl
 				end
 				outstr	+=	wrap(div	+	tstr+	wc.commify+' '+b+' '+(wc > 1 ? ' bets -> $' : ' bet -> $' )+	profit.r2.commify	+	'</div>')
