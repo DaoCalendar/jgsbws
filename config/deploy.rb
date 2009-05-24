@@ -5,7 +5,7 @@ set :application, "jgsbws"
 default_run_options[:pty] = true
 set :repository,  "git@github.com:tjlsmith/jgsbws.git"
 set :scm, :git
-set :scm_passphrase, "ujmjw0ck" #This is your custom users password
+#	set :scm_passphrase, "ujmjw0ck" #This is your custom users password
 set :user, "tjlsmith"
 #set :user, "git"
 

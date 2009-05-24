@@ -53,7 +53,9 @@ def soccer
 	years.sort!{|a,b|ysort(a,	b)}
 #	raise years.inspect
 #	raise
-	outstr	=	'<h2>Soccer Matrix<h2><br><h3>The Rules:</h3><br>Start with $100, compute prob of home win, away win or draw via my propriatary method, compute EV (expected value of bet - just prob of event times odds - anything over 1.0 is good) bet 4 percent of bankroll in $4 increments (OR one $4 bet if bankroll is less than $100) on bets sorted by best EV on down! (Provided it is greater then 1.0 - when there is no good EV - there is no bet!)<br><table border = "1">'
+	bankroll	=	1_000.0
+	bet		=	bankroll	*	Fpc
+	outstr	=	"<h2>Soccer Matrix<h2><br><h3>The Rules:</h3><br>Start with $#{bankroll.commify}, compute prob of home win, away win or draw via my propriatary method, compute EV (expected value of bet - just prob of event times odds - anything over 1.0 is good) bet 4 percent of bankroll in $#{bet} increments (OR one $#{bet} bet if bankroll is less than $#{bankroll.commify}) on bets sorted by best EV on down! (Provided it is greater then 1.0 - when there is no good EV - there is no bet!)<br>"+'<table border = "1">'
 	outstr	+=	"<th>"
 #	years.each{|y|outstr	+=	wrap("Season "+y[1]+' '+y[0])}
 	uy.each{|y|outstr	+=	wrap(y)}
@@ -116,7 +118,8 @@ def soccer
 				outstr2	=	div+ss.amount.r2.commify+'</div>'	unless	ss.nil?
 				#		<a href="/main/main/2008?league=5">Joe Guy's 2008 NCAA Basketball Season</a><br>
 				title		=	"#{l[1][0]} - Season #{yh[keyy].chomp} - #{y}"
-				ls		=	'<a href="/main/makscr/'+"#{season}?league=#{l[0]}"+'"'+"title='#{title}'>"+outstr2+'</a>'
+				ls		=	'<a href="/main/makscr/'+"#{season}?league=#{l[0]}"+'"'+"title='#{title}'>"+outstr2+'</a>'	unless	ss.nil?
+				ls		=	outstr2	if	ss.nil?
 				outstr	+=	wrap(ls)
 			else
 				outstr	+=	wrap('')
