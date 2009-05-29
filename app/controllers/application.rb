@@ -354,7 +354,7 @@ def ms(wsh, ysh, week, header=nil, gaptitle	=	'Week', gc	=	0)
 		when '*central michigan*'
 			return 'Central Michigan Chippewas'
 		when '*cincinnati u*'
-			return 'Cincinatti Bearcats'
+			return 'Cincinnatti Bearcats'
 		when '*clemson*'
 			return 'Clemson Tigers'
 		when '*colorado state*'
@@ -815,7 +815,7 @@ def summarytime(pweek,	oldweek,	sumhash,	beta,	outstr,	bph,	prevweeksprofit,	for
 		}
 		div		=	Gdiv	if	st	>	0
 		div		=	Rdiv	if	st	<	0
-		outstr	+=	Tr+"<td>#{div}Week #{oldweek} - #{wc} bets Total -> $#{st.r2.commify} yyyyWeeks profit -> $xxxxxxxxxx</div></div></td>"
+		toutstr	=	Tr+"<td>#{div}Week #{oldweek} - #{wc} bets Total -> $#{st.r2.commify} yyyyWeeks profit -> $xxxxxxxxxx</div></div></td>"
 		oldweek	=	pweek
 		oldleague	=	''
 		beta.each{|b|
@@ -835,18 +835,19 @@ def summarytime(pweek,	oldweek,	sumhash,	beta,	outstr,	bph,	prevweeksprofit,	for
 					tstr		=	Rdiv+"Total Loss from #{Bookienamehash[nl]} -> $#{bph[nl].r2.commify}</div>"	if	bph[nl]	<	0.0
 					oldleague	=	nl
 				end
-				outstr	+=	wrap(div	+	tstr+	wc.commify+' '+b+' '+(wc > 1 ? ' bets -> $' : ' bet -> $' )+	profit.r2.commify	+	'</div>')
+				toutstr	+=	wrap(div	+	tstr+	wc.commify+' '+b+' '+(wc > 1 ? ' bets -> $' : ' bet -> $' )+	profit.r2.commify	+	'</div>')
 				profit	=	nil
 			rescue
-				outstr	+=	Na
+				toutstr	+=	Na
 			end
 		}
-		outstr			+=	Tre
+		toutstr			+=	Tre # table row end
 		twp				=	weekstotalprofits	-	prevweeksprofit
-		outstr.gsub!('xxxxxxxxxx',	twp.r2.commify)
-		outstr.gsub!('yyyy',	Gdiv)	if	twp	>	0.0
-		outstr.gsub!('yyyy',	Rdiv)	if	twp	<	0.0
-		outstr.gsub!('yyyy',	Ydiv)	if	twp	==	0.0
+		toutstr.gsub!('xxxxxxxxxx',	twp.r2.commify)
+		toutstr.gsub!('yyyy',	Gdiv)	if	twp	>	0.0
+		toutstr.gsub!('yyyy',	Rdiv)	if	twp	<	0.0
+		toutstr.gsub!('yyyy',	Ydiv)	if	twp	==	0.0
+		outstr	<<	toutstr.dup
 		return weekstotalprofits,	sumhash,	outstr,	oldweek
 	else
 		#	not done
@@ -924,20 +925,21 @@ def makeswp(lid,	pid)
 	bet		=	bankroll	*	Fpc
 	fdate	=	pred[0].game_date_time
 	ldate		=	pred.last.game_date_time
-	outstr	=	''
-	outstr	=	"<h2>#{lname} - Season #{pid} - #{fdate.strftime("%B %d %Y  ")} to #{ldate.strftime("%B %d %Y  ")}</h2> Starting bankroll $#{bankroll.commify} - Bet is $#{bet}<br>"
-	outstr	+=	'<table border="1"><th>'
+	outerstr	=	"<h2>#{lname} - Season #{pid} - #{fdate.strftime("%B %d %Y  ")} to #{ldate.strftime("%B %d %Y  ")}</h2> Starting bankroll $#{bankroll.commify} - Bet is $#{bet}<br>"
+	outerstr	+=	'<table border="1"><th>'
+	outstr	=	[]
+	thisrow	=	''
 	beta.each{|b|
-		outstr	+=	wrap(bth[b])
+		thisrow	+=	wrap(bth[b])
 	}
-	outstr		+=	'</th><br>'
+	thisrow		+=	'</th><br>'
 	plen			=	pred.length.commify
 	sumhash		=	{}
 	oldweek		=	pred.first.week
 	sumofprevweeksprofit	=	0.0
 	pred.each_with_index{|p,	pi|
 		puts "sending sumofprevweeksprofit #{sumofprevweeksprofit}"
-		sumofprevweeksprofit,	sumhash,	outstr,	oldweek	=	summarytime(p.week,	oldweek,	sumhash,	beta,	outstr,	bph,	sumofprevweeksprofit)
+		sumofprevweeksprofit,	sumhash,	thisrow,	oldweek	=	summarytime(p.week,	oldweek,	sumhash,	beta,	thisrow,	bph,	sumofprevweeksprofit)
 		puts "sumofprevweeksprofit #{sumofprevweeksprofit}"
 #		sleep 1
 		puts
@@ -950,10 +952,10 @@ def makeswp(lid,	pid)
 		eva		=	[]
 		tmpstr	=	''
 		begin
-			outstr	+=	'zzzzzzzzzzzzzzzzz' 	# for replacement later
+			thisrow	+=	'zzzzzzzzzzzzzzzzz' 	# for replacement later
 			tmpstr	=	Tr+wrap("aaaaaaaaaaaaGame #{(pi+1).commify} - "+p.game_date_time.strftime("%B %d %Y  ")+' - '+ht+' '+p.actual_home_score.to_s+' - '+awt+' '+p.actual_away_score.to_s+' -> $bbbbbbbbbbb' + (bet == 4 ? '' : " Bet is $#{bet.r2}"))
 		rescue
-			raise "outstr #{outstr.inspect}"
+			raise "thisrow #{thisrow.inspect}"
 		end
 		beta.each{|b|
 			eva	<<	[b,	(s[b+'_ev'].nil? ? 0.0 : s[b+'_ev'])]	# unless	s[b].nil?
@@ -963,7 +965,7 @@ def makeswp(lid,	pid)
 #		sleep 10
 		eva2		=	[]
 		
-#		bet		=	bankroll	*	Fpc
+#		bet		=	(bankroll	*	Fpc).to_i
 #		bet		=	4.0	if	bet	<	4.0
 #		bet		=	100	if	bet	>	100
 		
@@ -993,7 +995,7 @@ def makeswp(lid,	pid)
 		oc				=	[]	#	odds count for computation of margin
 		beta.each{|b|
 			if	s[b].nil?
-				outstr	+=	wrap('')		# spacer
+				thisrow	+=	wrap('')		# spacer
 			else
 				odiv		=	nil
 				margin	=	-1
@@ -1053,19 +1055,21 @@ def makeswp(lid,	pid)
 					rescue
 						bph[bookie[0,2]]	=	prize
 					end
-					outstr	+=	wrap(odiv+s[b].to_s+' -> '+s[b+'_ev'].to_s+"<br> -> $#{bankroll.r2.commify}"+margintext+'</div>')
+					thisrow	+=	wrap(odiv+s[b].to_s+' -> '+s[b+'_ev'].to_s+"<br> -> $#{bankroll.r2.commify}"+margintext+'</div>')
 				else
-					outstr	+=	wrap(s[b].to_s+' -> '+s[b+'_ev'].to_s+"<br> -> $#{bankroll.r2.commify}"+margintext)
+					thisrow	+=	wrap(s[b].to_s+' -> '+s[b+'_ev'].to_s+"<br> -> $#{bankroll.r2.commify}"+margintext)
 				end
 			end
 		}	#	next bet
-		outstr			+=	'</tr>'
+		thisrow			+=	'</tr>'
 		# now to process the game total
 		tmpstr.gsub!('aaaaaaaaaaaa',	Gdiv)	if	gt	>	0.0
 		tmpstr.gsub!('aaaaaaaaaaaa',	Rdiv)	if	gt	<	0.0
 		tmpstr.gsub!('aaaaaaaaaaaa',	Ydiv)	if	gt	==	0.0
-		outstr.gsub!('zzzzzzzzzzzzzzzzz',	tmpstr)
-		outstr.gsub!('bbbbbbbbbbb',	gt.r2.commify)
+		thisrow.gsub!('zzzzzzzzzzzzzzzzz',	tmpstr)
+		thisrow.gsub!('bbbbbbbbbbb',	gt.r2.commify)
+		outstr	<<	thisrow.dup
+		thisrow	=	''
 	}	#	next prediction
 #	raise	"bph.inspect #{bph.inspect}"
 	puts "sending sumofprevweeksprofit #{sumofprevweeksprofit}"
@@ -1086,18 +1090,19 @@ def makeswp(lid,	pid)
 #			raise "b is #{b}"
 		end
 	}
-	outstr		+=	Tr+"<td>Season Total - #{yc.commify} bets -> $#{yt.r2.commify} </td>"
+	toutstr		=	Tr+"<td>Season Total - #{yc.commify} bets -> $#{yt.r2.commify} </td>"
 	beta.each{|b|
 		begin
 			div		=	Gdiv	if	sumhash['year'+b]	>	0
 			div		=	Rdiv	if	sumhash['year'+b]	<	0
-			outstr	+=	wrap(div	+	sumhash['yearcount'+b].commify	+	((sumhash['yearcount'+b] > 1) ? ' bets -> $' : ' bet -> $' )	+	sumhash['year'+b].r2.commify	+	'</div>')
+			toutstr	+=	wrap(div	+	sumhash['yearcount'+b].commify	+	((sumhash['yearcount'+b] > 1) ? ' bets -> $' : ' bet -> $' )	+	sumhash['year'+b].r2.commify	+	'</div>')
 		rescue
-			outstr	+=	Na
+			toutstr	+=	Na
 		end
 	}
-	outstr			+=	Tre
-	outstr			+=	'</table>'
+	toutstr			+=	Tre
+	outstr			<<	toutstr
+	retstr			=	outerstr	+	outstr.reverse.join	+	'</table>'
 	@main			=	{}
 	@main['pad']		=	false
 	@main['bankroll']	=	bankroll
@@ -1112,8 +1117,8 @@ def makeswp(lid,	pid)
 		bma			<<	bth[b]
 	}
 	@main['content']	=	"#{lname} Betting starting bankroll $1,000 - Ending Bankroll $#{bankroll.r2.commify} - Bet is $#{bet} - #{uta.sort.join(',')} - #{bma.sort.join(',')}"
-	@main['rollwith']	=	outstr
+	@main['rollwith']	=	retstr
 #	return @main
   end	#	makeswp
-end # class ApplicationController
+end	#	class ApplicationController
 

@@ -698,9 +698,9 @@ def	do_season(newpred,	year,	winprob	=	0.7,	header	=	nil, gap	=	Secondsinthreeda
 #	<%	@desc		=	@main['desc']		%>
 #	@main['heading']	=	"Joe Guy's Soccer Betting - #{lname} - Season #{pid+1} - #{fdate.strftime("%B %d %Y  ")} to #{ldate.strftime("%B %d %Y  ")} Starting bankroll $100 - Ending Bankroll $#{bankroll.r2.commify} - Bet is $#{bet}"
 #	@main['desc']		=	"Joe Guy's Soccer Betting - #{lname} - Season #{pid+1} - #{fdate.strftime("%B %d %Y  ")} to #{ldate.strftime("%B %d %Y  ")} Starting bankroll $100 - Ending Bankroll $#{bankroll.r2.commify} - Bet is $#{bet}"
-	rm['heading']	=	"Joe Guy's #{sport} Betting - #{lname} - #{year} - #{fdate.strftime("%B %d %Y  ")} to #{ldate.strftime("%B %d %Y  ")} Starting bankroll $100 - Ending Bankroll $#{bankroll.r2.commify} - Bet is $#{bet}"
-	rm['content']	=	"Joe Guy's #{sport} Betting - #{lname} - #{year} - #{fdate.strftime("%B %d %Y  ")} to #{ldate.strftime("%B %d %Y  ")} Starting bankroll $100 - Ending Bankroll $#{bankroll.r2.commify} - Bet is $#{bet} - spread, moneyline , money line - #{utl.sort.join(',')}"
-	rm['desc']	=	"Joe Guy's #{sport} Betting - #{lname} - #{year} - #{fdate.strftime("%B %d %Y  ")} to #{ldate.strftime("%B %d %Y  ")} Starting bankroll $100 - Ending Bankroll $#{bankroll.r2.commify} - Bet is $#{bet} - spread, moneyline , money line - #{utl.sort.join(',')}"
+	rm['heading']	=	"Joe Guy's #{sport} Betting - #{lname} - #{year} - #{fdate.strftime("%B %d %Y  ")} to #{ldate.strftime("%B %d %Y  ")} Starting bankroll $1,000 - Ending Bankroll $#{bankroll.r2.commify} - Bet is $#{bet}"
+	rm['content']	=	"Joe Guy's #{sport} Betting - #{lname} - #{year} - #{fdate.strftime("%B %d %Y  ")} to #{ldate.strftime("%B %d %Y  ")} Starting bankroll $1,000 - Ending Bankroll $#{bankroll.r2.commify} - Bet is $#{bet} - spread, moneyline , money line - #{utl.sort.join(',')}"
+	rm['desc']	=	"Joe Guy's #{sport} Betting - #{lname} - #{year} - #{fdate.strftime("%B %d %Y  ")} to #{ldate.strftime("%B %d %Y  ")} Starting bankroll $1,000 - Ending Bankroll $#{bankroll.r2.commify} - Bet is $#{bet} - spread, moneyline , money line - #{utl.sort.join(',')}"
 	@main		=	rm.dup
 end	#	do_season
 
@@ -795,9 +795,11 @@ def calcatsbet(g,	ysh,	wsh, winprob)
 =begin
 =end
 
-def summarytime(pweek,	oldweek,	sumhash,	beta,	outstr,	bph,	forced	=	false)
+def summarytime(pweek,	oldweek,	sumhash,	beta,	outstr,	bph,	prevweeksprofit,	forced	=	false)
 	# check for summary time
+	weekstotalprofits	=	0.0
 	if	!(oldweek	==	pweek)	or forced
+		puts "doing summary"
 #		puts "sumhash.inspect #{sumhash.inspect}"
 #		puts "beta.inspect #{beta.inspect}"
 #		raise
@@ -813,12 +815,13 @@ def summarytime(pweek,	oldweek,	sumhash,	beta,	outstr,	bph,	forced	=	false)
 		}
 		div		=	Gdiv	if	st	>	0
 		div		=	Rdiv	if	st	<	0
-		outstr	+=	Tr+"<td>#{div}Week #{oldweek} - #{wc} bets Total -> $#{st.r2.commify}</div></td>"
+		outstr	+=	Tr+"<td>#{div}Week #{oldweek} - #{wc} bets Total -> $#{st.r2.commify} yyyyWeeks profit -> $xxxxxxxxxx</div></div></td>"
 		oldweek	=	pweek
 		oldleague	=	''
 		beta.each{|b|
 			begin
 				profit	=	sumhash['week'+b]
+				weekstotalprofits	+=	profit
 				wc		=	sumhash['weekcount'+b]
 				div		=	Gdiv	if	profit	>	0
 				div		=	Rdiv	if	profit	<	0
@@ -838,9 +841,17 @@ def summarytime(pweek,	oldweek,	sumhash,	beta,	outstr,	bph,	forced	=	false)
 				outstr	+=	Na
 			end
 		}
-		outstr			+=	Tre
+		outstr			+=	Tre # table row end
+		twp				=	weekstotalprofits	-	prevweeksprofit
+		outstr.gsub!('xxxxxxxxxx',	twp.r2.commify)
+		outstr.gsub!('yyyy',	Gdiv)	if	twp	>	0.0
+		outstr.gsub!('yyyy',	Rdiv)	if	twp	<	0.0
+		outstr.gsub!('yyyy',	Ydiv)	if	twp	==	0.0
+		return weekstotalprofits,	sumhash,	outstr,	oldweek
+	else
+		#	not done
+		return prevweeksprofit,	sumhash,	outstr,	oldweek
 	end
-	return sumhash,	outstr,	oldweek
 end	#	summarytime
 
 def maintsh(sumhash, bookie,	prize)
@@ -909,13 +920,13 @@ def makeswp(lid,	pid)
 	puts beta.inspect
 #	raise
 	# now that we have a list of all used bets - create table for them
-	bankroll	=	100.0
-	bet		=	4.0
+	bankroll	=	1_000.0
+	bet		=	bankroll	*	Fpc
 	fdate	=	pred[0].game_date_time
 	ldate		=	pred.last.game_date_time
+	outerstr	=	"<h2>#{lname} - Season #{pid} - #{fdate.strftime("%B %d %Y  ")} to #{ldate.strftime("%B %d %Y  ")}</h2> Starting bankroll $#{bankroll.commify} - Bet is $#{bet}<br>"
+	outerstr	+=	'<table border="1"><th>'
 	outstr	=	''
-	outstr	=	"<h2>#{lname} - Season #{pid} - #{fdate.strftime("%B %d %Y  ")} to #{ldate.strftime("%B %d %Y  ")}</h2> Starting bankroll $#{bankroll.commify} - Bet is $#{bet}<br>"
-	outstr	+=	'<table border="1"><th>'
 	beta.each{|b|
 		outstr	+=	wrap(bth[b])
 	}
@@ -923,8 +934,12 @@ def makeswp(lid,	pid)
 	plen			=	pred.length.commify
 	sumhash		=	{}
 	oldweek		=	pred.first.week
+	sumofprevweeksprofit	=	0.0
 	pred.each_with_index{|p,	pi|
-		sumhash,	outstr,	oldweek	=	summarytime(p.week,	oldweek,	sumhash,	beta,	outstr,	bph)
+		puts "sending sumofprevweeksprofit #{sumofprevweeksprofit}"
+		sumofprevweeksprofit,	sumhash,	outstr,	oldweek	=	summarytime(p.week,	oldweek,	sumhash,	beta,	outstr,	bph,	sumofprevweeksprofit)
+		puts "sumofprevweeksprofit #{sumofprevweeksprofit}"
+#		sleep 1
 		puts
 		puts "done #{pi.commify} of #{plen}"
 		puts 'building bets'
@@ -948,7 +963,7 @@ def makeswp(lid,	pid)
 #		sleep 10
 		eva2		=	[]
 		
-#		bet		=	bankroll	*	Fpc
+#		bet		=	(bankroll	*	Fpc).to_i
 #		bet		=	4.0	if	bet	<	4.0
 #		bet		=	100	if	bet	>	100
 		
@@ -975,11 +990,22 @@ def makeswp(lid,	pid)
 #		raise
 		puts 'playing bets'
 		gt				=	0.0	#	game total
+		oc				=	[]	#	odds count for computation of margin
 		beta.each{|b|
 			if	s[b].nil?
 				outstr	+=	wrap('')		# spacer
 			else
 				odiv		=	nil
+				margin	=	-1
+				margintext	=	''
+				oc	<<	s[b]
+				if	oc.length	==	3
+					# calc margin here
+					margin	=	oc.inject(0.0){|margin,	o|	margin	+	1 / o}
+					margin	=	((margin	-	1.0)	*	100.0).r2
+					oc		=	[]
+					margintext	=	" Margin is % #{margin}"
+				end
 				if	eva2.include?(b)
 #				if (s[b+'_ev']	>	1.0) && (abotg == 0 || ((abotg + bet) <= (bankroll * 0.04))) # never bet more than 4 % of bankroll on any one game but always make at least one bet if ev > 1.0
 					# bet on this game - how did we do?
@@ -1027,9 +1053,9 @@ def makeswp(lid,	pid)
 					rescue
 						bph[bookie[0,2]]	=	prize
 					end
-					outstr	+=	wrap(odiv+s[b].to_s+' -> '+s[b+'_ev'].to_s+"<br> -> $#{bankroll.r2.commify}"+'</div>')
+					outstr	+=	wrap(odiv+s[b].to_s+' -> '+s[b+'_ev'].to_s+"<br> -> $#{bankroll.r2.commify}"+margintext+'</div>')
 				else
-					outstr	+=	wrap(s[b].to_s+' -> '+s[b+'_ev'].to_s+"<br> -> $#{bankroll.r2.commify}")
+					outstr	+=	wrap(s[b].to_s+' -> '+s[b+'_ev'].to_s+"<br> -> $#{bankroll.r2.commify}"+margintext)
 				end
 			end
 		}	#	next bet
@@ -1042,7 +1068,10 @@ def makeswp(lid,	pid)
 		outstr.gsub!('bbbbbbbbbbb',	gt.r2.commify)
 	}	#	next prediction
 #	raise	"bph.inspect #{bph.inspect}"
-	sumhash,	outstr,	oldweek	=	summarytime(oldweek+1,	oldweek,	sumhash,	beta,	outstr, bph,	true)
+	puts "sending sumofprevweeksprofit #{sumofprevweeksprofit}"
+	sumofprevweeksprofit,	sumhash,	outstr,	oldweek	=	summarytime(oldweek+1,	oldweek,	sumhash,	beta,	outstr, bph,	sumofprevweeksprofit,	true)
+	puts "sumofprevweeksprofit 2 #{sumofprevweeksprofit}"
+#	sleep 1
 	yt			=	0.0
 	yc			=	0
 	beta.each{|b|
@@ -1068,12 +1097,13 @@ def makeswp(lid,	pid)
 		end
 	}
 	outstr			+=	Tre
-	outstr			+=	'</table>'
+#	outstr			+=	'</table>'
+	retstr			=	outerstr	+	outstr+'</table>'
 	@main			=	{}
 	@main['pad']		=	false
 	@main['bankroll']	=	bankroll
-	@main['heading']	=	"Joe Guy's Soccer Betting - #{lname} - Season #{pid+1} - #{fdate.strftime("%B %d %Y  ")} to #{ldate.strftime("%B %d %Y  ")} Starting bankroll $100 - Ending Bankroll $#{bankroll.r2.commify} - Bet is $#{bet}"
-	@main['desc']		=	"Joe Guy's Soccer Betting - #{lname} - Season #{pid+1} - #{fdate.strftime("%B %d %Y  ")} to #{ldate.strftime("%B %d %Y  ")} Starting bankroll $100 - Ending Bankroll $#{bankroll.r2.commify} - Bet is $#{bet}"
+	@main['heading']	=	"Joe Guy's Soccer Betting - #{lname} - Season #{pid+1} - #{fdate.strftime("%B %d %Y  ")} to #{ldate.strftime("%B %d %Y  ")} Starting bankroll $1,000 - Ending Bankroll $#{bankroll.r2.commify} - Bet is $#{bet}"
+	@main['desc']		=	"Joe Guy's Soccer Betting - #{lname} - Season #{pid+1} - #{fdate.strftime("%B %d %Y  ")} to #{ldate.strftime("%B %d %Y  ")} Starting bankroll $1,000 - Ending Bankroll $#{bankroll.r2.commify} - Bet is $#{bet}"
 	uta				=	[]
 	th.each{|k,	v|
 		uta			<<	v
@@ -1082,8 +1112,8 @@ def makeswp(lid,	pid)
 	beta.each{|b|
 		bma			<<	bth[b]
 	}
-	@main['content']	=	"#{lname} Betting starting bankroll $100 - Ending Bankroll $#{bankroll.r2.commify} - Bet is $#{bet} - #{uta.sort.join(',')} - #{bma.sort.join(',')}"
-	@main['rollwith']	=	outstr
+	@main['content']	=	"#{lname} Betting starting bankroll $1,000 - Ending Bankroll $#{bankroll.r2.commify} - Bet is $#{bet} - #{uta.sort.join(',')} - #{bma.sort.join(',')}"
+	@main['rollwith']	=	retstr
 #	return @main
   end	#	makeswp
 end # class ApplicationController
