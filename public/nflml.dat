@@ -1,0 +1,681 @@
+01/03/2009,Arizona Cardinals,Atlanta Falcons,-130,110
+01/03/2009,San Diego Chargers,Indianapolis Colts,125,-145
+01/04/2009,Miami Dolphins,Baltimore Ravens,160,-180
+01/04/2009,Minnesota Vikings,Philadelphia Eagles,150,-170
+01/05/2008,Pittsburgh Steelers,Jacksonville Jaguars,130,-150
+01/05/2008,Seattle Seahawks,Washington Redskins,-175,155
+01/06/2008,San Diego Chargers,Tennessee Titans,-600,450
+01/06/2008,Tampa Bay Buccaneers,N.Y. Giants,-150,130
+01/12/2008,Green Bay Packers,Seattle Seahawks,-320,260
+01/12/2008,New England Patriots,Jacksonville Jaguars,-750,550
+01/13/2008,Dallas Cowboys,N.Y. Giants,-280,240
+01/13/2008,Indianapolis Colts,San Diego Chargers,-600,450
+02/03/2008,New England Patriots,N.Y. Giants,-460,360
+08/03/2008,Washington Redskins,Indianapolis Colts,-220,180
+08/05/2007,Pittsburgh Steelers,New Orleans Saints,-160,140
+08/07/2008,Arizona Cardinals,New Orleans Saints,-140,120
+08/07/2008,Chicago Bears,Kansas City Chiefs,-180,160
+08/07/2008,Cleveland Browns,N.Y. Jets,-240,200
+08/07/2008,Detroit Lions,N.Y. Giants,-145,125
+08/07/2008,New England Patriots,Baltimore Ravens,-180,160
+08/08/2008,Minnesota Vikings,Seattle Seahawks,-150,130
+08/08/2008,Oakland Raiders,San Francisco 49Ers,-125,105
+08/08/2008,Pittsburgh Steelers,Philadelphia Eagles,110,-130
+08/09/2007,Dallas Cowboys,Indianapolis Colts,-240,200
+08/09/2007,Detroit Lions,Cincinnati Bengals,-180,160
+08/09/2008,Carolina Panthers,Indianapolis Colts,-180,160
+08/09/2008,Houston Texans,Denver Broncos,-140,120
+08/09/2008,Jacksonville Jaguars,Atlanta Falcons,-210,175
+08/09/2008,Miami Dolphins,Tampa Bay Buccaneers,-135,115
+08/09/2008,San Diego Chargers,Dallas Cowboys,-140,120
+08/09/2008,Tennessee Titans,St. Louis Rams,-140,120
+08/09/2008,Washington Redskins,Buffalo Bills,-240,200
+08/10/2007,Minnesota Vikings,St. Louis Rams,-122,112
+08/10/2007,New Orleans Saints,Buffalo Bills,-260,220
+08/10/2007,N.Y. Jets,Atlanta Falcons,-190,165
+08/10/2007,Tampa Bay Buccaneers,New England Patriots,-150,130
+08/11/2007,Cleveland Browns,Kansas City Chiefs,-160,140
+08/11/2007,Houston Texans,Chicago Bears,-150,130
+08/11/2007,Miami Dolphins,Jacksonville Jaguars,110,-130
+08/11/2007,N.Y. Giants,Carolina Panthers,-104,-106
+08/11/2007,Oakland Raiders,Arizona Cardinals,-123,113
+08/11/2007,Pittsburgh Steelers,Green Bay Packers,-270,230
+08/11/2007,Tennessee Titans,Washington Redskins,-150,130
+08/11/2008,Green Bay Packers,Cincinnati Bengals,-165,145
+08/12/2007,San Diego Chargers,Seattle Seahawks,-200,170
+08/13/2007,Baltimore Ravens,Philadelphia Eagles,-200,170
+08/13/2007,San Francisco 49Ers,Denver Broncos,-150,130
+08/14/2008,Buffalo Bills,Pittsburgh Steelers,-102,-108
+08/14/2008,Philadelphia Eagles,Carolina Panthers,-200,170
+08/15/2008,Tennessee Titans,Oakland Raiders,-180,160
+08/16/2007,Kansas City Chiefs,Miami Dolphins,-190,165
+08/16/2008,Atlanta Falcons,Indianapolis Colts,-175,155
+08/16/2008,Baltimore Ravens,Minnesota Vikings,-121,111
+08/16/2008,Denver Broncos,Dallas Cowboys,-140,120
+08/16/2008,Jacksonville Jaguars,Miami Dolphins,-180,160
+08/16/2008,Kansas City Chiefs,Arizona Cardinals,-130,110
+08/16/2008,New Orleans Saints,Houston Texans,-165,145
+08/16/2008,N.Y. Jets,Washington Redskins,-145,125
+08/16/2008,San Francisco 49Ers,Green Bay Packers,-140,120
+08/16/2008,Seattle Seahawks,Chicago Bears,125,-145
+08/16/2008,St. Louis Rams,San Diego Chargers,-190,165
+08/17/2007,Buffalo Bills,Atlanta Falcons,-145,125
+08/17/2007,New England Patriots,Tennessee Titans,-240,200
+08/17/2007,N.Y. Jets,Minnesota Vikings,-210,175
+08/17/2007,Philadelphia Eagles,Carolina Panthers,-140,120
+08/17/2008,Cincinnati Bengals,Detroit Lions,-170,150
+08/17/2008,Tampa Bay Buccaneers,New England Patriots,-155,135
+08/18/2007,Arizona Cardinals,Houston Texans,-165,145
+08/18/2007,Cincinnati Bengals,New Orleans Saints,-190,165
+08/18/2007,Cleveland Browns,Detroit Lions,-150,130
+08/18/2007,Dallas Cowboys,Denver Broncos,-210,175
+08/18/2007,Green Bay Packers,Seattle Seahawks,-170,150
+08/18/2007,Jacksonville Jaguars,Tampa Bay Buccaneers,-250,210
+08/18/2007,San Francisco 49Ers,Oakland Raiders,-190,165
+08/18/2007,St. Louis Rams,San Diego Chargers,120,-140
+08/18/2007,Washington Redskins,Pittsburgh Steelers,120,-140
+08/18/2008,N.Y. Giants,Cleveland Browns,-135,115
+08/19/2007,Baltimore Ravens,N.Y. Giants,-180,160
+08/20/2007,Indianapolis Colts,Chicago Bears,120,-140
+08/21/2008,Chicago Bears,San Francisco 49Ers,-175,155
+08/22/2008,Atlanta Falcons,Tennessee Titans,-150,130
+08/22/2008,Dallas Cowboys,Houston Texans,-230,190
+08/22/2008,Denver Broncos,Green Bay Packers,-155,135
+08/22/2008,New England Patriots,Philadelphia Eagles,-140,120
+08/23/2007,Green Bay Packers,Jacksonville Jaguars,155,-175
+08/23/2007,Kansas City Chiefs,New Orleans Saints,-117,107
+08/23/2008,Carolina Panthers,Washington Redskins,-160,140
+08/23/2008,Cincinnati Bengals,New Orleans Saints,125,-145
+08/23/2008,Detroit Lions,Cleveland Browns,-135,115
+08/23/2008,Miami Dolphins,Kansas City Chiefs,-150,130
+08/23/2008,Minnesota Vikings,Pittsburgh Steelers,125,-145
+08/23/2008,N.Y. Jets,N.Y. Giants,-150,130
+08/23/2008,Oakland Raiders,Arizona Cardinals,-170,150
+08/23/2008,St. Louis Rams,Baltimore Ravens,-115,105
+08/23/2008,Tampa Bay Buccaneers,Jacksonville Jaguars,125,-145
+08/24/2007,Buffalo Bills,Tennessee Titans,-130,110
+08/24/2007,Carolina Panthers,New England Patriots,110,-120
+08/24/2007,Oakland Raiders,St. Louis Rams,107,-117
+08/24/2008,Indianapolis Colts,Buffalo Bills,-250,210
+08/25/2007,Arizona Cardinals,San Diego Chargers,125,-145
+08/25/2007,Chicago Bears,San Francisco 49Ers,-220,180
+08/25/2007,Denver Broncos,Cleveland Browns,-270,230
+08/25/2007,Houston Texans,Dallas Cowboys,125,-145
+08/25/2007,Indianapolis Colts,Detroit Lions,-320,260
+08/25/2007,Miami Dolphins,Tampa Bay Buccaneers,110,-130
+08/25/2007,N.Y. Giants,N.Y. Jets,130,-150
+08/25/2007,Seattle Seahawks,Minnesota Vikings,-350,290
+08/25/2007,Washington Redskins,Baltimore Ravens,170,-200
+08/25/2008,San Diego Chargers,Seattle Seahawks,-240,200
+08/26/2007,Pittsburgh Steelers,Philadelphia Eagles,-170,150
+08/27/2007,Atlanta Falcons,Cincinnati Bengals,155,-175
+08/28/2008,Baltimore Ravens,Atlanta Falcons,-140,120
+08/28/2008,Buffalo Bills,Detroit Lions,-145,125
+08/28/2008,Cleveland Browns,Chicago Bears,-155,135
+08/28/2008,Dallas Cowboys,Minnesota Vikings,-150,130
+08/28/2008,Green Bay Packers,Tennessee Titans,240,-280
+08/28/2008,Houston Texans,Tampa Bay Buccaneers,102,-112
+08/28/2008,Indianapolis Colts,Cincinnati Bengals,-155,135
+08/28/2008,Kansas City Chiefs,St. Louis Rams,-230,190
+08/28/2008,New Orleans Saints,Miami Dolphins,-108,-102
+08/28/2008,N.Y. Giants,New England Patriots,-140,120
+08/28/2008,Philadelphia Eagles,N.Y. Jets,-150,130
+08/28/2008,Pittsburgh Steelers,Carolina Panthers,-200,170
+08/28/2008,Washington Redskins,Jacksonville Jaguars,-170,150
+08/29/2008,Arizona Cardinals,Denver Broncos,-150,130
+08/29/2008,San Francisco 49Ers,San Diego Chargers,-170,150
+08/29/2008,Seattle Seahawks,Oakland Raiders,-165,145
+08/30/2007,Carolina Panthers,Pittsburgh Steelers,-165,145
+08/30/2007,Chicago Bears,Cleveland Browns,-180,160
+08/30/2007,Denver Broncos,Arizona Cardinals,-190,165
+08/30/2007,Detroit Lions,Buffalo Bills,-160,140
+08/30/2007,Jacksonville Jaguars,Washington Redskins,-175,155
+08/30/2007,Minnesota Vikings,Dallas Cowboys,-130,110
+08/30/2007,New England Patriots,N.Y. Giants,-175,155
+08/30/2007,New Orleans Saints,Miami Dolphins,109,-119
+08/30/2007,Philadelphia Eagles,N.Y. Jets,-145,125
+08/30/2007,San Diego Chargers,San Francisco 49Ers,-145,125
+08/30/2007,Seattle Seahawks,Oakland Raiders,-145,125
+08/30/2007,St. Louis Rams,Kansas City Chiefs,-155,135
+08/30/2007,Tampa Bay Buccaneers,Houston Texans,-165,145
+08/30/2007,Tennessee Titans,Green Bay Packers,-320,260
+08/31/2007,Atlanta Falcons,Baltimore Ravens,165,-190
+08/31/2007,Cincinnati Bengals,Indianapolis Colts,-260,220
+09/04/2008,N.Y. Giants,Washington Redskins,-210,175
+09/06/2007,Indianapolis Colts,New Orleans Saints,-230,190
+09/07/2008,Atlanta Falcons,Detroit Lions,155,-175
+09/07/2008,Baltimore Ravens,Cincinnati Bengals,110,-130
+09/07/2008,Buffalo Bills,Seattle Seahawks,-136,126
+09/07/2008,Cleveland Browns,Dallas Cowboys,230,-270
+09/07/2008,Indianapolis Colts,Chicago Bears,-600,450
+09/07/2008,Miami Dolphins,N.Y. Jets,135,-155
+09/07/2008,New England Patriots,Kansas City Chiefs,-1600,1200
+09/07/2008,New Orleans Saints,Tampa Bay Buccaneers,-170,150
+09/07/2008,Philadelphia Eagles,St. Louis Rams,-360,300
+09/07/2008,Pittsburgh Steelers,Houston Texans,-300,250
+09/07/2008,San Diego Chargers,Carolina Panthers,-430,335
+09/07/2008,San Francisco 49Ers,Arizona Cardinals,115,-135
+09/07/2008,Tennessee Titans,Jacksonville Jaguars,135,-155
+09/08/2008,Green Bay Packers,Minnesota Vikings,-130,110
+09/08/2008,Oakland Raiders,Denver Broncos,130,-150
+09/09/2007,Buffalo Bills,Denver Broncos,155,-175
+09/09/2007,Cleveland Browns,Pittsburgh Steelers,190,-230
+09/09/2007,Dallas Cowboys,N.Y. Giants,-270,230
+09/09/2007,Green Bay Packers,Philadelphia Eagles,150,-170
+09/09/2007,Houston Texans,Kansas City Chiefs,-170,150
+09/09/2007,Jacksonville Jaguars,Tennessee Titans,-300,250
+09/09/2007,Minnesota Vikings,Atlanta Falcons,-165,145
+09/09/2007,N.Y. Jets,New England Patriots,230,-270
+09/09/2007,Oakland Raiders,Detroit Lions,-135,115
+09/09/2007,San Diego Chargers,Chicago Bears,-270,230
+09/09/2007,Seattle Seahawks,Tampa Bay Buccaneers,-270,230
+09/09/2007,St. Louis Rams,Carolina Panthers,-110,100
+09/09/2007,Washington Redskins,Miami Dolphins,-165,145
+09/10/2007,Cincinnati Bengals,Baltimore Ravens,-140,120
+09/10/2007,San Francisco 49Ers,Arizona Cardinals,-190,165
+09/14/2008,Arizona Cardinals,Miami Dolphins,-270,230
+09/14/2008,Carolina Panthers,Chicago Bears,-175,155
+09/14/2008,Cincinnati Bengals,Tennessee Titans,-104,-106
+09/14/2008,Cleveland Browns,Pittsburgh Steelers,230,-270
+09/14/2008,Denver Broncos,San Diego Chargers,-121,111
+09/14/2008,Detroit Lions,Green Bay Packers,140,-160
+09/14/2008,Houston Texans,Baltimore Ravens,-210,175
+09/14/2008,Jacksonville Jaguars,Buffalo Bills,-190,165
+09/14/2008,Kansas City Chiefs,Oakland Raiders,-180,160
+09/14/2008,Minnesota Vikings,Indianapolis Colts,110,-130
+09/14/2008,N.Y. Jets,New England Patriots,-103,-107
+09/14/2008,Seattle Seahawks,San Francisco 49Ers,-260,220
+09/14/2008,St. Louis Rams,N.Y. Giants,305,-375
+09/14/2008,Tampa Bay Buccaneers,Atlanta Falcons,-300,250
+09/14/2008,Washington Redskins,New Orleans Saints,-118,108
+09/15/2008,Dallas Cowboys,Philadelphia Eagles,-265,225
+09/15/2008,Houston Texans,Baltimore Ravens,-210,175
+09/16/2007,Arizona Cardinals,Seattle Seahawks,125,-145
+09/16/2007,Baltimore Ravens,N.Y. Jets,-520,410
+09/16/2007,Carolina Panthers,Houston Texans,-300,250
+09/16/2007,Chicago Bears,Kansas City Chiefs,-750,550
+09/16/2007,Cleveland Browns,Cincinnati Bengals,290,-350
+09/16/2007,Denver Broncos,Oakland Raiders,-500,400
+09/16/2007,Detroit Lions,Minnesota Vikings,-170,150
+09/16/2007,Jacksonville Jaguars,Atlanta Falcons,-600,450
+09/16/2007,Miami Dolphins,Dallas Cowboys,170,-200
+09/16/2007,New England Patriots,San Diego Chargers,-200,170
+09/16/2007,N.Y. Giants,Green Bay Packers,-150,130
+09/16/2007,Pittsburgh Steelers,Buffalo Bills,-525,410
+09/16/2007,St. Louis Rams,San Francisco 49Ers,-160,140
+09/16/2007,Tampa Bay Buccaneers,New Orleans Saints,220,-260
+09/16/2007,Tennessee Titans,Indianapolis Colts,260,-320
+09/17/2007,Philadelphia Eagles,Washington Redskins,-300,250
+09/21/2008,Atlanta Falcons,Kansas City Chiefs,-270,230
+09/21/2008,Baltimore Ravens,Cleveland Browns,-135,115
+09/21/2008,Buffalo Bills,Oakland Raiders,-480,380
+09/21/2008,Chicago Bears,Tampa Bay Buccaneers,-165,145
+09/21/2008,Denver Broncos,New Orleans Saints,-240,200
+09/21/2008,Green Bay Packers,Dallas Cowboys,140,-160
+09/21/2008,Indianapolis Colts,Jacksonville Jaguars,-190,165
+09/21/2008,Minnesota Vikings,Carolina Panthers,-170,150
+09/21/2008,New England Patriots,Miami Dolphins,-700,500
+09/21/2008,N.Y. Giants,Cincinnati Bengals,-750,550
+09/21/2008,Philadelphia Eagles,Pittsburgh Steelers,-190,165
+09/21/2008,San Francisco 49Ers,Detroit Lions,-230,190
+09/21/2008,Seattle Seahawks,St. Louis Rams,-350,290
+09/21/2008,Tennessee Titans,Houston Texans,-220,180
+09/21/2008,Washington Redskins,Arizona Cardinals,-165,145
+09/22/2008,San Diego Chargers,N.Y. Jets,-360,300
+09/23/2007,Atlanta Falcons,Carolina Panthers,175,-210
+09/23/2007,Baltimore Ravens,Arizona Cardinals,-340,280
+09/23/2007,Chicago Bears,Dallas Cowboys,-150,130
+09/23/2007,Denver Broncos,Jacksonville Jaguars,-190,165
+09/23/2007,Green Bay Packers,San Diego Chargers,240,-280
+09/23/2007,Houston Texans,Indianapolis Colts,255,-310
+09/23/2007,Kansas City Chiefs,Minnesota Vikings,-165,145
+09/23/2007,N.Y. Jets,Miami Dolphins,-170,150
+09/23/2007,Oakland Raiders,Cleveland Browns,-165,145
+09/23/2007,Philadelphia Eagles,Detroit Lions,-210,175
+09/23/2007,Pittsburgh Steelers,San Francisco 49Ers,-500,400
+09/23/2007,Seattle Seahawks,Cincinnati Bengals,-175,155
+09/23/2007,Tampa Bay Buccaneers,St. Louis Rams,-175,155
+09/23/2007,Washington Redskins,N.Y. Giants,-200,170
+09/24/2007,New Orleans Saints,Tennessee Titans,-230,190
+09/28/2008,Carolina Panthers,Atlanta Falcons,-290,245
+09/28/2008,Chicago Bears,Philadelphia Eagles,145,-165
+09/28/2008,Cincinnati Bengals,Cleveland Browns,-130,110
+09/28/2008,Dallas Cowboys,Washington Redskins,-450,350
+09/28/2008,Jacksonville Jaguars,Houston Texans,-280,240
+09/28/2008,Kansas City Chiefs,Denver Broncos,330,-420
+09/28/2008,New Orleans Saints,San Francisco 49Ers,-190,165
+09/28/2008,N.Y. Jets,Arizona Cardinals,-120,110
+09/28/2008,Oakland Raiders,San Diego Chargers,290,-350
+09/28/2008,St. Louis Rams,Buffalo Bills,305,-370
+09/28/2008,Tampa Bay Buccaneers,Green Bay Packers,-125,105
+09/28/2008,Tennessee Titans,Minnesota Vikings,-160,140
+09/29/2008,Pittsburgh Steelers,Baltimore Ravens,-250,210
+09/30/2007,Arizona Cardinals,Pittsburgh Steelers,190,-230
+09/30/2007,Atlanta Falcons,Houston Texans,115,-135
+09/30/2007,Buffalo Bills,N.Y. Jets,160,-180
+09/30/2007,Carolina Panthers,Tampa Bay Buccaneers,-145,125
+09/30/2007,Cleveland Browns,Baltimore Ravens,175,-210
+09/30/2007,Detroit Lions,Chicago Bears,110,-130
+09/30/2007,Indianapolis Colts,Denver Broncos,-550,425
+09/30/2007,Miami Dolphins,Oakland Raiders,-190,165
+09/30/2007,Minnesota Vikings,Green Bay Packers,105,-125
+09/30/2007,N.Y. Giants,Philadelphia Eagles,110,-130
+09/30/2007,San Francisco 49Ers,Seattle Seahawks,110,-130
+10/01/2007,Cincinnati Bengals,New England Patriots,280,-340
+10/01/2007,Cincinnati Bengals,New England Patriots,280,-340
+10/05/2008,Arizona Cardinals,Buffalo Bills,-135,115
+10/05/2008,Baltimore Ravens,Tennessee Titans,110,-130
+10/05/2008,Carolina Panthers,Kansas City Chiefs,-440,340
+10/05/2008,Dallas Cowboys,Cincinnati Bengals,-1000,700
+10/05/2008,Denver Broncos,Tampa Bay Buccaneers,-190,165
+10/05/2008,Detroit Lions,Chicago Bears,155,-175
+10/05/2008,Green Bay Packers,Atlanta Falcons,-230,190
+10/05/2008,Houston Texans,Indianapolis Colts,175,-210
+10/05/2008,Jacksonville Jaguars,Pittsburgh Steelers,-240,200
+10/05/2008,Miami Dolphins,San Diego Chargers,200,-240
+10/05/2008,N.Y. Giants,Seattle Seahawks,-260,220
+10/05/2008,Philadelphia Eagles,Washington Redskins,-290,245
+10/05/2008,San Francisco 49Ers,New England Patriots,150,-170
+10/06/2008,New Orleans Saints,Minnesota Vikings,-155,135
+10/07/2007,Denver Broncos,San Diego Chargers,-120,110
+10/07/2007,Green Bay Packers,Chicago Bears,-190,165
+10/07/2007,Houston Texans,Miami Dolphins,-230,190
+10/07/2007,Indianapolis Colts,Tampa Bay Buccaneers,-440,340
+10/07/2007,Kansas City Chiefs,Jacksonville Jaguars,110,-130
+10/07/2007,New England Patriots,Cleveland Browns,-1700,1300
+10/07/2007,New Orleans Saints,Carolina Panthers,-200,170
+10/07/2007,N.Y. Giants,N.Y. Jets,-200,170
+10/07/2007,Pittsburgh Steelers,Seattle Seahawks,-220,180
+10/07/2007,San Francisco 49Ers,Baltimore Ravens,170,-200
+10/07/2007,St. Louis Rams,Arizona Cardinals,170,-200
+10/07/2007,Tennessee Titans,Atlanta Falcons,-360,300
+10/07/2007,Washington Redskins,Detroit Lions,-200,170
+10/08/2007,Buffalo Bills,Dallas Cowboys,500,-700
+10/12/2008,Arizona Cardinals,Dallas Cowboys,180,-220
+10/12/2008,Atlanta Falcons,Chicago Bears,130,-150
+10/12/2008,Denver Broncos,Jacksonville Jaguars,-170,150
+10/12/2008,Houston Texans,Miami Dolphins,-150,130
+10/12/2008,Indianapolis Colts,Baltimore Ravens,-190,165
+10/12/2008,Minnesota Vikings,Detroit Lions,-600,450
+10/12/2008,New Orleans Saints,Oakland Raiders,-300,250
+10/12/2008,N.Y. Jets,Cincinnati Bengals,-340,280
+10/12/2008,San Diego Chargers,New England Patriots,-260,220
+10/12/2008,San Francisco 49Ers,Philadelphia Eagles,180,-220
+10/12/2008,Seattle Seahawks,Green Bay Packers,-130,110
+10/12/2008,Tampa Bay Buccaneers,Carolina Panthers,-130,110
+10/12/2008,Washington Redskins,St. Louis Rams,-650,475
+10/13/2008,Cleveland Browns,N.Y. Giants,290,-350
+10/14/2007,Arizona Cardinals,Carolina Panthers,-260,220
+10/14/2007,Baltimore Ravens,St. Louis Rams,-460,360
+10/14/2007,Chicago Bears,Minnesota Vikings,-220,180
+10/14/2007,Cleveland Browns,Miami Dolphins,-200,170
+10/14/2007,Dallas Cowboys,New England Patriots,200,-240
+10/14/2007,Green Bay Packers,Washington Redskins,-160,140
+10/14/2007,Jacksonville Jaguars,Houston Texans,-280,240
+10/14/2007,Kansas City Chiefs,Cincinnati Bengals,110,-130
+10/14/2007,N.Y. Jets,Philadelphia Eagles,175,-210
+10/14/2007,San Diego Chargers,Oakland Raiders,-500,400
+10/14/2007,Seattle Seahawks,New Orleans Saints,-250,210
+10/14/2007,Tampa Bay Buccaneers,Tennessee Titans,-125,105
+10/15/2007,Atlanta Falcons,N.Y. Giants,200,-240
+10/19/2008,Buffalo Bills,San Diego Chargers,103,-113
+10/19/2008,Carolina Panthers,New Orleans Saints,-150,130
+10/19/2008,Chicago Bears,Minnesota Vikings,-170,150
+10/19/2008,Cincinnati Bengals,Pittsburgh Steelers,295,-355
+10/19/2008,Green Bay Packers,Indianapolis Colts,120,-140
+10/19/2008,Houston Texans,Detroit Lions,-540,420
+10/19/2008,Kansas City Chiefs,Tennessee Titans,300,-360
+10/19/2008,Miami Dolphins,Baltimore Ravens,-150,130
+10/19/2008,N.Y. Giants,San Francisco 49Ers,-460,360
+10/19/2008,Oakland Raiders,N.Y. Jets,150,-170
+10/19/2008,St. Louis Rams,Dallas Cowboys,280,-340
+10/19/2008,Tampa Bay Buccaneers,Seattle Seahawks,-550,425
+10/19/2008,Washington Redskins,Cleveland Browns,-280,240
+10/20/2008,New England Patriots,Denver Broncos,-135,115
+10/21/2007,Buffalo Bills,Baltimore Ravens,120,-140
+10/21/2007,Cincinnati Bengals,N.Y. Jets,-260,220
+10/21/2007,Dallas Cowboys,Minnesota Vikings,-450,350
+10/21/2007,Denver Broncos,Pittsburgh Steelers,180,-220
+10/21/2007,Detroit Lions,Tampa Bay Buccaneers,-130,110
+10/21/2007,Houston Texans,Tennessee Titans,-130,110
+10/21/2007,Miami Dolphins,New England Patriots,1300,-1700
+10/21/2007,New Orleans Saints,Atlanta Falcons,-360,300
+10/21/2007,N.Y. Giants,San Francisco 49Ers,-470,370
+10/21/2007,Oakland Raiders,Kansas City Chiefs,-130,110
+10/21/2007,Philadelphia Eagles,Chicago Bears,-220,180
+10/21/2007,Seattle Seahawks,St. Louis Rams,-370,305
+10/21/2007,Washington Redskins,Arizona Cardinals,-360,300
+10/22/2007,Jacksonville Jaguars,Indianapolis Colts,150,-170
+10/26/2008,Baltimore Ravens,Oakland Raiders,-340,280
+10/26/2008,Carolina Panthers,Arizona Cardinals,-230,190
+10/26/2008,Dallas Cowboys,Tampa Bay Buccaneers,-130,110
+10/26/2008,Detroit Lions,Washington Redskins,245,-290
+10/26/2008,Houston Texans,Cincinnati Bengals,-380,310
+10/26/2008,Jacksonville Jaguars,Cleveland Browns,-310,255
+10/26/2008,Miami Dolphins,Buffalo Bills,-107,-103
+10/26/2008,New England Patriots,St. Louis Rams,-390,315
+10/26/2008,New Orleans Saints,San Diego Chargers,150,-170
+10/26/2008,N.Y. Jets,Kansas City Chiefs,-700,500
+10/26/2008,Philadelphia Eagles,Atlanta Falcons,-405,320
+10/26/2008,Pittsburgh Steelers,N.Y. Giants,-140,120
+10/26/2008,San Francisco 49Ers,Seattle Seahawks,-240,200
+10/27/2008,Tennessee Titans,Indianapolis Colts,-180,160
+10/28/2007,Carolina Panthers,Indianapolis Colts,270,-330
+10/28/2007,Chicago Bears,Detroit Lions,-250,210
+10/28/2007,Cincinnati Bengals,Pittsburgh Steelers,175,-210
+10/28/2007,Miami Dolphins,N.Y. Giants,400,-500
+10/28/2007,Minnesota Vikings,Philadelphia Eagles,102,-112
+10/28/2007,New England Patriots,Washington Redskins,-1450,1050
+10/28/2007,N.Y. Jets,Buffalo Bills,-140,120
+10/28/2007,San Diego Chargers,Houston Texans,-480,380
+10/28/2007,San Francisco 49Ers,New Orleans Saints,105,-125
+10/28/2007,St. Louis Rams,Cleveland Browns,130,-150
+10/28/2007,Tampa Bay Buccaneers,Jacksonville Jaguars,-200,170
+10/28/2007,Tennessee Titans,Oakland Raiders,-320,260
+10/29/2007,Denver Broncos,Green Bay Packers,-160,140
+11/02/2008,Buffalo Bills,N.Y. Jets,-220,180
+11/02/2008,Buffalo Bills,N.Y. Jets,-220,180
+11/02/2008,Chicago Bears,Detroit Lions,-620,460
+11/02/2008,Chicago Bears,Detroit Lions,-620,460
+11/02/2008,Cincinnati Bengals,Jacksonville Jaguars,255,-310
+11/02/2008,Cincinnati Bengals,Jacksonville Jaguars,255,-310
+11/02/2008,Cleveland Browns,Baltimore Ravens,-155,135
+11/02/2008,Cleveland Browns,Baltimore Ravens,-155,135
+11/02/2008,Denver Broncos,Miami Dolphins,-210,175
+11/02/2008,Denver Broncos,Miami Dolphins,-210,175
+11/02/2008,Indianapolis Colts,New England Patriots,-300,250
+11/02/2008,Indianapolis Colts,New England Patriots,-300,250
+11/02/2008,Kansas City Chiefs,Tampa Bay Buccaneers,335,-430
+11/02/2008,Kansas City Chiefs,Tampa Bay Buccaneers,335,-430
+11/02/2008,Minnesota Vikings,Houston Texans,-260,220
+11/02/2008,Minnesota Vikings,Houston Texans,-260,220
+11/02/2008,N.Y. Giants,Dallas Cowboys,-380,310
+11/02/2008,N.Y. Giants,Dallas Cowboys,-380,310
+11/02/2008,Oakland Raiders,Atlanta Falcons,125,-145
+11/02/2008,Oakland Raiders,Atlanta Falcons,125,-145
+11/02/2008,Seattle Seahawks,Philadelphia Eagles,250,-300
+11/02/2008,Seattle Seahawks,Philadelphia Eagles,250,-300
+11/02/2008,St. Louis Rams,Arizona Cardinals,140,-160
+11/02/2008,St. Louis Rams,Arizona Cardinals,140,-160
+11/02/2008,Tennessee Titans,Green Bay Packers,-175,155
+11/02/2008,Tennessee Titans,Green Bay Packers,-175,155
+11/03/2008,Washington Redskins,Pittsburgh Steelers,-140,120
+11/04/2007,Atlanta Falcons,San Francisco 49Ers,-180,160
+11/04/2007,Atlanta Falcons,San Francisco 49Ers,-180,160
+11/04/2007,Buffalo Bills,Cincinnati Bengals,103,-113
+11/04/2007,Buffalo Bills,Cincinnati Bengals,103,-113
+11/04/2007,Cleveland Browns,Seattle Seahawks,-115,105
+11/04/2007,Cleveland Browns,Seattle Seahawks,-115,105
+11/04/2007,Detroit Lions,Denver Broncos,-145,125
+11/04/2007,Detroit Lions,Denver Broncos,-145,125
+11/04/2007,Indianapolis Colts,New England Patriots,175,-210
+11/04/2007,Indianapolis Colts,New England Patriots,175,-210
+11/04/2007,Kansas City Chiefs,Green Bay Packers,-135,115
+11/04/2007,Kansas City Chiefs,Green Bay Packers,-135,115
+11/04/2007,Minnesota Vikings,San Diego Chargers,280,-340
+11/04/2007,Minnesota Vikings,San Diego Chargers,280,-340
+11/04/2007,New Orleans Saints,Jacksonville Jaguars,-180,160
+11/04/2007,New Orleans Saints,Jacksonville Jaguars,-180,160
+11/04/2007,N.Y. Jets,Washington Redskins,175,-210
+11/04/2007,N.Y. Jets,Washington Redskins,175,-210
+11/04/2007,Oakland Raiders,Houston Texans,-145,125
+11/04/2007,Oakland Raiders,Houston Texans,-145,125
+11/04/2007,Philadelphia Eagles,Dallas Cowboys,165,-190
+11/04/2007,Philadelphia Eagles,Dallas Cowboys,165,-190
+11/04/2007,Tampa Bay Buccaneers,Arizona Cardinals,-190,165
+11/04/2007,Tampa Bay Buccaneers,Arizona Cardinals,-190,165
+11/04/2007,Tennessee Titans,Carolina Panthers,-240,200
+11/04/2007,Tennessee Titans,Carolina Panthers,-240,200
+11/05/2007,Pittsburgh Steelers,Baltimore Ravens,-420,330
+11/06/2008,Cleveland Browns,Denver Broncos,-165,145
+11/09/2008,Atlanta Falcons,New Orleans Saints,-121,111
+11/09/2008,Chicago Bears,Tennessee Titans,120,-140
+11/09/2008,Detroit Lions,Jacksonville Jaguars,210,-250
+11/09/2008,Houston Texans,Baltimore Ravens,-135,115
+11/09/2008,Miami Dolphins,Seattle Seahawks,-320,260
+11/09/2008,Minnesota Vikings,Green Bay Packers,-140,120
+11/09/2008,New England Patriots,Buffalo Bills,-180,160
+11/09/2008,N.Y. Jets,St. Louis Rams,-380,310
+11/09/2008,Oakland Raiders,Carolina Panthers,400,-500
+11/09/2008,Philadelphia Eagles,N.Y. Giants,-150,130
+11/09/2008,Pittsburgh Steelers,Indianapolis Colts,-170,150
+11/09/2008,San Diego Chargers,Kansas City Chiefs,-850,625
+11/10/2008,Arizona Cardinals,San Francisco 49Ers,-500,400
+11/11/2007,Arizona Cardinals,Detroit Lions,-130,110
+11/11/2007,Baltimore Ravens,Cincinnati Bengals,-165,145
+11/11/2007,Carolina Panthers,Atlanta Falcons,-175,155
+11/11/2007,Green Bay Packers,Minnesota Vikings,-245,205
+11/11/2007,Kansas City Chiefs,Denver Broncos,-160,140
+11/11/2007,Miami Dolphins,Buffalo Bills,110,-130
+11/11/2007,New Orleans Saints,St. Louis Rams,-550,425
+11/11/2007,N.Y. Giants,Dallas Cowboys,120,-140
+11/11/2007,Oakland Raiders,Chicago Bears,170,-200
+11/11/2007,Pittsburgh Steelers,Cleveland Browns,-500,400
+11/11/2007,San Diego Chargers,Indianapolis Colts,175,-210
+11/11/2007,Tennessee Titans,Jacksonville Jaguars,-220,180
+11/11/2007,Washington Redskins,Philadelphia Eagles,-145,125
+11/12/2007,Seattle Seahawks,San Francisco 49Ers,-450,350
+11/13/2008,New England Patriots,N.Y. Jets,-155,135
+11/16/2008,Atlanta Falcons,Denver Broncos,-265,225
+11/16/2008,Carolina Panthers,Detroit Lions,-800,600
+11/16/2008,Cincinnati Bengals,Philadelphia Eagles,335,-430
+11/16/2008,Green Bay Packers,Chicago Bears,-175,155
+11/16/2008,Indianapolis Colts,Houston Texans,-350,290
+11/16/2008,Jacksonville Jaguars,Tennessee Titans,120,-140
+11/16/2008,Kansas City Chiefs,New Orleans Saints,230,-270
+11/16/2008,Miami Dolphins,Oakland Raiders,-450,350
+11/16/2008,N.Y. Giants,Baltimore Ravens,-285,240
+11/16/2008,Pittsburgh Steelers,San Diego Chargers,-210,175
+11/16/2008,San Francisco 49Ers,St. Louis Rams,-290,245
+11/16/2008,Seattle Seahawks,Arizona Cardinals,135,-155
+11/16/2008,Tampa Bay Buccaneers,Minnesota Vikings,-220,180
+11/16/2008,Washington Redskins,Dallas Cowboys,110,-130
+11/17/2008,Buffalo Bills,Cleveland Browns,-220,180
+11/18/2007,Atlanta Falcons,Tampa Bay Buccaneers,155,-175
+11/18/2007,Baltimore Ravens,Cleveland Browns,110,-130
+11/18/2007,Buffalo Bills,New England Patriots,800,-1100
+11/18/2007,Cincinnati Bengals,Arizona Cardinals,-170,150
+11/18/2007,Dallas Cowboys,Washington Redskins,-600,450
+11/18/2007,Detroit Lions,N.Y. Giants,125,-145
+11/18/2007,Green Bay Packers,Carolina Panthers,-500,400
+11/18/2007,Houston Texans,New Orleans Saints,-117,107
+11/18/2007,Indianapolis Colts,Kansas City Chiefs,-1300,950
+11/18/2007,Jacksonville Jaguars,San Diego Chargers,-160,140
+11/18/2007,Minnesota Vikings,Oakland Raiders,-220,180
+11/18/2007,N.Y. Jets,Pittsburgh Steelers,350,-450
+11/18/2007,Philadelphia Eagles,Miami Dolphins,-475,375
+11/18/2007,San Francisco 49Ers,St. Louis Rams,165,-190
+11/18/2007,Seattle Seahawks,Chicago Bears,-240,200
+11/19/2007,Denver Broncos,Tennessee Titans,-110,100
+11/20/2008,Pittsburgh Steelers,Cincinnati Bengals,-900,650
+11/22/2007,Atlanta Falcons,Indianapolis Colts,550,-750
+11/22/2007,Dallas Cowboys,N.Y. Jets,-950,860
+11/22/2007,Detroit Lions,Green Bay Packers,155,-175
+11/23/2008,Arizona Cardinals,N.Y. Giants,130,-150
+11/23/2008,Atlanta Falcons,Carolina Panthers,101,-111
+11/23/2008,Baltimore Ravens,Philadelphia Eagles,-130,110
+11/23/2008,Cleveland Browns,Houston Texans,-150,130
+11/23/2008,Dallas Cowboys,San Francisco 49Ers,-400,320
+11/23/2008,Denver Broncos,Oakland Raiders,-400,320
+11/23/2008,Detroit Lions,Tampa Bay Buccaneers,290,-350
+11/23/2008,Jacksonville Jaguars,Minnesota Vikings,-135,115
+11/23/2008,Kansas City Chiefs,Buffalo Bills,135,-155
+11/23/2008,Miami Dolphins,New England Patriots,110,-130
+11/23/2008,San Diego Chargers,Indianapolis Colts,-145,125
+11/23/2008,Seattle Seahawks,Washington Redskins,140,-160
+11/23/2008,St. Louis Rams,Chicago Bears,250,-300
+11/23/2008,Tennessee Titans,N.Y. Jets,-230,190
+11/24/2008,New Orleans Saints,Green Bay Packers,-125,105
+11/25/2007,Arizona Cardinals,San Francisco 49Ers,-520,410
+11/25/2007,Carolina Panthers,New Orleans Saints,140,-160
+11/25/2007,Chicago Bears,Denver Broncos,-125,105
+11/25/2007,Cincinnati Bengals,Tennessee Titans,-115,105
+11/25/2007,Cleveland Browns,Houston Texans,-170,150
+11/25/2007,Jacksonville Jaguars,Buffalo Bills,-450,350
+11/25/2007,Kansas City Chiefs,Oakland Raiders,-190,165
+11/25/2007,New England Patriots,Philadelphia Eagles,-2500,1700
+11/25/2007,N.Y. Giants,Minnesota Vikings,-330,270
+11/25/2007,San Diego Chargers,Baltimore Ravens,-460,360
+11/25/2007,St. Louis Rams,Seattle Seahawks,150,-170
+11/25/2007,Tampa Bay Buccaneers,Washington Redskins,-190,165
+11/26/2007,Pittsburgh Steelers,Miami Dolphins,-900,700
+11/27/2008,Dallas Cowboys,Seattle Seahawks,-750,550
+11/27/2008,Detroit Lions,Tennessee Titans,430,-560
+11/27/2008,Philadelphia Eagles,Arizona Cardinals,-165,145
+11/29/2007,Dallas Cowboys,Green Bay Packers,-275,235
+11/30/2008,Buffalo Bills,San Francisco 49Ers,-270,230
+11/30/2008,Cincinnati Bengals,Baltimore Ravens,260,-320
+11/30/2008,Cleveland Browns,Indianapolis Colts,180,-220
+11/30/2008,Green Bay Packers,Carolina Panthers,-145,125
+11/30/2008,Minnesota Vikings,Chicago Bears,-230,190
+11/30/2008,New England Patriots,Pittsburgh Steelers,-140,120
+11/30/2008,N.Y. Jets,Denver Broncos,-350,290
+11/30/2008,Oakland Raiders,Kansas City Chiefs,-175,155
+11/30/2008,San Diego Chargers,Atlanta Falcons,-260,220
+11/30/2008,St. Louis Rams,Miami Dolphins,260,-320
+11/30/2008,Tampa Bay Buccaneers,New Orleans Saints,-180,160
+11/30/2008,Washington Redskins,N.Y. Giants,170,-200
+12/01/2008,Houston Texans,Jacksonville Jaguars,-165,145
+12/02/2007,Arizona Cardinals,Cleveland Browns,-109,-101
+12/02/2007,Carolina Panthers,San Francisco 49Ers,-175,155
+12/02/2007,Chicago Bears,N.Y. Giants,-110,100
+12/02/2007,Indianapolis Colts,Jacksonville Jaguars,-280,240
+12/02/2007,Kansas City Chiefs,San Diego Chargers,230,-270
+12/02/2007,Miami Dolphins,N.Y. Jets,-135,125
+12/02/2007,Minnesota Vikings,Detroit Lions,-240,200
+12/02/2007,New Orleans Saints,Tampa Bay Buccaneers,-250,210
+12/02/2007,Oakland Raiders,Denver Broncos,170,-200
+12/02/2007,Philadelphia Eagles,Seattle Seahawks,-175,155
+12/02/2007,Pittsburgh Steelers,Cincinnati Bengals,-290,245
+12/02/2007,St. Louis Rams,Atlanta Falcons,-175,155
+12/02/2007,Tennessee Titans,Houston Texans,-190,165
+12/02/2007,Washington Redskins,Buffalo Bills,-300,250
+12/03/2007,Baltimore Ravens,New England Patriots,1100,-1500
+12/04/2008,San Diego Chargers,Oakland Raiders,-470,370
+12/06/2007,Washington Redskins,Chicago Bears,-165,145
+12/07/2008,Arizona Cardinals,St. Louis Rams,-800,600
+12/07/2008,Baltimore Ravens,Washington Redskins,-270,230
+12/07/2008,Buffalo Bills,Miami Dolphins,-130,110
+12/07/2008,Chicago Bears,Jacksonville Jaguars,-280,240
+12/07/2008,Denver Broncos,Kansas City Chiefs,-400,320
+12/07/2008,Detroit Lions,Minnesota Vikings,425,-550
+12/07/2008,Green Bay Packers,Houston Texans,-320,260
+12/07/2008,Indianapolis Colts,Cincinnati Bengals,-700,500
+12/07/2008,New Orleans Saints,Atlanta Falcons,-160,140
+12/07/2008,N.Y. Giants,Philadelphia Eagles,-270,230
+12/07/2008,Pittsburgh Steelers,Dallas Cowboys,-200,170
+12/07/2008,San Francisco 49Ers,N.Y. Jets,180,-220
+12/07/2008,Seattle Seahawks,New England Patriots,280,-340
+12/07/2008,Tennessee Titans,Cleveland Browns,-800,600
+12/08/2008,Carolina Panthers,Tampa Bay Buccaneers,-175,155
+12/09/2007,Baltimore Ravens,Indianapolis Colts,310,-380
+12/09/2007,Buffalo Bills,Miami Dolphins,-290,245
+12/09/2007,Cincinnati Bengals,St. Louis Rams,-500,400
+12/09/2007,Denver Broncos,Kansas City Chiefs,-320,260
+12/09/2007,Detroit Lions,Dallas Cowboys,410,-525
+12/09/2007,Green Bay Packers,Oakland Raiders,-500,400
+12/09/2007,Houston Texans,Tampa Bay Buccaneers,125,-145
+12/09/2007,Jacksonville Jaguars,Carolina Panthers,-600,450
+12/09/2007,New England Patriots,Pittsburgh Steelers,-490,390
+12/09/2007,N.Y. Jets,Cleveland Browns,160,-180
+12/09/2007,Philadelphia Eagles,N.Y. Giants,-155,135
+12/09/2007,San Francisco 49Ers,Minnesota Vikings,300,-360
+12/09/2007,Seattle Seahawks,Arizona Cardinals,-320,260
+12/09/2007,Tennessee Titans,San Diego Chargers,104,-114
+12/10/2007,Atlanta Falcons,New Orleans Saints,180,-220
+12/11/2008,Chicago Bears,New Orleans Saints,-145,125
+12/13/2007,Houston Texans,Denver Broncos,125,-145
+12/14/2008,Arizona Cardinals,Minnesota Vikings,-220,180
+12/14/2008,Atlanta Falcons,Tampa Bay Buccaneers,-235,195
+12/14/2008,Baltimore Ravens,Pittsburgh Steelers,-150,130
+12/14/2008,Carolina Panthers,Denver Broncos,-330,270
+12/14/2008,Cincinnati Bengals,Washington Redskins,230,-270
+12/14/2008,Dallas Cowboys,N.Y. Giants,-150,130
+12/14/2008,Houston Texans,Tennessee Titans,130,-150
+12/14/2008,Indianapolis Colts,Detroit Lions,-1500,1100
+12/14/2008,Jacksonville Jaguars,Green Bay Packers,120,-140
+12/14/2008,Kansas City Chiefs,San Diego Chargers,220,-260
+12/14/2008,Miami Dolphins,San Francisco 49Ers,-240,200
+12/14/2008,N.Y. Jets,Buffalo Bills,-360,300
+12/14/2008,Oakland Raiders,New England Patriots,250,-300
+12/14/2008,St. Louis Rams,Seattle Seahawks,110,-130
+12/15/2007,San Francisco 49Ers,Cincinnati Bengals,320,-400
+12/15/2008,Philadelphia Eagles,Cleveland Browns,-800,600
+12/16/2007,Carolina Panthers,Seattle Seahawks,270,-330
+12/16/2007,Cleveland Browns,Buffalo Bills,-240,200
+12/16/2007,Dallas Cowboys,Philadelphia Eagles,-500,400
+12/16/2007,Kansas City Chiefs,Tennessee Titans,165,-190
+12/16/2007,Miami Dolphins,Baltimore Ravens,150,-170
+12/16/2007,New England Patriots,N.Y. Jets,-1500,1000
+12/16/2007,New Orleans Saints,Arizona Cardinals,-200,170
+12/16/2007,N.Y. Giants,Washington Redskins,-270,230
+12/16/2007,Oakland Raiders,Indianapolis Colts,400,-500
+12/16/2007,Pittsburgh Steelers,Jacksonville Jaguars,-165,145
+12/16/2007,San Diego Chargers,Detroit Lions,-450,350
+12/16/2007,St. Louis Rams,Green Bay Packers,280,-340
+12/16/2007,Tampa Bay Buccaneers,Atlanta Falcons,-641,581
+12/17/2007,Minnesota Vikings,Chicago Bears,-470,370
+12/18/2008,Jacksonville Jaguars,Indianapolis Colts,215,-255
+12/20/2007,St. Louis Rams,Pittsburgh Steelers,310,-380
+12/20/2008,Dallas Cowboys,Baltimore Ravens,-250,210
+12/21/2008,Cleveland Browns,Cincinnati Bengals,-130,110
+12/21/2008,Denver Broncos,Buffalo Bills,-260,220
+12/21/2008,Detroit Lions,New Orleans Saints,240,-280
+12/21/2008,Kansas City Chiefs,Miami Dolphins,160,-180
+12/21/2008,Minnesota Vikings,Atlanta Falcons,-170,150
+12/21/2008,New England Patriots,Arizona Cardinals,-350,290
+12/21/2008,N.Y. Giants,Carolina Panthers,-200,170
+12/21/2008,Oakland Raiders,Houston Texans,260,-320
+12/21/2008,Seattle Seahawks,N.Y. Jets,160,-180
+12/21/2008,St. Louis Rams,San Francisco 49Ers,165,-190
+12/21/2008,Tampa Bay Buccaneers,San Diego Chargers,-220,180
+12/21/2008,Tennessee Titans,Pittsburgh Steelers,125,-145
+12/21/2008,Washington Redskins,Philadelphia Eagles,230,-270
+12/22/2007,Carolina Panthers,Dallas Cowboys,500,-700
+12/22/2008,Chicago Bears,Green Bay Packers,-210,175
+12/23/2007,Arizona Cardinals,Atlanta Falcons,-525,410
+12/23/2007,Buffalo Bills,N.Y. Giants,115,-135
+12/23/2007,Chicago Bears,Green Bay Packers,280,-340
+12/23/2007,Cincinnati Bengals,Cleveland Browns,120,-140
+12/23/2007,Detroit Lions,Kansas City Chiefs,-260,220
+12/23/2007,Indianapolis Colts,Houston Texans,-290,245
+12/23/2007,Jacksonville Jaguars,Oakland Raiders,-800,720
+12/23/2007,Minnesota Vikings,Washington Redskins,-250,210
+12/23/2007,New England Patriots,Miami Dolphins,-2100,1600
+12/23/2007,New Orleans Saints,Philadelphia Eagles,-175,155
+12/23/2007,San Francisco 49Ers,Tampa Bay Buccaneers,245,-290
+12/23/2007,Seattle Seahawks,Baltimore Ravens,-750,550
+12/23/2007,Tennessee Titans,N.Y. Jets,-400,320
+12/24/2007,San Diego Chargers,Denver Broncos,-400,320
+12/28/2008,Arizona Cardinals,Seattle Seahawks,-290,245
+12/28/2008,Atlanta Falcons,St. Louis Rams,-850,625
+12/28/2008,Baltimore Ravens,Jacksonville Jaguars,-600,450
+12/28/2008,Buffalo Bills,New England Patriots,190,-230
+12/28/2008,Cincinnati Bengals,Kansas City Chiefs,-130,110
+12/28/2008,Green Bay Packers,Detroit Lions,-550,425
+12/28/2008,Houston Texans,Chicago Bears,-155,135
+12/28/2008,Indianapolis Colts,Tennessee Titans,125,-145
+12/28/2008,Minnesota Vikings,N.Y. Giants,-300,250
+12/28/2008,New Orleans Saints,Carolina Panthers,120,-140
+12/28/2008,N.Y. Jets,Miami Dolphins,-140,120
+12/28/2008,Philadelphia Eagles,Dallas Cowboys,-130,110
+12/28/2008,Pittsburgh Steelers,Cleveland Browns,-625,460
+12/28/2008,San Diego Chargers,Denver Broncos,-300,250
+12/28/2008,San Francisco 49Ers,Washington Redskins,-145,125
+12/28/2008,Tampa Bay Buccaneers,Oakland Raiders,-550,425
+12/29/2007,N.Y. Giants,New England Patriots,650,-850
+12/30/2007,Arizona Cardinals,St. Louis Rams,-260,220
+12/30/2007,Atlanta Falcons,Seattle Seahawks,110,-130
+12/30/2007,Baltimore Ravens,Pittsburgh Steelers,155,-175
+12/30/2007,Chicago Bears,New Orleans Saints,110,-130
+12/30/2007,Cleveland Browns,San Francisco 49Ers,-600,450
+12/30/2007,Denver Broncos,Minnesota Vikings,125,-145
+12/30/2007,Green Bay Packers,Detroit Lions,-170,150
+12/30/2007,Houston Texans,Jacksonville Jaguars,-290,245
+12/30/2007,Indianapolis Colts,Tennessee Titans,175,-210
+12/30/2007,Miami Dolphins,Cincinnati Bengals,120,-140
+12/30/2007,N.Y. Jets,Kansas City Chiefs,-200,170
+12/30/2007,Oakland Raiders,San Diego Chargers,340,-440
+12/30/2007,Philadelphia Eagles,Buffalo Bills,-380,310
+12/30/2007,Tampa Bay Buccaneers,Carolina Panthers,125,-145
+12/30/2007,Washington Redskins,Dallas Cowboys,-430,335
