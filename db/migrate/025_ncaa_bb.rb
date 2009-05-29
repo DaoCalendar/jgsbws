@@ -2,7 +2,7 @@ class NcaaBb < ActiveRecord::Migration
 require "migration_helpers"
 extend MigrationHelpers
 def self.up                                                                                                      
-	ncaabba = IO.readlines('../../joe guy ncaa bb 2008/jgsbws ncaabb2008.dat')
+	ncaabba = IO.readlines(File.dirname(__FILE__) + '/../../public/jgsbws ncaabb2008.dat')
   #  puts ncaabba.length
 #    sleep 3
     ncaabba.reject!{|g|g.include?('*')}

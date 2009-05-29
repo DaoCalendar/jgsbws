@@ -2,7 +2,7 @@ require "migration_helpers"
 class AddNflMoneyLines < ActiveRecord::Migration
   extend MigrationHelpers
   def self.up
-	  dataa = IO.readlines("../../scrape/nflml.dat")
+	  dataa = IO.readlines(File.dirname(__FILE__) + "/../../public/nflml.dat")
 	  teamleague   = League.find_by_name("National Football League").id
 	  #      0                1                                      2                  3    4
 	  # 01/05/2008,seattle seahawks,washington redskins,-175,155
