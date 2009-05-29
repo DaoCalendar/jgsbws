@@ -36,6 +36,12 @@ def soccer
 	#	E0,2000,1
 	yh		=	{}	#	year hash
 	years	=	[]
+	nsa		=	[]
+	sa.each{|y|
+		ta	=	y.split(',')
+		nsa	<<	y	if	ta[1].to_i	>=	1_999
+	}
+	sa	=	nsa
 	sa.each{|y|
 		ta	=	y.split(',')
 		yh[[ta[1],	ta[0]]]	=	ta[2] #	key is year and league and data is season

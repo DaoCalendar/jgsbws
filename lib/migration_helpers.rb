@@ -99,7 +99,9 @@ def fronthalf(sh,	tta,	sh2,	wh,	save_pred	=	true)
 		tid				=	nil
 	end
 	if	tid.nil?
-		p.home_team_id	=	Team.create(:name=>home, :league_id=>p.league).id
+#		p.home_team_id	=	Team.create(:name=>home, :league_id=>p.league).id
+		Team.create(:name=>home, :league_id=>p.league)
+		p.home_team_id	=	Team.find_by_name(home).id
 	else
 		p.home_team_id	=	tid
 	end
@@ -109,7 +111,9 @@ def fronthalf(sh,	tta,	sh2,	wh,	save_pred	=	true)
 		tid	=	nil
 	end
 	if	tid.nil?
-		p.away_team_id	=	Team.create(:name=>away, :league_id=>p.league).id
+#		p.away_team_id	=	Team.create(:name=>away, :league_id=>p.league).id
+		Team.create(:name=>away, :league_id=>p.league)
+		p.away_team_id	=	Team.find_by_name(away).id
 	else
 		p.away_team_id	=	tid
 	end

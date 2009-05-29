@@ -1,6 +1,6 @@
 #require 'ruby-prof'
 class MainController < ApplicationController
-# caches_page :index, :nfl, :notdone
+caches_page :index, :nfl, :notdone, :soccer, :makescr
 
 def mc_wrap(str, wrapper='td')
 	return "<#{wrapper}>#{str}</#{wrapper}>"
