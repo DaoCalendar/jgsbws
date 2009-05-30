@@ -31,6 +31,6 @@ test:
 production:
   adapter: mysql
   database: tjlsmith_production
-  username: tjlsmith
+  username: tjlsmith_jg
   password: ujmjw0ck
   host: 127.0.0.1
