@@ -154,9 +154,10 @@ def soccer
 end
 
 def main
-	year		=	params[:id].to_i
+	# params[:id] is now like 012007 - 01 is the league
+	year		=	params[:id][2,4].to_i
 	logger.warn params.inspect
-	leagueid	=	params[:league].to_i
+	leagueid	=	params[:id][0,2].to_i
 	pred		=	Prediction.find_all_by_league(leagueid)
 #	logger.warn pred.inspect
 	pred.sort!{|a,b|a["game_date_time"]<=>b["game_date_time"]}
