@@ -815,7 +815,7 @@ def summarytime(pweek,	oldweek,	sumhash,	beta,	outstr,	bph,	prevweeksprofit,	for
 		}
 		div		=	Gdiv	if	st	>	0
 		div		=	Rdiv	if	st	<	0
-		toutstr	=	Tr+"<td>#{div}Week #{oldweek} - #{wc} bets Total -> $#{st.r2.commify} yyyyWeeks profit -> $xxxxxxxxxx</div></div></td>"
+		toutstr	=	Tr+"<td>#{div}Week #{oldweek} - #{wc.commify} bets Total -> $#{st.r2.commify} yyyyWeeks profit -> $xxxxxxxxxx</div></div></td>"
 		oldweek	=	pweek
 		oldleague	=	''
 		beta.each{|b|
