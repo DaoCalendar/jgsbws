@@ -94,11 +94,13 @@ def fronthalf(sh,	tta,	sh2,	wh,	save_pred	=	true)
 	p.season				=	sh[league+Sea]
 	p.week				=	wh[league][1]
 	begin
+		tido				=	Team.find_by_name(home)
 		tid				=	Team.find_by_name(home).id
 	rescue
+		tido				=	nil
 		tid				=	nil
 	end
-	if	tid.nil?
+	if	tido.nil?	||	tid.nil?
 #		p.home_team_id	=	Team.create(:name=>home, :league_id=>p.league).id
 		if	Team.create(:name=>home, :league_id=>p.league)
 			puts "created #{home}"
@@ -110,11 +112,13 @@ def fronthalf(sh,	tta,	sh2,	wh,	save_pred	=	true)
 		p.home_team_id	=	tid
 	end
 	begin
+		tido	=	Team.find_by_name(away)
 		tid	=	Team.find_by_name(away).id
 	rescue
+		tido	=	nil
 		tid	=	nil
 	end
-	if	tid.nil?
+	if	tido.nil?	||	tid.nil?
 #		p.away_team_id	=	Team.create(:name=>away, :league_id=>p.league).id
 		if Team.create(:name=>away, :league_id=>p.league)
 			puts "created #{away}"

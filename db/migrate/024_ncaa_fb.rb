@@ -16,11 +16,12 @@ def self.up
       d=g.split(",")
 #      puts "g.inspect #{g.inspect}"
 #	begin
-		home_id = Team.find_by_name(d[2]).id
+	home_o	=	Team.find_by_name(d[2])
+	home_id	=	Team.find_by_name(d[2]).id
 #	rescue
 #        raise "no such team as "+d[2] if home_id.nil?
 	# add teanms
-	if	home_id.nil?
+	if	home_o.nil?	||	home_id.nil?
 		t = Team.new
 		t.name = d[2]
 		t.league_id	=	teamleague
@@ -33,10 +34,11 @@ def self.up
 		raise "d.inspect #{d.inspect}" if home_id.nil?
 	end
 #      begin
+        away_o = Team.find_by_name(d[5])
         away_id = Team.find_by_name(d[5]).id
 #      rescue
 #        raise "no such team as "+d[5] if away_id.nil?
-	if	away_id.nil?
+	if	away_o.nil?	||	away_id.nil?
 		t = Team.new
 		t.name = d[5]
 		t.league_id = teamleague

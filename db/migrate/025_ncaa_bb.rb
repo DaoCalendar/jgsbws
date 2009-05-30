@@ -27,10 +27,10 @@ def self.up
     #  puts "g.inspect #{g.inspect}"
     puts "seeking #{d[2]}"
         home_o	=	Team.find_by_name(d[2])
-	puts "home object #{home_o.inspect}"
-	sleep 3
+#	puts "home object #{home_o.inspect}"
+#	sleep 3
         home_id = Team.find_by_name(d[2]).id
-	puts "home_id is #{home_id}"
+#	puts "home_id is #{home_id}"
 #        raise "no such team as "+d[2] if home_id.nil?
 	# add teanms
 	if	home_o.nil?	||	home_id.nil?
