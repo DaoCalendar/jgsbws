@@ -33,7 +33,7 @@ def self.up
 	puts "home_id is #{home_id}"
 #        raise "no such team as "+d[2] if home_id.nil?
 	# add teanms
-	if	home_id.nil?
+	if	home_o.nil?	||	home_id.nil?
 		puts "making #{d[2]}"
 		t = Team.new
 		t.name = d[2]
@@ -46,9 +46,10 @@ def self.up
 		home_id = Team.find_by_name(d[2]).id
 		raise "d.inspect #{d.inspect}"	if	home_id.nil?
       end
-        away_id = Team.find_by_name(d[5]).id
+        away_o	=	Team.find_by_name(d[5])
+        away_id	=	Team.find_by_name(d[5]).id
 #        raise "no such team as "+d[5] if away_id.nil?
-	if	away_id.nil?
+	if	away_o.nil?	||	away_id.nil?
 		puts "making #{d[5]}"
 		t = Team.new
 		t.name = d[5]
