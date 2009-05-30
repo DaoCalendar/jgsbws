@@ -1,6 +1,6 @@
 #require 'ruby-prof'
 class MainController < ApplicationController
-caches_page :index, :nfl, :notdone, :soccer, :makescr
+caches_page :index, :nfl, :notdone, :soccer, :makscr
 
 def mc_wrap(str, wrapper='td')
 	return "<#{wrapper}>#{str}</#{wrapper}>"
@@ -16,8 +16,15 @@ def makscr
 #	raise
 #	Profile the code
 
+	# l112 <- combo league and season
+
 #	RubyProf.start
-	makeswp(params['league'],	params['id'].to_i)
+#	makeswp(params['league'],	params['id'].to_i)
+	league	=	params['id'][0,2]
+	season	=	params['id'][2,2].to_i
+#	puts params['id']
+#	raise "league >#{league}< season >#{season}<"
+	makeswp(league,	season)
 
 #	result = RubyProf.stop
 
@@ -124,7 +131,8 @@ def soccer
 				outstr2	=	div+ss.amount.r2.commify+'</div>'	unless	ss.nil?
 				#		<a href="/main/main/2008?league=5">Joe Guy's 2008 NCAA Basketball Season</a><br>
 				title		=	"#{l[1][0]} - Season #{yh[keyy].chomp} - #{y}"
-				ls		=	'<a href="/main/makscr/'+"#{season}?league=#{l[0]}"+'"'+"title='#{title}'>"+outstr2+'</a>'	unless	ss.nil?
+#				ls		=	'<a href="/main/makscr/'+"#{season}?league=#{l[0]}"+'"'+"title='#{title}'>"+outstr2+'</a>'	unless	ss.nil?
+				ls		=	'<a href="/main/makscr/'+"#{l[0]}#{season}"+'"'+"title='#{title}'>"+outstr2+'</a>'	unless	ss.nil?
 				ls		=	outstr2	if	ss.nil?
 				outstr	+=	wrap(ls)
 			else

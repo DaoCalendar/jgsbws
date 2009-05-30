@@ -880,8 +880,8 @@ def makeswp(lid,	pid)
 	}
 	puts params
 #	raise
-	lid		=	params['league']
-	pid		=	params['id'].to_i
+#	lid		=	params['league']
+#	pid		=	params['id'].to_i
 	sid		=	League.find_by_short_league(lid).id
 	lname	=	League.find_by_short_league(lid).name
 	preds	=	nil
