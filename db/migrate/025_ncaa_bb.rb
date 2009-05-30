@@ -1,13 +1,15 @@
 class NcaaBb < ActiveRecord::Migration
 require "migration_helpers"
 extend MigrationHelpers
-def self.up                                                                                                      
+def self.up
 	ncaabba = IO.readlines(File.dirname(__FILE__) + '/../../public/jgsbws ncaabb2008.dat')
-  #  puts ncaabba.length
+    puts ncaabba.length
 #    sleep 3
     ncaabba.reject!{|g|g.include?('*')}
     ncaabba.reject!{|g|g.empty?}
+    puts ncaabba.length
     teamleague   = League.find_by_name("NCAA Basketball").id
+    puts "league is #{teamleague}" unless teamleague.nil?
     raise "no league!" if teamleague.nil?
     #    0     1        2          3   4         5                 6     7   8                  9                               10                   11                 12                  13   14    15                16                        17         18    19  20    21  22  23 24  24
     # 14/9/08,2,St. Louis,8.0,13,N.Y. Giants,23.6875,41,9.0,0.0204550479789872,0.228046242969888,42.0,0.0554413784828847,-110,-110,N O,TT Spread bet right,TT OU wrong,N O,N O,N O,   0,   -1,   0, -1,  0
