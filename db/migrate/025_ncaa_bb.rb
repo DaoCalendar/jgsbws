@@ -25,7 +25,7 @@ def self.up
 		else raise "wonky date #{g.inspect}"
 	end
     #  puts "g.inspect #{g.inspect}"
-    puts "seeking #{d[2]}"
+#    puts "seeking #{d[2]}"
         home_o	=	Team.find_by_name(d[2])
 #	puts "home object #{home_o.inspect}"
 #	sleep 3
