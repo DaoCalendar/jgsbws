@@ -83,7 +83,7 @@ def fronthalf(sh,	tta,	sh2,	wh,	save_pred	=	true)
 #		sh[league][0]		=	p.game_date_time
 	else
 		puts "setting up #{league}"
-		sleep 1
+#		sleep 1
 		sh[league+Cok]	==	false
 #		sh[league]		=	[p.game_date_time,	1]
 		sh[league+Sea]	=	1
