@@ -23,7 +23,11 @@ def self.up
 	t = Team.new
 	t.name = d[2]
 	t.league_id = teamleague
-	t.save!
+	if t.save!
+		puts "Created #{t.name}"
+	else
+		puts 'Create of #{t.name} failed!!!!'
+	end
 	begin
 		home_id = Team.find_by_name(d[2]).id
 	rescue
@@ -37,7 +41,11 @@ def self.up
 	t = Team.new
 	t.name = d[5]
 	t.league_id = teamleague
-	t.save!
+	if t.save!
+		puts "Created #{t.name}"
+	else
+		puts 'Create of #{t.name} failed!!!!'
+	end
 	begin
 		away_id = Team.find_by_name(d[5]).id
 	rescue
