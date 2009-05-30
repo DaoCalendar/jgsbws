@@ -15,7 +15,7 @@ development:
   adapter: mysql
   database: jgsbws_development
   username: root
-  password: root
+  password: ujmjw0ck
   host: localhost
 
 # Warning: The database defined as 'test' will be erased and
@@ -25,12 +25,12 @@ test:
   adapter: mysql
   database: jgsbws_test
   username: root
-  password: root
+  password: ujmjw0ck
   host: localhost
 
 production:
   adapter: mysql
-  database: jgsbws_production
-  username: root
-  password: root
-  host: localhost
+  database: tjlsmith_production
+  username: tjlsmith_jg
+  password: ujmjw0ck
+  host: 127.0.0.1
