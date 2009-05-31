@@ -874,6 +874,8 @@ def maintsh(sumhash, bookie,	prize)
 end	#maintsh
 
 def makeswp(lid,	pid)
+	makedat		=	(ENV['RAILS_ENV']	==	'development')
+	ff			=	File.open('graphdata.txt','a')	if	makedat
 	bth			=	{}
 	Betarray.each_with_index{|s,	bai|
 		bth[s]	=	Betnames[bai]
@@ -882,7 +884,11 @@ def makeswp(lid,	pid)
 #	raise
 #	lid		=	params['league']
 #	pid		=	params['id'].to_i
-	sid		=	League.find_by_short_league(lid).id
+	begin
+		sid		=	League.find_by_short_league(lid).id
+	rescue
+		raise "lid #{lid} pid #{pid}"
+	end
 	lname	=	League.find_by_short_league(lid).name
 	preds	=	nil
 	preds	=	Prediction.find_all_by_league(sid)
@@ -925,6 +931,7 @@ def makeswp(lid,	pid)
 	bet		=	bankroll	*	Fpc
 	fdate	=	pred[0].game_date_time
 	ldate		=	pred.last.game_date_time
+	ff.write("#{lid}#{pid} -> #{lname} - Season #{pid} - #{fdate.strftime("%B %d %Y  ")} to #{ldate.strftime("%B %d %Y  ")} Starting bankroll $#{bankroll.commify} - Bet is $#{bet}\n")	if	makedat
 	outerstr	=	"<h2>#{lname} - Season #{pid} - #{fdate.strftime("%B %d %Y  ")} to #{ldate.strftime("%B %d %Y  ")}</h2> Starting bankroll $#{bankroll.commify} - Bet is $#{bet}<br>"
 	outerstr	+=	'<table border="1"><th>'
 	outstr	=	[]
@@ -1050,6 +1057,7 @@ def makeswp(lid,	pid)
 					end
 					bankroll	+=	prize
 					gt		+=	prize
+					ff.write("#{lid}#{pid} -> #{gt}\n")	if	makedat
 					begin
 						bph[bookie[0,2]]	+=	prize
 					rescue
@@ -1071,6 +1079,7 @@ def makeswp(lid,	pid)
 		outstr	<<	thisrow.dup
 		thisrow	=	''
 	}	#	next prediction
+	ff.close	if	makedat
 #	raise	"bph.inspect #{bph.inspect}"
 	puts "sending sumofprevweeksprofit #{sumofprevweeksprofit}"
 	sumofprevweeksprofit,	sumhash,	outstr,	oldweek	=	summarytime(oldweek+1,	oldweek,	sumhash,	beta,	outstr, bph,	sumofprevweeksprofit,	true)
