@@ -1,6 +1,6 @@
 #require 'ruby-prof'
 class MainController < ApplicationController
-caches_page :index, :nfl, :notdone, :soccer, :makscr
+	caches_page :index, :nfl, :notdone, :soccer, :makscr, :main
 
 def mc_wrap(str, wrapper='td')
 	return "<#{wrapper}>#{str}</#{wrapper}>"
@@ -16,8 +16,15 @@ def makscr
 #	raise
 #	Profile the code
 
+	# l112 <- combo league and season
+
 #	RubyProf.start
-	makeswp(params['league'],	params['id'].to_i)
+#	makeswp(params['league'],	params['id'].to_i)
+	league	=	params['id'][0,2]
+	season	=	params['id'][2,2].to_i
+#	puts params['id']
+#	raise "league >#{league}< season >#{season}<"
+	makeswp(league,	season)
 
 #	result = RubyProf.stop
 
@@ -125,7 +132,7 @@ def soccer
 				#		<a href="/main/main/2008?league=5">Joe Guy's 2008 NCAA Basketball Season</a><br>
 				title		=	"#{l[1][0]} - Season #{yh[keyy].chomp} - #{y}"
 #				ls		=	'<a href="/main/makscr/'+"#{season}?league=#{l[0]}"+'"'+"title='#{title}'>"+outstr2+'</a>'	unless	ss.nil?
-				ls		=	'<a href="/main/makscr/'+"#{l[0]}/#{season}"+'"'+"title='#{title}'>"+outstr2+'</a>'	unless	ss.nil?
+				ls		=	'<a href="/main/makscr/'+"#{l[0]}#{season}"+'"'+"title='#{title}'>"+outstr2+'</a>'	unless	ss.nil?
 				ls		=	outstr2	if	ss.nil?
 				outstr	+=	wrap(ls)
 			else
@@ -147,9 +154,10 @@ def soccer
 end
 
 def main
-	year		=	params[:id].to_i
+	# params[:id] is now like 012007 - 01 is the league
+	year		=	params[:id][2,4].to_i
 	logger.warn params.inspect
-	leagueid	=	params[:league].to_i
+	leagueid	=	params[:id][0,2].to_i
 	pred		=	Prediction.find_all_by_league(leagueid)
 #	logger.warn pred.inspect
 	pred.sort!{|a,b|a["game_date_time"]<=>b["game_date_time"]}
