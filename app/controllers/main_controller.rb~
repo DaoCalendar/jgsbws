@@ -20,8 +20,9 @@ def makscr
 
 #	RubyProf.start
 #	makeswp(params['league'],	params['id'].to_i)
-	league	=	params['id'][0,2]
-	season	=	params['id'][2,2].to_i
+	t		=	params['id'].split('_')
+	league	=	t[0]
+	season	=	t[1].to_i
 #	puts params['id']
 #	raise "league >#{league}< season >#{season}<"
 	makeswp(league,	season)
@@ -35,7 +36,7 @@ def makscr
 end
 
 def soccer
-	sa		=	IO.readlines("public/soccer seasons.txt")
+	sa	=	IO.readlines("public/soccer seasons.txt")
 	#	build table with season numbers across the top and league names down the left side
 	#	puts sa.inspect
 	#	raise
@@ -132,8 +133,9 @@ def soccer
 				#		<a href="/main/main/2008?league=5">Joe Guy's 2008 NCAA Basketball Season</a><br>
 				title		=	"#{l[1][0]} - Season #{yh[keyy].chomp} - #{y}"
 #				ls		=	'<a href="/main/makscr/'+"#{season}?league=#{l[0]}"+'"'+"title='#{title}'>"+outstr2+'</a>'	unless	ss.nil?
-				ls		=	'<a href="/main/makscr/'+"#{l[0]}#{season}"+'"'+"title='#{title}'>"+outstr2+'</a>'	unless	ss.nil?
-				ls		=	outstr2	if	ss.nil?
+				ls		=	'<a href="/main/makscr/'+"#{l[0]}_#{season}"+'"'+"title='#{title}'>"+outstr2+'</a>'	unless	ss.nil?
+				makeswp(l[0],	season, [bet,	bankroll].min)	if	Makedata	&&	!ss.nil?
+				ls		=	outstr2		if	ss.nil?
 				outstr	+=	wrap(ls)
 			else
 				outstr	+=	wrap('')

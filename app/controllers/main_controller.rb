@@ -36,7 +36,7 @@ def makscr
 end
 
 def soccer
-	sa		=	IO.readlines("public/soccer seasons.txt")
+	sa	=	IO.readlines("public/soccer seasons.txt")
 	#	build table with season numbers across the top and league names down the left side
 	#	puts sa.inspect
 	#	raise
@@ -134,7 +134,8 @@ def soccer
 				title		=	"#{l[1][0]} - Season #{yh[keyy].chomp} - #{y}"
 #				ls		=	'<a href="/main/makscr/'+"#{season}?league=#{l[0]}"+'"'+"title='#{title}'>"+outstr2+'</a>'	unless	ss.nil?
 				ls		=	'<a href="/main/makscr/'+"#{l[0]}_#{season}"+'"'+"title='#{title}'>"+outstr2+'</a>'	unless	ss.nil?
-				ls		=	outstr2	if	ss.nil?
+				makeswp(l[0],	season, [bet,	bankroll].min)	if	Makedata	&&	!ss.nil?
+				ls		=	outstr2		if	ss.nil?
 				outstr	+=	wrap(ls)
 			else
 				outstr	+=	wrap('')
@@ -159,6 +160,7 @@ def main
 	year		=	params[:id][2,4].to_i
 	logger.warn params.inspect
 	leagueid	=	params[:id][0,2].to_i
+#	raise "year #{year} leagueid #{leagueid}"
 	pred		=	Prediction.find_all_by_league(leagueid)
 #	logger.warn pred.inspect
 	pred.sort!{|a,b|a["game_date_time"]<=>b["game_date_time"]}
@@ -233,6 +235,7 @@ def main
 	pred.each{|g|
 		newpred	<<	g	if	g.game_date_time	>=	startdate	&&	g.game_date_time	<=	enddate
 	}
+#	raise
 	@main	=	do_season(newpred,	year,	winprob,	header,	gap,	gaptitle, (leagueid	==	5),	sport,	lname)
 end
 =begin
