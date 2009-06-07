@@ -1,6 +1,6 @@
 # Filters added to this controller apply to all controllers in the application.
 # Likewise, all the methods added will be available for all controllers.
-Makedata			=	false
+Makedata			=	true
 Pasttime			=	Time.local(1_962,1,1)
 Seasonone		=	Time.local(2_008,4,7)
 Futuretime		=	Time.local(2_012,1,1)
@@ -598,8 +598,12 @@ end # def nameconv
 def	do_season(newpred,	year,	winprob	=	0.7,	header	=	nil, gap	=	Secondsinthreedays,	gaptitle	=	"Week", mm = false, sport	=	nil,	lname	=	nil)
 	raise 'need a sport'		if	sport.nil?
 	raise 'need a league'		if	lname.nil?
+	ff				=	File.open('graphdata.txt','a')	if	Makedata
+#	puts "in makeswp with #{lid} and #{pid}"			if	Makedata
 	fdate			=	newpred.first.game_date_time
 	ldate				=	newpred.last.game_date_time
+	ff.write("#{sport} -> #{lname}^ #{fdate.strftime("%B %d %Y ")} - #{ldate.strftime("%B %d %Y ")}\n")	if	Makedata
+#	raise "Makedata #{Makedata}"
 	week			=	0
 	bet				=	4
 	currentdate		=	nil
@@ -620,8 +624,8 @@ def	do_season(newpred,	year,	winprob	=	0.7,	header	=	nil, gap	=	Secondsinthreeda
 	newpred.each{|g|
 		next if g.actual_home_score	<=	0	or g.actual_away_score	<=	0	or	g.game_total	==	0
 		unless utlid.include?(g.home_team_id)
-			utl	<<	Team.find(g.home_team_id).name
-			utlid	<<	g.home_team_id
+			utl		<<	Team.find(g.home_team_id).name
+			utlid		<<	g.home_team_id
 		end
 		winprob		=	0.65	if	mm	and g.game_date_time	>=	Time.local(2_009,3,20)
 		currentdate	=	g.game_date_time	if	currentdate.nil?
@@ -641,7 +645,7 @@ def	do_season(newpred,	year,	winprob	=	0.7,	header	=	nil, gap	=	Secondsinthreeda
 		# now build row of predictions,
 		# date, home with moneyline, away with moneyline, spread, ou, spreadpick, ttspreadpick, oupick, ttoupick, moneyline both small and large bet
 		# ysh,	wsh,	supick,	suright,	supush,	atsbet,	oubet,	atsbetright,	atsbetpush,	oubetright,	oubetpush
-		   ysh,	wsh,	supick,	suright,	supush,	atsbet,	oubet,	atsbetright,	atsbetpush,	oubetright,	oubetpush	=	calcatsbet(g,	ysh,	wsh,	winprob)
+		ysh,	wsh,	supick,	suright,	supush,	atsbet,	oubet,	atsbetright,	atsbetpush,	oubetright,	oubetpush	=	calcatsbet(g,	ysh,	wsh,	winprob)
 		# date	home	away		spread	ou	atspick	
 		thisrow		=	''
 		theader		+=	wrap('Game Date')	if	header.empty?
@@ -692,7 +696,6 @@ def	do_season(newpred,	year,	winprob	=	0.7,	header	=	nil, gap	=	Secondsinthreeda
 		thisrow	+=	wrap(mlo)		if		bbmlprz.nil?	or mlo.include?('No Opinion')	# if	mlo.nil?
 		thisrow	+=	wrap(mlo+" big bet >#{bbmlprz.commify}< Running total is #{ysh['mlbb'].commify}")		unless	(bbmlprz.nil? or mlo.include?('No Opinion'))	# if	mlo.nil?
 
-		
 		# end of row
 		trm		<<	'<tr>'+thisrow+'</tr>'
 		header	=	'<tr>'+theader+'</tr>'	if 	header.empty?
@@ -762,8 +765,8 @@ def calcatsbet(g,	ysh,	wsh, winprob)
 	if atsbetpush
 		wsh['atsbetpush']	+=	1 
 	else
-		ysh['ats']		+=	1 unless atsbet.nil?
-		wsh['ats']		+=	1 unless atsbet.nil?
+		ysh['ats']	+=	1 unless atsbet.nil?
+		wsh['ats']	+=	1 unless atsbet.nil?
 	end
 
 	oubet		=	nil
@@ -948,7 +951,7 @@ def makeswp(lid,	pid,	bet	=	40.0)
 	bet		=	bankroll	*	Fpc
 	fdate	=	pred[0].game_date_time
 	ldate		=	pred.last.game_date_time
-	ff.write("#{lid}#{pid} -> #{lname}^ #{fdate.strftime("%B %d %Y ")} - #{ldate.strftime("%B %d %Y ")}")	if	Makedata
+	ff.write("#{lid}#{pid} -> #{lname}^ #{fdate.strftime("%B %d %Y ")} - #{ldate.strftime("%B %d %Y ")}\n")	if	Makedata
 	outerstr	=	"<h2>#{lname} - Season #{pid} - #{fdate.strftime("%B %d %Y  ")} to #{ldate.strftime("%B %d %Y  ")}</h2> Starting bankroll $#{bankroll.commify} - Bet is $#{bet}<br>"
 #	outerstr	+=	'<img src="'+"images/#{lid}#{pid}.png"+'" <P ALIGN="CENTER">'
 	outerstr	+=	'<table border="1"><th>'

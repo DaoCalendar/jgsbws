@@ -1,6 +1,6 @@
 # Filters added to this controller apply to all controllers in the application.
 # Likewise, all the methods added will be available for all controllers.
-Makedata			=	true
+Makedata			=	false
 Pasttime			=	Time.local(1_962,1,1)
 Seasonone		=	Time.local(2_008,4,7)
 Futuretime		=	Time.local(2_012,1,1)
@@ -35,19 +35,19 @@ Bookienamehash['VC']	=	'VC Bet'
 Bookienamehash['WH']	=	'William Hill'
 
 class Numeric
-  def commify()
+  def	commify()
 	  retme 	=	self.to_s.reverse.gsub(/(\d\d\d)(?=\d)(?!\d*\.)/,'\1,').reverse
 	  if retme.include?('.')
 		  retme	=	retme	+	'0' unless (retme.length - retme.index('.'))	==	3
 	  end
 	  return retme
   end 
-  def currency()
+  def	currency()
     sstr = to_s+".00"
     sstr.gsub!("..",".") if sstr.include?("..")
     sstr[0..sstr.index(".")+2]
   end
-  def r2()
+  def	r2()
 #	return self
 	begin
 		return ((((self+0.005)*100.0).to_i) / 100.00)
@@ -65,7 +65,7 @@ class ApplicationController < ActionController::Base
 	# Pick a unique cookie name to distinguish our session data from others'
 	session :session_key	=>	'_jgsbws_session_id'
 
-	def getthisweeksbets(preds,	thisweek,	sbh,	beta)
+	def	getthisweeksbets(preds,	thisweek,	sbh,	beta)
 		eva			=	[]
 		preds.each_with_index{|p,	pi|
 			next unless	p.week	==	thisweek
@@ -75,6 +75,10 @@ class ApplicationController < ActionController::Base
 				eva	<<	[b,	(s[b+'_ev'].nil? ? 0.0 : s[b+'_ev']),	pi]	unless	s[b].nil?
 			}
 		}
+		puts	eva.inspect
+		puts eva.length
+		eva.delete_if{|e|	e[1]	<	1.0}
+#		raise	"eva.inspect #{eva.inspect} eva.length #{eva.length}"
 		return eva
 	end
 
@@ -84,7 +88,7 @@ class ApplicationController < ActionController::Base
 		return a[1].to_i<=>b[1].to_i	if	a[0].to_i	==	b[0].to_i
 		return a[0].to_i<=>b[0].to_i
 	end
-	def mlhlpr(p)
+	def	mlhlpr(p)
 		# process moneyline
 		return ["No Moneyline", 0.0, nil, 0.0, 0.0, 0.0, false] if p.moneyline_home == -110 and p.moneyline_away == -110 or (p.moneyline_home == 0 or p.moneyline_away == 0)
 		hml = nil
@@ -178,7 +182,7 @@ class ApplicationController < ActionController::Base
 		return ["<div id='yellow'> #{nameconv(Team.find(p.away_team_id).name, p.league)}  ->  0.0</div>", 0.0, mlats, 0.0, 0.0, 0.0, false] if pickaway and p.actual_away_score == p.actual_home_score
 		raise "why am i here"
 	end
-def hi
+def	hi
 	ysh				=	{}
 	wsh				=	{}
 	ysh['hd']			=	[0,	0]
@@ -215,7 +219,7 @@ def hi
 	ysh['mll']			=	0
 	return ysh,	wsh
 end
-def ms(wsh, ysh, week, header=nil, gaptitle	=	'Week', gc	=	0)
+def	ms(wsh, ysh, week, header=nil, gaptitle	=	'Week', gc	=	0)
 		summ	=	0.0
 		ta	=	[]
 		#week first
@@ -328,7 +332,7 @@ def ms(wsh, ysh, week, header=nil, gaptitle	=	'Week', gc	=	0)
 		return [ta,	summ]
 	end
 
-	def nameconv(name, league)
+	def	nameconv(name, league)
 		case '*'+name+'*'
 		when '*air force*'
 			return 'Air Force Falcons'
@@ -593,7 +597,7 @@ def ms(wsh, ysh, week, header=nil, gaptitle	=	'Week', gc	=	0)
 		else
          return name
 	end # case
-end # def nameconv
+end # def	nameconv
 
 def	do_season(newpred,	year,	winprob	=	0.7,	header	=	nil, gap	=	Secondsinthreedays,	gaptitle	=	"Week", mm = false, sport	=	nil,	lname	=	nil)
 	raise 'need a sport'		if	sport.nil?
@@ -677,7 +681,7 @@ def	do_season(newpred,	year,	winprob	=	0.7,	header	=	nil, gap	=	Secondsinthreeda
 		# ou result
 		theader	+=	wrap('OU Pick')	if	header.empty?
 		thisrow	+=	wrap(NO)			if	oubet.nil?
-		# def wrap(str, picked=nil, pickright=nil, pickpush=nil, ou=false)
+		# def	wrap(str, picked=nil, pickright=nil, pickpush=nil, ou=false)
 		thisrow	+=	wrap((oubet	?	'Over'	:	'Under'),	true,	oubetright,	oubetpush)	unless	oubet.nil?
 
 		# moneyline
@@ -722,7 +726,7 @@ def	do_season(newpred,	year,	winprob	=	0.7,	header	=	nil, gap	=	Secondsinthreeda
 	@main		=	rm.dup
 end	#	do_season
 
-def calcatsbet(g,	ysh,	wsh, winprob)
+def	calcatsbet(g,	ysh,	wsh, winprob)
 	supick		=	nil
 	supick		=	g.home_team_id	if	g.prob_home_win_su			>=	winprob
 	supick		=	g.away_team_id	if	g.prob_away_win_su				>=	winprob
@@ -796,7 +800,7 @@ def calcatsbet(g,	ysh,	wsh, winprob)
 	return ysh,	wsh,	supick,	suright,	supush,	atsbet,	oubet,	atsbetright,	atsbetpush,	oubetright,	oubetpush
 	end
 
-	def wrap(str, picked=nil, pickright=nil, pickpush=nil, ou=false)
+	def	wrap(str, picked=nil, pickright=nil, pickpush=nil, ou=false)
 		#	if ou
 		#		return "<td>#{str}</td>" if picked.nil? # no opinion in ou
 		#		return "<td><div id='yellow'>#{str}</div></td>" if pickpush
@@ -813,7 +817,7 @@ def calcatsbet(g,	ysh,	wsh, winprob)
 =begin
 =end
 
-def summarytime(pweek,	oldweek,	sumhash,	beta,	outstr,	bph,	prevweeksprofit,	forced	=	false)
+def	summarytime(pweek,	oldweek,	sumhash,	beta,	outstr,	bph,	prevweeksprofit,	forced	=	false)
 	# check for summary time
 	weekstotalprofits	=	0.0
 	if	!(oldweek	==	pweek)	or forced
@@ -873,7 +877,7 @@ def summarytime(pweek,	oldweek,	sumhash,	beta,	outstr,	bph,	prevweeksprofit,	for
 	end
 end	#	summarytime
 
-def maintsh(sumhash, bookie,	prize)
+def	maintsh(sumhash, bookie,	prize)
 	begin
 		sumhash['year'+bookie]		+=	prize
 		sumhash['yearcount'+bookie]	+=	1
@@ -891,7 +895,7 @@ def maintsh(sumhash, bookie,	prize)
 	return sumhash
 end	#maintsh
 
-def makeswp(lid,	pid,	bet	=	40.0)
+def	makeswp(lid,	pid,	bet	=	40.0)
 #	makedat		=	(ENV['RAILS_ENV']	==	'development')
 	ff			=	File.open('graphdata.txt','a')	if	Makedata
 	puts "in makeswp with #{lid} and #{pid}"		if	Makedata

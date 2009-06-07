@@ -160,6 +160,7 @@ def main
 	year		=	params[:id][2,4].to_i
 	logger.warn params.inspect
 	leagueid	=	params[:id][0,2].to_i
+#	raise "year #{year} leagueid #{leagueid}"
 	pred		=	Prediction.find_all_by_league(leagueid)
 #	logger.warn pred.inspect
 	pred.sort!{|a,b|a["game_date_time"]<=>b["game_date_time"]}
@@ -234,6 +235,7 @@ def main
 	pred.each{|g|
 		newpred	<<	g	if	g.game_date_time	>=	startdate	&&	g.game_date_time	<=	enddate
 	}
+#	raise
 	@main	=	do_season(newpred,	year,	winprob,	header,	gap,	gaptitle, (leagueid	==	5),	sport,	lname)
 end
 =begin
