@@ -1,6 +1,7 @@
 # Filters added to this controller apply to all controllers in the application.
 # Likewise, all the methods added will be available for all controllers.
-Makedata			=	false
+Makedata			=	false	# make data file for images
+Oldway			=	false	# try new moneyline way
 Pasttime			=	Time.local(1_962,1,1)
 Seasonone		=	Time.local(2_008,4,7)
 Futuretime		=	Time.local(2_012,1,1)
@@ -91,31 +92,33 @@ class ApplicationController < ActionController::Base
 	def	mlhlpr(p)
 		# process moneyline
 		return ["No Moneyline", 0.0, nil, 0.0, 0.0, 0.0, false] if p.moneyline_home == -110 and p.moneyline_away == -110 or (p.moneyline_home == 0 or p.moneyline_away == 0)
-		hml = nil
-		hml = p.moneyline_home/100.0 if p.moneyline_home > 0
-		hml = -100.0/p.moneyline_home if p.moneyline_home < 0
-		raise "hml problem p is #{p.inspect}" if hml.nil?
-		aml = nil
-		aml = p.moneyline_away/100.0 if p.moneyline_away > 0
-		aml = -100.0/p.moneyline_away if p.moneyline_away < 0
-		# raise "aml problem" if aml.nil?
-		aml = 0.0 if aml.nil?
-		pickhome = nil
-		pickaway = nil
-		homepo   = p.prob_home_win_su # *hml
-		awaypo    = p.prob_away_win_su # *aml
-		raise "homepo is nil" if homepo.nil?
-		raise "awaypo is nil" if awaypo.nil?
-#		return ["<div id='yellow'>No Opinion </div>", 0.0]  if homepo<1.0 and awaypo<1.0
-		pickhome = (homepo > awaypo) unless p.league == 5
-		pickaway = (awaypo > homepo) unless p.league == 5
-		pickhome = (homepo > 0.92) # if p.league > 3
-		pickaway = (awaypo > 0.92) # if p.league > 3
-		pickhome = (homepo > 0.85) if p.league  == 2
-		pickaway = (awaypo > 0.85)  if p.league == 2
-#		return ["<div id='yellow'>No Opinion </div>", 0.0]  if (pickhome and hml<1.0) or (pickaway and aml<1.0)
-		raise "???" if pickhome.nil? or pickaway.nil?
-		hlose	 = nil
+		pickhome	=	nil
+		pickaway	=	nil
+		mlats	=	nil
+		if Oldway
+			hml = nil
+			hml = p.moneyline_home/100.0 if p.moneyline_home > 0
+			hml = -100.0/p.moneyline_home if p.moneyline_home < 0
+			raise "hml problem p is #{p.inspect}" if hml.nil?
+			aml = nil
+			aml = p.moneyline_away/100.0 if p.moneyline_away > 0
+			aml = -100.0/p.moneyline_away if p.moneyline_away < 0
+			# raise "aml problem" if aml.nil?
+			aml = 0.0 if aml.nil?
+			homepo   = p.prob_home_win_su # *hml
+			awaypo    = p.prob_away_win_su # *aml
+			raise "homepo is nil" if homepo.nil?
+			raise "awaypo is nil" if awaypo.nil?
+#			return ["<div id='yellow'>No Opinion </div>", 0.0]  if homepo<1.0 and awaypo<1.0
+			pickhome = (homepo > awaypo) unless p.league == 5
+			pickaway = (awaypo > homepo) unless p.league == 5
+			pickhome = (homepo > 0.92) # if p.league > 3
+			pickaway = (awaypo > 0.92) # if p.league > 3
+			pickhome = (homepo > 0.85) if p.league  == 2
+			pickaway = (awaypo > 0.85)  if p.league == 2
+#			return ["<div id='yellow'>No Opinion </div>", 0.0]  if (pickhome and hml<1.0) or (pickaway and aml<1.0)
+			raise "???" if pickhome.nil? or pickaway.nil?
+			hlose	 = nil
 		alose		 = nil
 		hbbmlwin	 = nil
 		hbbmllose = nil
@@ -159,16 +162,48 @@ class ApplicationController < ActionController::Base
 			bh = true
 		else
 			hhf = 1.0-ahf
-			bh = false
+				bh = false
+			end
+			puts " after hhf #{hhf} ahf #{ahf} "
+			raise "hlose is nil " if hlose.nil?
+			raise "alose is nil" if alose.nil?
+			raise "hbbmlwin is nil" if hbbmlwin.nil?
+				raise "hbbmllose is nil" if hbbmllose.nil?
+			raise "abbmlwin is nil" if abbmlwin.nil?
+				raise "abbmllose is nil" if abbmllose.nil?
+		else
+			# new way
+			if p.moneyline_home > 0
+				hbbmlwin = p.moneyline_home
+				hbbmllose = -100.0
+				hwinprize = 1+p.moneyline_home / 100.0
+				hlose         = -1
+			else
+				hbbmlwin = 100.0
+				hbbmllose = p.moneyline_home
+				hwinprize = 1+-100.0/p.moneyline_home #+1.0
+				hlose         = -1
+			end
+			if p.moneyline_away > 0
+				abbmlwin = p.moneyline_away
+				abbmllose = -100.0
+				awinprize = 1+p.moneyline_away / 100.0
+				alose         = -1
+			else
+				abbmlwin = 100.0
+				abbmllose = p.moneyline_away
+				awinprize = 1+-100.00/p.moneyline_away #+1.0
+				alose         = -1
+			end
+			hodds	=	1	+	p.moneyline_home/100.0 if p.moneyline_home > 0
+			hodds	=	1	+	-100.0/p.moneyline_home if p.moneyline_home < 0
+			aodds	=	1	+	p.moneyline_away/100.0 if p.moneyline_away > 0
+			aodds	=	1	+	-100.0/p.moneyline_away if p.moneyline_away < 0
+			hev		=	hodds	*	p.prob_home_win_su
+			aev		=	aodds	*	p.prob_away_win_su
+			pickhome	=	(hev	>	1.0)
+			pickaway	=	(aev	>	1.0)
 		end
-		puts " after hhf #{hhf} ahf #{ahf} "
-		raise "hlose is nil " if hlose.nil?
-		raise "alose is nil" if alose.nil?
-		mlats = nil
-		raise "hbbmlwin is nil" if hbbmlwin.nil?
-			raise "hbbmllose is nil" if hbbmllose.nil?
-		raise "abbmlwin is nil" if abbmlwin.nil?
-			raise "abbmllose is nil" if abbmllose.nil?
 		mlats = ((pickhome and p.spread > 0.0) ? p.home_team_id : ((pickaway and p.spread < 0.0) ? p.away_team_id : nil))
 #		puts "mlats.inspect #{mlats.inspect}"
 		raise "mlats is zero #{p.inspect}" if mlats == 0
@@ -285,17 +320,17 @@ def	ms(wsh, ysh, week, header=nil, gaptitle	=	'Week', gc	=	0)
 
 		# week
 		ta	<<	"<td>#{wsudiv}SU wins -> #{wsuw} loses -> #{wsul} % win is #{wpcw}</div></td>"
-		ta	<<	"<td>#{watsdiv}ATS wins -> #{watsw} loses -> #{watsl} % win is #{(100.0 * watsw / (watst == 0 ? 1 : watst)).r2} profit is #{(watsw - 1.1 * watsl).r2}</div></td>"
-		ta	<<	"<td>#{woudiv}OU wins -> #{wouright} loses -> #{woul} % win is #{(100.0 * wouright / (wout == 0 ? 1 : wout)).r2} profit is #{(wouright - 1.1 * woul).r2}</div></td>"
-		ta	<<	"<td>#{wmldiv}Money Line wins -> #{wmlw} loses -> #{wmll} % win is #{(100.0 * wmlw / ((wmlw + wmll) == 0 ? 1 : wmlw + wmll)).r2} profit is #{wmlp.r2}</div></td>"
+		ta	<<	"<td>#{watsdiv}ATS wins -> #{watsw} loses -> #{watsl} % win is #{(100.0 * watsw / (watst == 0 ? 1 : watst)).r2} profit is #{(watsw - 1.1 * watsl).r2.commify}</div></td>"
+		ta	<<	"<td>#{woudiv}OU wins -> #{wouright} loses -> #{woul} % win is #{(100.0 * wouright / (wout == 0 ? 1 : wout)).r2} profit is #{(wouright - 1.1 * woul).r2.commify}</div></td>"
+		ta	<<	"<td>#{wmldiv}Money Line wins -> #{wmlw} loses -> #{wmll.commify} % win is #{(100.0 * wmlw / ((wmlw + wmll) == 0 ? 1 : wmlw + wmll)).r2} profit is #{wmlp.r2.commify}</div></td>"
 
 		# year
 		ta	<<	"<td>#{ysudiv}Year #{week} SU wins -> #{ysuw} loses -> #{ysul} % win is #{ypcw}</div></td>"
-		ta	<<	"<td>#{yatsdiv}ATS wins -> #{yatsw} loses -> #{yatsl} % win is #{(100.0 * yatsw / (yatst == 0 ? 1 : yatst)).r2} profit is #{(yatsw - 1.1 * yatsl).r2}</div></td>"
+		ta	<<	"<td>#{yatsdiv}ATS wins -> #{yatsw} loses -> #{yatsl} % win is #{(100.0 * yatsw / (yatst == 0 ? 1 : yatst)).r2} profit is #{(yatsw - 1.1 * yatsl).r2.commify}</div></td>"
 		summ	+=	yatsw - 1.1 * yatsl
-		ta	<<	"<td>#{youdiv}OU wins -> #{youright} loses -> #{youl} % win is #{(100.0 * youright / (yout == 0 ? 1 : yout)).r2} profit is #{(youright - 1.1 * youl).r2}</div></td>"
+		ta	<<	"<td>#{youdiv}OU wins -> #{youright} loses -> #{youl} % win is #{(100.0 * youright / (yout == 0 ? 1 : yout)).r2} profit is #{(youright - 1.1 * youl).r2.commify}</div></td>"
 		summ	+=	youright - 1.1 * youl
-		ta	<<	"<td>#{ymldiv}Money Line wins -> #{ymlw} loses -> #{ymll} % win is #{(100.0 * ymlw / ((ymlw+ymll) == 0 ? 1 : (ymlw+ymll))).r2} profit is #{ymlp.r2}</div></td>"
+		ta	<<	"<td>#{ymldiv}Money Line wins -> #{ymlw} loses -> #{ymll.commify} % win is #{(100.0 * ymlw / ((ymlw+ymll) == 0 ? 1 : (ymlw+ymll))).r2} profit is #{ymlp.r2.commify}</div></td>"
 		summ	+=	ymlp
 #		ta	<<	'</table></tr>' # turn off this table
 #		ta	<<	'<tr><table border="1">' # restart old table
@@ -626,7 +661,8 @@ def	do_season(newpred,	year,	winprob	=	0.7,	header	=	nil, gap	=	Secondsinthreeda
 	utl				=	[]	#	unique team list
 	utlid				=	[]	#	unique team list ids
 	newpred.each{|g|
-		next if g.actual_home_score	<=	0	or g.actual_away_score	<=	0	or	g.game_total	==	0
+#		next if g.actual_home_score	<=	0	or g.actual_away_score	<=	0	or	g.game_total	==	0
+		next if (g.actual_home_score	<=	0	or g.actual_away_score	<=	0)	and	g.spread == 0 and g.moneyline_home == 0 && g.moneyline_away == 0
 		unless utlid.include?(g.home_team_id)
 			utl		<<	Team.find(g.home_team_id).name
 			utlid		<<	g.home_team_id
@@ -703,12 +739,12 @@ def	do_season(newpred,	year,	winprob	=	0.7,	header	=	nil, gap	=	Secondsinthreeda
 		# end of row
 		trm		<<	'<tr>'+thisrow+'</tr>'
 		header	=	'<tr>'+theader+'</tr>'	if 	header.empty?
-	}
+	} # newpred
 	returnme	<<	header
 	trma		=	nil
 	trma,	bankroll		=	ms(wsh, ysh, week, 'End of Year Stats')
 	trm		<<	trma.dup
-	returnme	<<	trm
+	returnme	<<	trm.reverse
 	returnme	<<	"</table>"
 #	raise "returnme length is #{returnme.length} #{returnme.inspect}"
 	rm			=	{}
@@ -1169,4 +1205,124 @@ def	makeswp(lid,	pid,	bet	=	40.0)
 #	return @main
   end	#	makeswp
 end	#	class ApplicationController
+
+class Object
+  def gs(ig)
+    ig.map{|l|l=l.gsub!("Arizona","Arizona Cardinals")}
+    ig.map{|l|l=l.gsub!("Atlanta","Atlanta Falcons")}
+    ig.map{|l|l=l.gsub!("Baltimore","Baltimore Ravens")}
+    ig.map{|l|l=l.gsub!("Buffalo","Buffalo Bills")}
+    ig.map{|l|l=l.gsub!("Carolina","Carolina Panthers")}
+    ig.map{|l|l=l.gsub!("Chicago","Chicago Bears")}
+    ig.map{|l|l=l.gsub!("Cincinnati","Cincinnati Bengals")}
+    ig.map{|l|l=l.gsub!("Cleveland","Cleveland Browns")}
+    ig.map{|l|l=l.gsub!("Dallas","Dallas Cowboys")}
+    ig.map{|l|l=l.gsub!("Denver","Denver Broncos")}
+    ig.map{|l|l=l.gsub!("Detroit","Detroit Lions")}
+    ig.map{|l|l=l.gsub!("Green Bay","Green Bay Packers")}
+    ig.map{|l|l=l.gsub!("Houston Oilers","Houston Texans")}
+    ig.map{|l|l=l.gsub!("Houston","Houston Texans")}
+    ig.map{|l|l=l.gsub!("Indianapolis","Indianapolis Colts")}
+    ig.map{|l|l=l.gsub!("Jacksonville","Jacksonville Jaguars")}
+    ig.map{|l|l=l.gsub!("Kansas City","Kansas City Chiefs")}
+    ig.map{|l|l=l.gsub!("Miami","Miami Dolphins")}
+    ig.map{|l|l=l.gsub!("Minnesota","Minnesota Vikings")}
+    ig.map{|l|l=l.gsub!("New England","New England Patriots")}
+    ig.map{|l|l=l.gsub!("New Orleans","New Orleans Saints")}
+    ig.map{|l|l=l.gsub!("Oakland","Oakland Raiders")}
+    ig.map{|l|l=l.gsub!("Philadelphia","Philadelphia Eagles")}
+    ig.map{|l|l=l.gsub!("Pittsburgh","Pittsburgh Steelers")}
+    ig.map{|l|l=l.gsub!("San Diego","San Diego Chargers")}
+    ig.map{|l|l=l.gsub!("San Francisco","San Francisco 49ers")}
+    ig.map{|l|l=l.gsub!("San Francisco 49ers  49ers","San Francisco 49ers")}
+    ig.map{|l|l=l.gsub!("Seattle","Seattle Seahawks")}
+    ig.map{|l|l=l.gsub!("St. Louis","St. Louis Rams")}
+    ig.map{|l|l=l.gsub!("Tampa Bay","Tampa Bay Buccaneers")}
+    ig.map{|l|l=l.gsub!("Tennessee","Tennessee Titans")}
+    ig.map{|l|l=l.gsub!("Washington","Washington Redskins")}
+    # nba
+    ig.map{|l|l=l.gsub!("oklahoma city","Oklahoma City Thunder")}
+    ig.map{|l|l=l.gsub!("portland trailblazers","Portland Trail Blazers")}
+    ig.map{|l|l=l.gsub!("los angeles lakers","L.A. Lakers")}
+    ig.map{|l|l=l.gsub!("los angeles clippers","L.A. Clippers")}
+    return ig
+  end
+
+  def	nbaloader(dataarray,	update=false,	doleague="National Basketball Association")
+	  teamleague	=	League.find_by_name(doleague).id
+		raise "no league!" if teamleague.nil?
+		#		0		 1				2					3	 4				 5								 6		 7	 8									9															 10									 11								 12		 se						 13	 14		15								16												17				 18		19	20		21	22	23 24	24
+		# 14/9/08,2,St. Louis,8.0,13,N.Y. Giants,23.6875,41,9.0,0.0204550479789872,0.228046242969888,42.0,0.0554413784828847,-110,-110,N O,TT Spread bet right,TT OU wrong,N O,N O,N O,	 0,	 -1,	 0, -1,	0
+		dataarray		=	gs(dataarray)
+		seasonnumber	=	0
+		prevdate		=	nil
+		dataarray.each{|g|
+			d	=	g.split(",")
+		#	puts "g.inspect #{g.inspect}"
+			begin
+				home_id	=	Team.find_by_name(d[2]).id
+			rescue
+				raise "no such team as "+d[2] if home_id.nil?
+			end
+			begin
+				away_id	=	Team.find_by_name(d[5]).id
+			rescue
+				raise "no such team as "+d[5] if away_id.nil?
+			end
+			p			=	nil
+			if update
+				t		=	d[0].split("/")
+				pa		=	Prediction.find_all_by_game_date_time(Time.local(2000+t[2].to_i, t[1], t[0]))
+#				raise p.inspect
+#				if p.length	
+				pa.delete_if{|dfg|!(dfg["home_team_id"]	==	home_id)}
+				pa.delete_if{|dfg|!(dfg["away_team_id"]		==	away_id)}
+				raise "pa.length #{pa.length} pa.inspect #{pa.inspect}" if pa.length	>	1
+				p		=	Prediction.new	if	pa.length	==	0
+				p		=	pa.first		if	pa.length	==	1
+			else
+				p		=	Prediction.new
+			end
+			begin
+				p['week']		=	d[1].to_i
+			rescue Exception => e
+#				print e, "\n"
+				raise "e #{e.inspect} d[1].to_i #{d[1].to_i} d[1] #{d[1].inspect} d.inspect #{d.inspect} p.inspect #{p.inspect}"
+			end
+			p['season']	=	seasonnumber
+			t			=	d[0].split("/")
+			p["game_date_time"]	=	Time.local(2000+t[2].to_i, t[1], t[0])
+			seasonnumber		+=	1	if	! prevdate.nil? and ((p["game_date_time"] - prevdate) / Secondsperday)  > 60 # time diff in days
+			prevdate						=	p["game_date_time"].dup
+			p["league"]					=	teamleague
+			p["home_team_id"]				=	home_id
+			p["away_team_id"]				=	away_id
+			p["actual_home_score"]			= d[6].to_i
+			p["actual_away_score"]			= d[7].to_i
+			p["spread"]					= d[8].to_f
+			p["predicted_home_score"]		= (d[3].to_f+0.5).to_i
+			p["predicted_away_score"]		= (d[6].to_f+0.5).to_i
+			p["actual_home_score"]			= d[4].to_i
+			p["actual_away_score"]			= d[7].to_i
+			p["joe_guys_bet"]				= nil
+			p["joe_guys_bet"]				= home_id if d[22].to_i==1 or d[21].to_i==1
+			p["joe_guys_bet"]				= away_id if d[22].to_i==-1 or d[21].to_i==-1
+			p["joe_guys_bet_amount"]		= 22
+			p["joe_guys_bet_amount_won"]	= 0
+			p["prob_home_win_su"]			= d[9].to_f
+			p["prob_away_win_su"]			= 1.0-d[9].to_f
+			p["prob_push_su"]				= 0.0
+			p["prob_home_win_ats"]			= d[10].to_f
+			p["prob_away_win_ats"]			= 1.0-d[10].to_f
+			p["prob_push_ats"]				= 0.0
+			p["game_total"]				= d[11].to_f
+			p["prob_game_over_total"]		= d[12].to_f
+			p["moneyline_bet"]				= home_id if d[24] .to_i== 1
+			p["moneyline_bet"]				= away_id if d[24].to_i == -1
+			p["moneyline_home"]			= d[13].to_f
+			p["moneyline_away"]			= d[14].to_f
+			p.save!
+	}
+	end # class object
+end
 

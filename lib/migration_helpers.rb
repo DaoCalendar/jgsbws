@@ -152,47 +152,6 @@ end
       foreign key (#{from_column})
       references #{to_table}(id)}
   end
-
-  def gs(ig)
-    ig.map{|l|l=l.gsub!("Arizona","Arizona Cardinals")}
-    ig.map{|l|l=l.gsub!("Atlanta","Atlanta Falcons")}
-    ig.map{|l|l=l.gsub!("Baltimore","Baltimore Ravens")}
-    ig.map{|l|l=l.gsub!("Buffalo","Buffalo Bills")}
-    ig.map{|l|l=l.gsub!("Carolina","Carolina Panthers")}
-    ig.map{|l|l=l.gsub!("Chicago","Chicago Bears")}
-    ig.map{|l|l=l.gsub!("Cincinnati","Cincinnati Bengals")}
-    ig.map{|l|l=l.gsub!("Cleveland","Cleveland Browns")}
-    ig.map{|l|l=l.gsub!("Dallas","Dallas Cowboys")}
-    ig.map{|l|l=l.gsub!("Denver","Denver Broncos")}
-    ig.map{|l|l=l.gsub!("Detroit","Detroit Lions")}
-    ig.map{|l|l=l.gsub!("Green Bay","Green Bay Packers")}
-    ig.map{|l|l=l.gsub!("Houston Oilers","Houston Texans")}
-    ig.map{|l|l=l.gsub!("Houston","Houston Texans")}
-    ig.map{|l|l=l.gsub!("Indianapolis","Indianapolis Colts")}
-    ig.map{|l|l=l.gsub!("Jacksonville","Jacksonville Jaguars")}
-    ig.map{|l|l=l.gsub!("Kansas City","Kansas City Chiefs")}
-    ig.map{|l|l=l.gsub!("Miami","Miami Dolphins")}
-    ig.map{|l|l=l.gsub!("Minnesota","Minnesota Vikings")}
-    ig.map{|l|l=l.gsub!("New England","New England Patriots")}
-    ig.map{|l|l=l.gsub!("New Orleans","New Orleans Saints")}
-    ig.map{|l|l=l.gsub!("Oakland","Oakland Raiders")}
-    ig.map{|l|l=l.gsub!("Philadelphia","Philadelphia Eagles")}
-    ig.map{|l|l=l.gsub!("Pittsburgh","Pittsburgh Steelers")}
-    ig.map{|l|l=l.gsub!("San Diego","San Diego Chargers")}
-    ig.map{|l|l=l.gsub!("San Francisco","San Francisco 49ers")}
-    ig.map{|l|l=l.gsub!("San Francisco 49ers  49ers","San Francisco 49ers")}
-    ig.map{|l|l=l.gsub!("Seattle","Seattle Seahawks")}
-    ig.map{|l|l=l.gsub!("St. Louis","St. Louis Rams")}
-    ig.map{|l|l=l.gsub!("Tampa Bay","Tampa Bay Buccaneers")}
-    ig.map{|l|l=l.gsub!("Tennessee","Tennessee Titans")}
-    ig.map{|l|l=l.gsub!("Washington","Washington Redskins")}
-    # nba
-    ig.map{|l|l=l.gsub!("oklahoma city","Oklahoma City Thunder")}
-    ig.map{|l|l=l.gsub!("portland trailblazers","Portland Trail Blazers")}
-    ig.map{|l|l=l.gsub!("los angeles lakers","L.A. Lakers")}
-    ig.map{|l|l=l.gsub!("los angeles clippers","L.A. Clippers")}
-    return ig
-  end
   
   def updatenflweekly(updatea)
     updatea = gs(updatea)
@@ -275,9 +234,10 @@ end
       end # unless @pred.empty?
     } # each update line
   end
+
   def mlconv(ml, p)
 	  #return ((p*(ml > 0 ? ml/100.0 : -100.0/ml)) > 2.0)
 	  return p > 0.5
   end
-  
+    
 end

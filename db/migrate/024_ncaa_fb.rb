@@ -15,11 +15,13 @@ def self.up
     ncaafba.each{|g|
       d=g.split(",")
 #      puts "g.inspect #{g.inspect}"
-#	begin
-	home_o	=	Team.find_by_name(d[2])
-	home_id	=	Team.find_by_name(d[2]).id
-#	rescue
-#        raise "no such team as "+d[2] if home_id.nil?
+	begin
+		home_o	=	Team.find_by_name(d[2])
+		home_id	=	Team.find_by_name(d[2]).id
+	rescue
+#		raise "no such team as "+d[2] #  if home_id.nil?
+		home_o	=	nil
+	end
 	# add teanms
 	if	home_o.nil?	||	home_id.nil?
 		t = Team.new
@@ -33,10 +35,12 @@ def self.up
 		home_id	=	Team.find_by_name(d[2]).id
 		raise "d.inspect #{d.inspect}" if home_id.nil?
 	end
-#      begin
-        away_o = Team.find_by_name(d[5])
-        away_id = Team.find_by_name(d[5]).id
-#      rescue
+      begin
+	      away_o	=	Team.find_by_name(d[5])
+	      away_id	=	Team.find_by_name(d[5]).id
+      rescue
+	      away_o	=	nil
+      end
 #        raise "no such team as "+d[5] if away_id.nil?
 	if	away_o.nil?	||	away_id.nil?
 		t = Team.new

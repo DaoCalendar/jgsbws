@@ -193,7 +193,7 @@ def main
 		when 2 # nba
 			# games run from Nov to April
 			startdate	=	Time.local(year, 'nov', 1) 
-			enddate	=	Time.local(year + 1, 'may', 1)
+			enddate	=	Time.local(year + 1, 'jul', 1)
 			winprob	=	0.62			if year == 2008
 #			winprob	=	11.0 / 21.0	if year == 2008
 			winprob	=	11.0 / 21.0	if year == 2007
