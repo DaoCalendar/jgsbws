@@ -11,7 +11,7 @@ NO				=	"No Opinion"
 Gdiv				=	"<div id='green'>"
 Rdiv				=	"<div id='red'>"
 Ydiv				=	"<div id='yellow'>"
-Fpc				=	0.04
+Fpc				=	0.045
 Tpf				=	2.5
 Td				=	"<td>"
 Tde				=	"</td>"
@@ -66,19 +66,32 @@ class ApplicationController < ActionController::Base
 	# Pick a unique cookie name to distinguish our session data from others'
 	session :session_key	=>	'_jgsbws_session_id'
 
+	def convml(ml)
+		return (1.0 + (ml > 0 ? ml / 100.0 : (-100.0 / ml)))
+	end
+
 	def	getthisweeksbets(preds,	thisweek,	sbh,	beta)
 		eva			=	[]
 		preds.each_with_index{|p,	pi|
 			next unless	p.week	==	thisweek
 			next unless sbh.has_key?(p.soccer_bet)
 			beta.each{|b|
-				s	=	sbh[p.soccer_bet]
-				eva	<<	[b,	(s[b+'_ev'].nil? ? 0.0 : s[b+'_ev']),	pi]	unless	s[b].nil?
+				s,ph,pa,pd	=	sbh[p.soccer_bet]
+				unless	s[b].nil?
+					bl	=	b[b.length-1,1]
+#					raise "ph #{ph} pa #{pa} pd #{pd}"
+#					raise "b #{b} bl #{bl} "
+#					next if (bl=='H' && ph < 0.5) || (bl=='A' && pa < 0.5) || (bl=='D' && pd < 0.5)
+#					eva	<<	[b,	(s[b+'_ev'].nil? ? 0.0 : s[b+'_ev']),	pi]	
+					eva	<<	[b,	ph,	(s[b+'_ev'].nil? ? 0.0 : s[b+'_ev']),	pi]	if	bl	==	'H'
+					eva	<<	[b,	pa,	(s[b+'_ev'].nil? ? 0.0 : s[b+'_ev']),	pi]	if	bl	==	'A'
+					eva	<<	[b,	pd,	(s[b+'_ev'].nil? ? 0.0 : s[b+'_ev']),	pi]	if	bl	==	'D'
+				end
 			}
 		}
 		puts	eva.inspect
 		puts eva.length
-		eva.delete_if{|e|	e[1]	<	1.0}
+		eva.delete_if{|e|	e[1]	<	0.5}
 #		raise	"eva.inspect #{eva.inspect} eva.length #{eva.length}"
 		return eva
 	end
@@ -637,6 +650,8 @@ end # def	nameconv
 def	do_season(newpred,	year,	winprob	=	0.7,	header	=	nil, gap	=	Secondsinthreedays,	gaptitle	=	"Week", mm = false, sport	=	nil,	lname	=	nil)
 	raise 'need a sport'		if	sport.nil?
 	raise 'need a league'		if	lname.nil?
+	isnhl				=	false
+	isnhl				=	(lname	==	'National Hockey League')
 	ff				=	File.open('graphdata.txt','a')	if	Makedata
 #	puts "in makeswp with #{lid} and #{pid}"			if	Makedata
 	fdate			=	newpred.first.game_date_time
@@ -700,25 +715,31 @@ def	do_season(newpred,	year,	winprob	=	0.7,	header	=	nil, gap	=	Secondsinthreeda
 		# game score
 		theader	+=	wrap('Game Score')	if	header.empty?
 		thisrow	+=	wrap(g.actual_home_score.to_s+'-'+g.actual_away_score.to_s)
-		# spread
-		theader	+=	wrap('Spread')	if	header.empty?
-		thisrow	+=	wrap(g.spread)
-		# ats pick
-		theader	+=	wrap('Spread Pick')	if	header.empty?
-		spick	=	'Wierd'
-		spick	=	" - "+nameconv(Team.find(g.home_team_id).name, 1)+" - "+g.prob_home_win_ats.r2.to_s if g.prob_home_win_ats	>	0.5
-		spick	=	" - "+nameconv(Team.find(g.away_team_id).name, 1)+" - "+g.prob_away_win_ats.r2.to_s if g.prob_away_win_ats	>	0.5
-		wrapme	=	(!atsbet.nil? ? (atsbet == g.home_team_id ? nameconv(Team.find(g.home_team_id).name, 1) : nameconv(Team.find(g.away_team_id).name, 1))	:	NO) 
-		wrapme	+=	spick if wrapme	==	NO
-		thisrow	+=	wrap(wrapme,	atsbet,	atsbetright,	atsbetpush)
-		# ou
-		theader	+=	wrap('OU Total')	if	header.empty?
-		thisrow	+=	wrap(g.game_total)
-		# ou result
-		theader	+=	wrap('OU Pick')	if	header.empty?
-		thisrow	+=	wrap(NO)			if	oubet.nil?
-		# def	wrap(str, picked=nil, pickright=nil, pickpush=nil, ou=false)
-		thisrow	+=	wrap((oubet	?	'Over'	:	'Under'),	true,	oubetright,	oubetpush)	unless	oubet.nil?
+		if isnhl
+			# do both pucklines and ou both odds
+			theader	+=	wrap('Puck Line Home')	if	header.empty?
+			theader	+=	wrap('Puck Line Away')	if	header.empty?
+		else
+			# spread
+			theader	+=	wrap('Spread')	if	header.empty?
+			thisrow	+=	wrap(g.spread)
+			# ats pick
+			theader	+=	wrap('Spread Pick')	if	header.empty?
+			spick	=	'Wierd'
+			spick	=	" - "+nameconv(Team.find(g.home_team_id).name, 1)+" - "+g.prob_home_win_ats.r2.to_s if g.prob_home_win_ats	>	0.5
+			spick	=	" - "+nameconv(Team.find(g.away_team_id).name, 1)+" - "+g.prob_away_win_ats.r2.to_s if g.prob_away_win_ats	>	0.5
+			wrapme	=	(!atsbet.nil? ? (atsbet == g.home_team_id ? nameconv(Team.find(g.home_team_id).name, 1) : nameconv(Team.find(g.away_team_id).name, 1))	:	NO) 
+			wrapme	+=	spick if wrapme	==	NO
+			thisrow	+=	wrap(wrapme,	atsbet,	atsbetright,	atsbetpush)
+			# ou
+			theader	+=	wrap('OU Total')	if	header.empty?
+			thisrow	+=	wrap(g.game_total)
+			# ou result
+			theader	+=	wrap('OU Pick')	if	header.empty?
+			thisrow	+=	wrap(NO)			if	oubet.nil?
+			# def	wrap(str, picked=nil, pickright=nil, pickpush=nil, ou=false)
+			thisrow	+=	wrap((oubet	?	'Over'	:	'Under'),	true,	oubetright,	oubetpush)	unless	oubet.nil?
+		end
 
 		# moneyline
 		mlo,	mlm,	mlats,	bbmlprz,	hhf,	ahf,	bh	=	mlhlpr(g)
@@ -931,7 +952,7 @@ def	maintsh(sumhash, bookie,	prize)
 	return sumhash
 end	#maintsh
 
-def	makeswp(lid,	pid,	bet	=	40.0)
+def	makeswp(lid,	pid,	bet	=	45.0)
 #	makedat		=	(ENV['RAILS_ENV']	==	'development')
 	ff			=	File.open('graphdata.txt','a')	if	Makedata
 	puts "in makeswp with #{lid} and #{pid}"		if	Makedata
@@ -973,7 +994,7 @@ def	makeswp(lid,	pid,	bet	=	40.0)
 #		puts p.soccer_bet
 		s					=	SoccerBet.find(p.soccer_bet)	#	look in soccer bet db and find by id
 #		raise s.inspect
-		sbh[p.soccer_bet]		=	s	# this is the entire record, with all available bets included
+		sbh[p.soccer_bet]		=	[s,	p.prob_home_win_su,	p.prob_away_win_su,	p.prob_push_su]	# this is the entire record, with all available bets included
 		raise if s.nil?
 #		puts s.inspect
 #		puts s.to_a.inspect
@@ -1015,11 +1036,11 @@ def	makeswp(lid,	pid,	bet	=	40.0)
 		puts
 		puts "done #{pi.commify} of #{plen}"
 		puts 'building bets'
-		abotg	=	0.0	# amount bet on this game is zero - must bet max 4 % on any one game 
-		s		=	sbh[p.soccer_bet] # SoccerBet.find(p.soccer_bet)
-		ht		=	th[p.home_team_id]
-		awt		=	th[p.away_team_id]
-		tmpstr	=	''
+		abotg		=	0.0	# amount bet on this game is zero - must bet max 4 % on any one game 
+		s,ph,pw,pd	=	sbh[p.soccer_bet] # SoccerBet.find(p.soccer_bet)
+		ht			=	th[p.home_team_id]
+		awt			=	th[p.away_team_id]
+		tmpstr		=	''
 		begin
 			thisrow	+=	'zzzzzzzzzzzzzzzzz' 	# for replacement later
 			tmpstr	=	Tr+wrap("aaaaaaaaaaaaGame #{(pi+1).commify} - "+p.game_date_time.strftime("%B %d %Y  ")+' - '+ht+' '+p.actual_home_score.to_s+' - '+awt+' '+p.actual_away_score.to_s+' -> won $bbbbbbbbbbb' + (bet == 4 ? '' : " Bet is $#{bet.r2}"))
@@ -1029,23 +1050,25 @@ def	makeswp(lid,	pid,	bet	=	40.0)
 		unless	dobigbet	==	oldweek
 			dobigbet		=	oldweek
 			eva			=	getthisweeksbets(pred,	oldweek,	sbh,	beta)
-			eva.sort!{|a,	b|	b[1]<=>a[1]}	#now has all this weeks bets
+			eva.sort!{|a,	b|	b[2]<=>a[2]}	#now has all this weeks bets
 		end
 #		raise eva.inspect
 #		sleep 10
 		eva2		=	[]
 
-		bet		=	40.0
-		bet		=	[bet,	bankroll].min
-#		bet		=	(bankroll	*	Fpc).to_i
-#		bet		=	40.0	if	bet	<	40.0
-#		bet		=	100	if	bet	>	100
+		bet		=	45.0
+		bet.freeze
+#		bet		=	[bet,	bankroll].min
+		bet		=	(bankroll	*	Fpc).to_i
+		bet		=	45.0	if	bet	<	45.0
+		bet		=	100	if	bet	>	100
 
 		eva.each{|e|	#	now do from best down
 			b	=	e[0]
 			begin
 #				if (s[b+'_ev']	>	1.0) && (abotg == 0 || ((abotg + bet) <= (bankroll * 0.04))) # never bet more than 4 % of bankroll on any one game but always make at least one bet if ev > 1.0
-				if (e[1]	>	1.0) && (abotg == 0 || ((abotg + bet)	<=	(bankroll	*	Fpc))) # never bet more than 4 % of bankroll on any one game but always make at least one bet if ev > 1.0
+				if (e[2]	>=	2.0) && (abotg == 0 || ((abotg + bet)	<=	(bankroll	*	Fpc))) # never bet more than 4 % of bankroll on any one game but always make at least one bet if ev > 1.0
+#				if (abotg == 0 || ((abotg + bet)	<=	(bankroll	*	Fpc))) # never bet more than 4 % of bankroll on any one game but always make at least one bet if ev > 1.0
 					eva2		<<	e[0]
 					# raise	#	if bankroll	<	bet
 					abotg	+=	[bet,	bankroll].min
@@ -1104,7 +1127,8 @@ def	makeswp(lid,	pid,	bet	=	40.0)
 						prize		=	0.0
 						if	(gt25	&&	bookie.include?('>'))	||	(gt25	&&	bookie.include?('<'))
 							odiv		=	Gdiv
-							prize		=	[bet,	bankroll].min	*	odds # (odds	-	1.0)
+							prize		=	[bet,	bankroll].min	*	(odds	-	1.0)
+#							prize		=	[bet,	bankroll].min	*	odds# (odds	-	1.0)
 							sumhash	=	maintsh(sumhash,	bookie,	prize)
 						else
 							prize		=	-[bet,	bankroll].min
@@ -1114,7 +1138,8 @@ def	makeswp(lid,	pid,	bet	=	40.0)
 					else
 						if	(gres	==	0	&&	bethome &&	!betdraw)	||	(gres	==	1	&&	!bethome &&	!betdraw)	||	(gres	==	2	&&	betdraw)
 							odiv		=	Gdiv
-							prize		=	[bet,	bankroll].min	*	odds # (odds	-	1.0)
+							prize		=	[bet,	bankroll].min	*	(odds	-	1.0)
+#							prize		=	[bet,	bankroll].min	*	odds# (odds	-	1.0)
 							sumhash	=	maintsh(sumhash,	bookie,	prize)
 						else
 							prize		=	-[bet,	bankroll].min
@@ -1248,28 +1273,30 @@ class Object
     return ig
   end
 
-  def	nbaloader(dataarray,	update=false,	doleague="National Basketball Association")
-	  teamleague	=	League.find_by_name(doleague).id
+  def	nbaloader(dataarray,	update	=	false,	doleague	=	"National Basketball Association")
+	  	teamleague		=	League.find_by_name(doleague).id
+		isnhl			=	(doleague	==	"National Hockey League")
 		raise "no league!" if teamleague.nil?
 		#		0		 1				2					3	 4				 5								 6		 7	 8									9															 10									 11								 12		 se						 13	 14		15								16												17				 18		19	20		21	22	23 24	24
 		# 14/9/08,2,St. Louis,8.0,13,N.Y. Giants,23.6875,41,9.0,0.0204550479789872,0.228046242969888,42.0,0.0554413784828847,-110,-110,N O,TT Spread bet right,TT OU wrong,N O,N O,N O,	 0,	 -1,	 0, -1,	0
-		dataarray		=	gs(dataarray)
-		seasonnumber	=	0
-		prevdate		=	nil
+		dataarray			=	gs(dataarray)
+		seasonnumber			=	0
+		prevdate			=	nil
 		dataarray.each{|g|
-			d	=	g.split(",")
+			d			=	g.split(",")
 		#	puts "g.inspect #{g.inspect}"
 			begin
-				home_id	=	Team.find_by_name(d[2]).id
+				home_id		=	Team.find_by_name(d[2].strip).id
 			rescue
 				raise "no such team as "+d[2] if home_id.nil?
 			end
 			begin
-				away_id	=	Team.find_by_name(d[5]).id
+				away_id		=	Team.find_by_name(d[5].strip).id
 			rescue
 				raise "no such team as "+d[5] if away_id.nil?
 			end
 			p			=	nil
+			addedp			=	false
 			if update
 				t		=	d[0].split("/")
 				pa		=	Prediction.find_all_by_game_date_time(Time.local(2000+t[2].to_i, t[1], t[0]))
@@ -1278,10 +1305,13 @@ class Object
 				pa.delete_if{|dfg|!(dfg["home_team_id"]	==	home_id)}
 				pa.delete_if{|dfg|!(dfg["away_team_id"]		==	away_id)}
 				raise "pa.length #{pa.length} pa.inspect #{pa.inspect}" if pa.length	>	1
+				addedp		=	true		if	pa.length	==	0
 				p		=	Prediction.new	if	pa.length	==	0
-				p		=	pa.first		if	pa.length	==	1
+				p		=	pa.first	if	pa.length	==	1
 			else
 				p		=	Prediction.new
+				h		=	Hockeybet.new	if	isnhl
+				addedp		=	true
 			end
 			begin
 				p['week']		=	d[1].to_i
@@ -1289,7 +1319,7 @@ class Object
 #				print e, "\n"
 				raise "e #{e.inspect} d[1].to_i #{d[1].to_i} d[1] #{d[1].inspect} d.inspect #{d.inspect} p.inspect #{p.inspect}"
 			end
-			p['season']	=	seasonnumber
+			p['season']		=	seasonnumber
 			t			=	d[0].split("/")
 			p["game_date_time"]	=	Time.local(2000+t[2].to_i, t[1], t[0])
 			seasonnumber		+=	1	if	! prevdate.nil? and ((p["game_date_time"] - prevdate) / Secondsperday)  > 60 # time diff in days
@@ -1299,7 +1329,42 @@ class Object
 			p["away_team_id"]				=	away_id
 			p["actual_home_score"]			= d[6].to_i
 			p["actual_away_score"]			= d[7].to_i
-			p["spread"]					= d[8].to_f
+			if isnhl
+				if addedp
+					h			=	HockeyBet.new
+					h.pred_id		=	p.id
+				else
+					tt			=	HockeyBet.find_by_pred_id(p.id)
+					if	tt.nil?	# no hb record
+						h		=	HockeyBet.new
+						h.pred_id	=	p.id
+					else
+						h		=	tt.dup
+					end
+				end
+#  0        1          2                 3          4           5                   6         7    8    9   10     11             12              13        14         15             16   17    18   19              20
+# 12/1/08, 305, florida panthers, 2.71256388018983, 3, tampa bay lightning, 2.53656264427579, 5, -1.5, 200, 1.5, -240, 0.229466233097562, 0.535769449796951, 6.0, 0.244208282466363, -135, 115, -140, 120.0, 0.585775697493162
+				h.plhome	=	d[8].to_f
+				h.plhodds	=	convml(d[9].to_i)
+				h.plhprob	=	d[12].to_f
+				h.plaway	=	d[10].to_f
+				h.plaodds	=	convml(d[11].to_f)
+				h.plaprob	=	d[13].to_f
+				h.ou		=	d[14].to_f
+				h.overodds	=	convml(d[16].to_i)
+				h.overprob	=	d[15].to_f
+				h.underodds	=	convml(d[17].to_i)
+				h.underprob	=	1.0	-	d[15].to_f
+				h.save!
+			else
+				p["spread"]					=	d[8].to_f
+				p["game_total"]				= d[11].to_f
+				p["prob_game_over_total"]		= d[12].to_f
+				p["moneyline_bet"]				= home_id if d[24] .to_i== 1
+				p["moneyline_bet"]				= away_id if d[24].to_i == -1
+				p["moneyline_home"]			= d[13].to_f
+				p["moneyline_away"]			= d[14].to_f
+			end
 			p["predicted_home_score"]		= (d[3].to_f+0.5).to_i
 			p["predicted_away_score"]		= (d[6].to_f+0.5).to_i
 			p["actual_home_score"]			= d[4].to_i
@@ -1315,12 +1380,6 @@ class Object
 			p["prob_home_win_ats"]			= d[10].to_f
 			p["prob_away_win_ats"]			= 1.0-d[10].to_f
 			p["prob_push_ats"]				= 0.0
-			p["game_total"]				= d[11].to_f
-			p["prob_game_over_total"]		= d[12].to_f
-			p["moneyline_bet"]				= home_id if d[24] .to_i== 1
-			p["moneyline_bet"]				= away_id if d[24].to_i == -1
-			p["moneyline_home"]			= d[13].to_f
-			p["moneyline_away"]			= d[14].to_f
 			p.save!
 	}
 	end # class object

@@ -9,7 +9,24 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 31) do
+ActiveRecord::Schema.define(:version => 32) do
+
+  create_table "hockey_bets", :force => true do |t|
+    t.integer  "pred_id"
+    t.float    "plhome"
+    t.float    "plhodds"
+    t.float    "plhprob"
+    t.float    "plaway"
+    t.float    "plaodds"
+    t.float    "plaprob"
+    t.float    "ou"
+    t.float    "overodds"
+    t.float    "overprob"
+    t.float    "underodds"
+    t.float    "underprob"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "leagues", :force => true do |t|
     t.string   "name"
