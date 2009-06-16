@@ -1345,15 +1345,15 @@ class Object
 #  0        1          2                 3          4           5                   6         7    8    9   10     11             12              13        14         15             16   17    18   19              20
 # 12/1/08, 305, florida panthers, 2.71256388018983, 3, tampa bay lightning, 2.53656264427579, 5, -1.5, 200, 1.5, -240, 0.229466233097562, 0.535769449796951, 6.0, 0.244208282466363, -135, 115, -140, 120.0, 0.585775697493162
 				h.plhome	=	d[8].to_f
-				h.plhodds	=	convml(d[9].to_i)
+				h.plhodds	=	d[9].to_i
 				h.plhprob	=	d[12].to_f
 				h.plaway	=	d[10].to_f
-				h.plaodds	=	convml(d[11].to_f)
+				h.plaodds	=	d[11].to_f
 				h.plaprob	=	d[13].to_f
 				h.ou		=	d[14].to_f
-				h.overodds	=	convml(d[16].to_i)
+				h.overodds	=	d[16].to_i
 				h.overprob	=	d[15].to_f
-				h.underodds	=	convml(d[17].to_i)
+				h.underodds	=	d[17].to_i
 				h.underprob	=	1.0	-	d[15].to_f
 				h.save!
 			else
