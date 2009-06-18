@@ -7,19 +7,19 @@ Seasonone		=	Time.local(2_008,4,7)
 Futuretime		=	Time.local(2_012,1,1)
 Secondsperday		=	24	*	3_600
 Secondsinthreedays	=	2.5	*	24	*	3600	#	days*hour/day*seconds/hour
-NO				=	"No Opinion"
-Gdiv				=	"<div id='green'>"
-Rdiv				=	"<div id='red'>"
-Ydiv				=	"<div id='yellow'>"
-Fpc				=	0.045
-Tpf				=	2.5
-Td				=	"<td>"
-Tde				=	"</td>"
-Tr				=	"<tr>"
-Tre				=	"</tr>"
-Na				=	'<td>No Action</td>'
-Betarray			=	%w(B365H B365D B365A BSH BSD BSA BWH BWD BWA GBH GBD GBA IWH IWD IWA LBH LBD LBA SBH SBD SBA WHH WHD WHA SJH SJD SJA VCH VCD VCA BbMxgt2p5 BbMxlt2p5 BbAvgt2p5 BbAvlt2p5 GBgt2p5 GBlt2p5 B365gt2p5 B365lt2p5)
-Betnames			= ['Bet365 home win odds -> EV -> $bankroll', 'Bet365 draw odds -> EV -> $bankroll', 'Bet365 away win odds -> EV -> $bankroll',  'Blue Square home win odds -> EV -> $bankroll', 'Blue Square draw odds -> EV -> $bankroll', 'Blue Square away win odds -> EV -> $bankroll',  'Bet&Win home win odds -> EV -> $bankroll', 'Bet&Win draw odds -> EV -> $bankroll', 'Bet&Win away win odds -> EV -> $bankroll',  'Gamebookers home win odds -> EV -> $bankroll', 'Gamebookers draw odds -> EV -> $bankroll', 'Gamebookers away win odds -> EV -> $bankroll',  'Interwetten home win odds -> EV -> $bankroll', 'Interwetten draw odds -> EV -> $bankroll', 'Interwetten away win odds -> EV -> $bankroll',  'Ladbrokes home win odds -> EV -> $bankroll', 'Ladbrokes draw odds -> EV -> $bankroll', 'Ladbrokes away win odds -> EV -> $bankroll',  'Sporting Odds home win odds -> EV -> $bankroll', 'Sporting Odds draw odds -> EV -> $bankroll', 'Sporting Odds away win odds -> EV -> $bankroll',  'Sportingbet home win odds -> EV -> $bankroll', 'Sportingbet draw odds -> EV -> $bankroll', 'Sportingbet away win odds -> EV -> $bankroll',  'Stan James home win odds -> EV -> $bankroll', 'Stan James draw odds -> EV -> $bankroll', 'Stan James away win odds -> EV -> $bankroll',  'Stanleybet home win odds -> EV -> $bankroll', 'Stanleybet draw odds -> EV -> $bankroll', 'Stanleybet away win odds -> EV -> $bankroll',  'VC Bet home win odds -> EV -> $bankroll', 'VC Bet draw odds -> EV -> $bankroll', 'VC Bet away win odds -> EV -> $bankroll',  'William Hill home win odds -> EV -> $bankroll', 'William Hill draw odds -> EV -> $bankroll', 'William Hill away win odds -> EV -> $bankroll']
+NO			=	"No Opinion"
+Gdiv			=	"<div id='green'>"
+Rdiv			=	"<div id='red'>"
+Ydiv			=	"<div id='yellow'>"
+Fpc			=	0.045
+Tpf			=	2.5
+Td			=	"<td>"
+Tde			=	"</td>"
+Tr			=	"<tr>"
+Tre			=	"</tr>"
+Na			=	'<td>No Action</td>'
+Betarray		=	%w(B365H B365D B365A BSH BSD BSA BWH BWD BWA GBH GBD GBA IWH IWD IWA LBH LBD LBA SBH SBD SBA WHH WHD WHA SJH SJD SJA VCH VCD VCA BbMxgt2p5 BbMxlt2p5 BbAvgt2p5 BbAvlt2p5 GBgt2p5 GBlt2p5 B365gt2p5 B365lt2p5)
+Betnames		=	['Bet365 home win odds -> EV -> $bankroll', 'Bet365 draw odds -> EV -> $bankroll', 'Bet365 away win odds -> EV -> $bankroll',  'Blue Square home win odds -> EV -> $bankroll', 'Blue Square draw odds -> EV -> $bankroll', 'Blue Square away win odds -> EV -> $bankroll',  'Bet&Win home win odds -> EV -> $bankroll', 'Bet&Win draw odds -> EV -> $bankroll', 'Bet&Win away win odds -> EV -> $bankroll',  'Gamebookers home win odds -> EV -> $bankroll', 'Gamebookers draw odds -> EV -> $bankroll', 'Gamebookers away win odds -> EV -> $bankroll',  'Interwetten home win odds -> EV -> $bankroll', 'Interwetten draw odds -> EV -> $bankroll', 'Interwetten away win odds -> EV -> $bankroll',  'Ladbrokes home win odds -> EV -> $bankroll', 'Ladbrokes draw odds -> EV -> $bankroll', 'Ladbrokes away win odds -> EV -> $bankroll',  'Sporting Odds home win odds -> EV -> $bankroll', 'Sporting Odds draw odds -> EV -> $bankroll', 'Sporting Odds away win odds -> EV -> $bankroll',  'Sportingbet home win odds -> EV -> $bankroll', 'Sportingbet draw odds -> EV -> $bankroll', 'Sportingbet away win odds -> EV -> $bankroll',  'Stan James home win odds -> EV -> $bankroll', 'Stan James draw odds -> EV -> $bankroll', 'Stan James away win odds -> EV -> $bankroll',  'Stanleybet home win odds -> EV -> $bankroll', 'Stanleybet draw odds -> EV -> $bankroll', 'Stanleybet away win odds -> EV -> $bankroll',  'VC Bet home win odds -> EV -> $bankroll', 'VC Bet draw odds -> EV -> $bankroll', 'VC Bet away win odds -> EV -> $bankroll',  'William Hill home win odds -> EV -> $bankroll', 'William Hill draw odds -> EV -> $bankroll', 'William Hill away win odds -> EV -> $bankroll']
 
 Bookienamehash	= {}
 Bookienamehash['B3']	=	'Bet365'
@@ -102,7 +102,7 @@ class ApplicationController < ActionController::Base
 		return a[1].to_i<=>b[1].to_i	if	a[0].to_i	==	b[0].to_i
 		return a[0].to_i<=>b[0].to_i
 	end
-	def	mlhlpr(p)
+	def	mlhlpr(p,	h)
 		# process moneyline
 		return ["No Moneyline", 0.0, nil, 0.0, 0.0, 0.0, false] if p.moneyline_home == -110 and p.moneyline_away == -110 or (p.moneyline_home == 0 or p.moneyline_away == 0)
 		pickhome	=	nil
@@ -122,114 +122,121 @@ class ApplicationController < ActionController::Base
 			awaypo    = p.prob_away_win_su # *aml
 			raise "homepo is nil" if homepo.nil?
 			raise "awaypo is nil" if awaypo.nil?
-#			return ["<div id='yellow'>No Opinion </div>", 0.0]  if homepo<1.0 and awaypo<1.0
+#			return ["#{Ydiv}No Opinion </div>", 0.0]  if homepo<1.0 and awaypo<1.0
 			pickhome = (homepo > awaypo) unless p.league == 5
 			pickaway = (awaypo > homepo) unless p.league == 5
 			pickhome = (homepo > 0.92) # if p.league > 3
 			pickaway = (awaypo > 0.92) # if p.league > 3
 			pickhome = (homepo > 0.85) if p.league  == 2
 			pickaway = (awaypo > 0.85)  if p.league == 2
-#			return ["<div id='yellow'>No Opinion </div>", 0.0]  if (pickhome and hml<1.0) or (pickaway and aml<1.0)
+#			return ["#{Ydiv}No Opinion </div>", 0.0]  if (pickhome and hml<1.0) or (pickaway and aml<1.0)
 			raise "???" if pickhome.nil? or pickaway.nil?
 			hlose	 = nil
-		alose		 = nil
-		hbbmlwin	 = nil
-		hbbmllose = nil
-		abbmlwin  = nil
-		abbmllose  = nil
-		if p.moneyline_home > 0
-			hbbmlwin = p.moneyline_home
-			hbbmllose = -100.0
-			hwinprize = p.moneyline_home / 100.0
-			hlose         = -1
-		else
-			hbbmlwin = 100.0
-			hbbmllose = p.moneyline_home
-			hwinprize = -100.0/p.moneyline_home #+1.0
-			hlose         = -1
-		end
-		if p.moneyline_away > 0
-			abbmlwin = p.moneyline_away
-			abbmllose = -100.0
-			awinprize = p.moneyline_away / 100.0
-			alose         = -1
-		else
-			abbmlwin = 100.0
-			abbmllose = p.moneyline_away
-			awinprize = -100.00/p.moneyline_away #+1.0
-			alose         = -1
-		end
-		# experimental hedge factor
-#		hhf = p.prob_home_win_ats * (awinprize-1.0) / (awinprize*())
-		hhf = 1.0
-#		ahf = 1.0 - hhf
-
-#		hhf = p.prob_home_win_ats * ()
-		hhf = (1.0-2.0*p.prob_away_win_su) / (p.prob_away_win_su*(awinprize-1)+31.0/11.0*p.prob_home_win_su)
-		ahf = (1.0-2.0*p.prob_home_win_su) / (p.prob_home_win_su*(hwinprize-1)+31.0/11.0*p.prob_away_win_su)
-		# ahf = 1.0 / hhf
-		puts "hhf #{hhf} ahf #{ahf} "
-		bh = nil
-		if hhf >= 0.0 and hhf <= 1.0
-			ahf = 1.0-hhf
-			bh = true
-		else
-			hhf = 1.0-ahf
+			alose		 = nil
+			hbbmlwin	 = nil
+			hbbmllose = nil
+			abbmlwin  = nil
+			abbmllose  = nil
+			if p.moneyline_home > 0
+				hbbmlwin = p.moneyline_home
+				hbbmllose = -100.0
+				hwinprize = p.moneyline_home / 100.0
+				hlose         = -1
+			else
+				hbbmlwin = 100.0
+				hbbmllose = p.moneyline_home
+				hwinprize = -100.0/p.moneyline_home #+1.0
+				hlose         = -1
+			end
+			if p.moneyline_away > 0
+				abbmlwin = p.moneyline_away
+				abbmllose = -100.0
+				awinprize = p.moneyline_away / 100.0
+				alose         = -1
+			else
+				abbmlwin = 100.0
+				abbmllose = p.moneyline_away
+				awinprize = -100.00/p.moneyline_away #+1.0
+				alose         = -1
+			end
+			# experimental hedge factor
+			#		hhf = p.prob_home_win_ats * (awinprize-1.0) / (awinprize*())
+			hhf = 1.0
+			#		ahf = 1.0 - hhf
+			
+			#		hhf = p.prob_home_win_ats * ()
+			hhf = (1.0-2.0*p.prob_away_win_su) / (p.prob_away_win_su*(awinprize-1)+31.0/11.0*p.prob_home_win_su)
+			ahf = (1.0-2.0*p.prob_home_win_su) / (p.prob_home_win_su*(hwinprize-1)+31.0/11.0*p.prob_away_win_su)
+			# ahf = 1.0 / hhf
+			puts "hhf #{hhf} ahf #{ahf} "
+			bh = nil
+			if hhf >= 0.0 and hhf <= 1.0
+				ahf = 1.0-hhf
+				bh = true
+			else
+				hhf = 1.0-ahf
 				bh = false
 			end
 			puts " after hhf #{hhf} ahf #{ahf} "
 			raise "hlose is nil " if hlose.nil?
 			raise "alose is nil" if alose.nil?
 			raise "hbbmlwin is nil" if hbbmlwin.nil?
-				raise "hbbmllose is nil" if hbbmllose.nil?
+			raise "hbbmllose is nil" if hbbmllose.nil?
 			raise "abbmlwin is nil" if abbmlwin.nil?
-				raise "abbmllose is nil" if abbmllose.nil?
+			raise "abbmllose is nil" if abbmllose.nil?
 		else
-			# new way
-			if p.moneyline_home > 0
-				hbbmlwin = p.moneyline_home
-				hbbmllose = -100.0
-				hwinprize = 1+p.moneyline_home / 100.0
-				hlose         = -1
-			else
-				hbbmlwin = 100.0
-				hbbmllose = p.moneyline_home
-				hwinprize = 1+-100.0/p.moneyline_home #+1.0
-				hlose         = -1
-			end
-			if p.moneyline_away > 0
-				abbmlwin = p.moneyline_away
-				abbmllose = -100.0
-				awinprize = 1+p.moneyline_away / 100.0
-				alose         = -1
-			else
-				abbmlwin = 100.0
-				abbmllose = p.moneyline_away
-				awinprize = 1+-100.00/p.moneyline_away #+1.0
-				alose         = -1
-			end
-			hodds	=	1	+	p.moneyline_home/100.0 if p.moneyline_home > 0
-			hodds	=	1	+	-100.0/p.moneyline_home if p.moneyline_home < 0
-			aodds	=	1	+	p.moneyline_away/100.0 if p.moneyline_away > 0
-			aodds	=	1	+	-100.0/p.moneyline_away if p.moneyline_away < 0
-			hev		=	hodds	*	p.prob_home_win_su
-			aev		=	aodds	*	p.prob_away_win_su
-			pickhome	=	(hev	>	1.0)
-			pickaway	=	(aev	>	1.0)
+		# new way
+		if p.moneyline_home > 0
+			hbbmlwin	= p.moneyline_home
+			hbbmllose	= -100.0
+			hwinprize	= p.moneyline_home / 100.0 - 1
+			hlose		= -1
+		else
+			hbbmlwin	= 100.0
+			hbbmllose	= p.moneyline_home
+			hwinprize	= -100.0/p.moneyline_home #+1.0
+			hlose		= -1
 		end
-		mlats = ((pickhome and p.spread > 0.0) ? p.home_team_id : ((pickaway and p.spread < 0.0) ? p.away_team_id : nil))
-#		puts "mlats.inspect #{mlats.inspect}"
-		raise "mlats is zero #{p.inspect}" if mlats == 0
-		return ["<div id='yellow'>No Opinion </div>", 0.0, nil, 0.0, 0.0, 0.0, false]  if pickhome == false and pickaway == false
-		return ["<div id='green'> #{nameconv(Team.find(p.home_team_id).name, p.league)}  ->  #{(hwinprize).to_s[0,6]}</div>", hwinprize, mlats, hbbmlwin, hhf, ahf, bh] if pickhome and p.actual_home_score > p.actual_away_score
-		return ["<div id='red'> #{nameconv(Team.find(p.home_team_id).name, p.league)}  ->  #{hlose.to_s[0,6]}</div>", hlose, mlats, hbbmllose, hhf, ahf, bh] if pickhome and p.actual_home_score < p.actual_away_score
-		return ["<div id='yellow'> #{nameconv(Team.find(p.home_team_id).name, p.league)}  ->  0.0</div>", 0.0, mlats, 0.0, 0.0, 0.0, false] if pickhome and p.actual_home_score == p.actual_away_score
-
-		return ["<div id='green'> #{nameconv(Team.find(p.away_team_id).name, p.league)}  ->  #{(awinprize).to_s[0,6]}</div>", awinprize, mlats, abbmlwin, hhf, ahf, bh] if pickaway and p.actual_away_score > p.actual_home_score
-		return ["<div id='red'> #{nameconv(Team.find(p.away_team_id).name, p.league)}  ->  #{alose.to_s[0,6]}</div>", alose, mlats, abbmllose, hhf, ahf, bh] if pickaway and p.actual_away_score < p.actual_home_score
-		return ["<div id='yellow'> #{nameconv(Team.find(p.away_team_id).name, p.league)}  ->  0.0</div>", 0.0, mlats, 0.0, 0.0, 0.0, false] if pickaway and p.actual_away_score == p.actual_home_score
-		raise "why am i here"
+		if p.moneyline_away > 0
+			abbmlwin	= p.moneyline_away
+			abbmllose	= -100.0
+			awinprize	= p.moneyline_away / 100.0 - 1
+			alose		= -1
+		else
+			abbmlwin	= 100.0
+			abbmllose	= p.moneyline_away
+			awinprize	= -100.00/p.moneyline_away #+1.0
+			alose		= -1
+		end
+		hodds			=			p.moneyline_home/100.0 if p.moneyline_home > 0
+		hodds			=	1	+	-100.0/p.moneyline_home if p.moneyline_home < 0
+		aodds			=			p.moneyline_away/100.0 if p.moneyline_away > 0
+		aodds			=	1	+	-100.0/p.moneyline_away if p.moneyline_away < 0
+#		hev			=	(hodds-0.0)	*	p.prob_home_win_su
+#		aev			=	(aodds-0.0)	*	p.prob_away_win_su
+		hev			=	hwinprize	*	p.prob_home_win_su	+	(hlose	*	(1.0-p.prob_home_win_su))
+		aev			=	awinprize	*	p.prob_away_win_su	+	(alose	*	(1.0-p.prob_away_win_su))
+		puts "hev #{hev} hodds #{hodds} p.prob_home_win_su #{p.prob_home_win_su}"
+		puts "aev #{aev} aodds #{aodds} p.prob_away_win_su #{p.prob_away_win_su}"
+#		sleep 1
+		pickhome		=	(hev	>	0.3)
+		pickaway		=	(aev	>	0.3)
+#		raise "hodds #{hodds}"
 	end
+	mlats = ((pickhome and p.spread > 0.0) ? p.home_team_id : ((pickaway and p.spread < 0.0) ? p.away_team_id : nil))	unless	isnhl
+	mlats = p.home_team_id													if	isnhl
+#	puts "mlats.inspect #{mlats.inspect}"
+#	raise "mlats is zero #{p.inspect}" if mlats == 0
+	return ["#{Ydiv}No Opinion </div>", 0.0, nil, 0.0, 0.0, 0.0, false]  if pickhome == false and pickaway == false
+	return ["#{Gdiv} #{nameconv(Team.find(p.home_team_id).name, p.league)}  ->  #{(hwinprize).to_s[0,6]}</div>", hwinprize, mlats, hbbmlwin, hhf, ahf, bh] if pickhome and p.actual_home_score > p.actual_away_score
+	return ["#{Rdiv} #{nameconv(Team.find(p.home_team_id).name, p.league)}  ->  #{hlose.to_s[0,6]}</div>", hlose, mlats, hbbmllose, hhf, ahf, bh] if pickhome and p.actual_home_score < p.actual_away_score
+	return ["#{Ydiv} #{nameconv(Team.find(p.home_team_id).name, p.league)}  ->  0.0</div>", 0.0, mlats, 0.0, 0.0, 0.0, false] if pickhome and p.actual_home_score == p.actual_away_score
+	return ["#{Gdiv} #{nameconv(Team.find(p.away_team_id).name, p.league)}  ->  #{(awinprize).to_s[0,6]}</div>", awinprize, mlats, abbmlwin, hhf, ahf, bh] if pickaway and p.actual_away_score > p.actual_home_score
+	return ["#{Rdiv} #{nameconv(Team.find(p.away_team_id).name, p.league)}  ->  #{alose.to_s[0,6]}</div>", alose, mlats, abbmllose, hhf, ahf, bh] if pickaway and p.actual_away_score < p.actual_home_score
+	return ["#{Ydiv} #{nameconv(Team.find(p.away_team_id).name, p.league)}  ->  0.0</div>", 0.0, mlats, 0.0, 0.0, 0.0, false] if pickaway and p.actual_away_score == p.actual_home_score
+	raise "why am i here"
+end
+
 def	hi
 	ysh				=	{}
 	wsh				=	{}
@@ -275,57 +282,57 @@ def	ms(wsh, ysh, week, header=nil, gaptitle	=	'Week', gc	=	0)
 #		ta	<<	'<tr><table border="1">' # start new table
 		ta	<<	"<tr><td>#{gaptitle} #{week} Statistics</td>" if header.nil?
 		ta	<<	"<tr><td>#{header} #{gc.commify} Statistics</td>" unless header.nil?
-		wsuw	=	wsh['suright']
+		wsuw		=	wsh['suright']
 		wsut		=	wsh['su']
 		wsul		=	wsut	-	wsuw	#	+	wsh['supush']
-		wsudiv	=	"<div id='green'>"	if	wsuw	>	wsul
-		wsudiv	=	"<div id='red'>"	if	wsuw	<	wsul
-		wsudiv	=	"<div id='yellow'>"	if	wsuw	==	wsul
+		wsudiv		=	Gdiv	if	wsuw	>	wsul
+		wsudiv		=	Rdiv	if	wsuw	<	wsul
+		wsudiv		=	Ydiv	if	wsuw	==	wsul
 		ysuw		=	ysh['suright']
 		ysut		=	ysh['su']
 		ysul		=	ysut	-	ysuw
-		ysudiv	=	"<div id='green'>"	if	ysuw	>	ysul
-		ysudiv	=	"<div id='red'>"	if	ysuw	<	ysul
-		ysudiv	=	"<div id='yellow'>"	if	ysuw	==	ysul
-		wpcw	=	(100.0 * wsuw / wsut).r2
-		wpcw	=	0.0	if	wpcw.nan?
-		ypcw	=	(100.0 * ysuw / ysut).r2
-		ypcw	=	0.0	if	ypcw.nan?
+		ysudiv		=	Gdiv	if	ysuw	>	ysul
+		ysudiv		=	Rdiv	if	ysuw	<	ysul
+		ysudiv		=	Ydiv	if	ysuw	==	ysul
+		wpcw		=	(100.0 * wsuw / wsut).r2
+		wpcw		=	0.0	if	wpcw.nan?
+		ypcw		=	(100.0 * ysuw / ysut).r2
+		ypcw		=	0.0	if	ypcw.nan?
 
 		watsw	=	wsh['atsright']
 		watst	=	wsh['ats']
 		watsl	=	watst	-	watsw	#	+	wsh['atsbetpush']
-		watsdiv	=	"<div id='green'>"	if	watsw	>	watsl * 1.1
-		watsdiv	=	"<div id='red'>"	if	watsw	<	watsl * 1.1
-		watsdiv	=	"<div id='yellow'>"	if	watsw	==	watsl * 1.1
+		watsdiv	=	Gdiv	if	watsw	>	watsl * 1.1
+		watsdiv	=	Rdiv	if	watsw	<	watsl * 1.1
+		watsdiv	=	Ydiv	if	watsw	==	watsl * 1.1
 		yatsw	=	ysh['atsright']
 		yatst		=	ysh['ats']
 		yatsl		=	yatst	-	yatsw
-		yatsdiv	=	"<div id='green'>"	if	yatsw	>	yatsl * 1.1
-		yatsdiv	=	"<div id='red'>"	if	yatsw	<	yatsl * 1.1
-		yatsdiv	=	"<div id='yellow'>"	if	yatsw	==	yatsl * 1.1
+		yatsdiv	=	Gdiv	if	yatsw	>	yatsl * 1.1
+		yatsdiv	=	Rdiv	if	yatsw	<	yatsl * 1.1
+		yatsdiv	=	Ydiv	if	yatsw	==	yatsl * 1.1
 
 		wout		=	wsh['ou']
 		yout		=	ysh['ou']
 		wouright	=	wsh['ouright']
 		youright	=	ysh['ouright']
 		woul		=	wout	-	wouright
-		woudiv	=	"<div id='green'>"	if	wouright	>	woul * 1.1
-		woudiv	=	"<div id='red'>"	if	wouright	<	woul * 1.1
-		woudiv	=	"<div id='yellow'>"	if	wouright	==	woul * 1.1
+		woudiv	=	Gdiv	if	wouright	>	woul * 1.1
+		woudiv	=	Rdiv	if	wouright	<	woul * 1.1
+		woudiv	=	Ydiv	if	wouright	==	woul * 1.1
 		youl		=	yout	-	youright
-		youdiv	=	"<div id='green'>"	if	youright	>	youl * 1.1
-		youdiv	=	"<div id='red'>"	if	youright	<	youl * 1.1
-		youdiv	=	"<div id='yellow'>"	if	youright	==	youl * 1.1
+		youdiv	=	Gdiv	if	youright	>	youl * 1.1
+		youdiv	=	Rdiv	if	youright	<	youl * 1.1
+		youdiv	=	Ydiv	if	youright	==	youl * 1.1
 
 		wmlp	=	wsh['mlp'].r2
-		wmldiv	=	"<div id='green'>"	if	wmlp	>	0
-		wmldiv	=	"<div id='red'>"	if	wmlp	<	0
-		wmldiv	=	"<div id='yellow'>"	if	wmlp	==	0
+		wmldiv	=	Gdiv	if	wmlp	>	0
+		wmldiv	=	Rdiv	if	wmlp	<	0
+		wmldiv	=	Ydiv	if	wmlp	==	0
 		ymlp		=	ysh['mlp'].r2
-		ymldiv	=	"<div id='green'>"	if	ymlp	>	0
-		ymldiv	=	"<div id='red'>"	if	ymlp	<	0
-		ymldiv	=	"<div id='yellow'>"	if	ymlp	==	0
+		ymldiv	=	Gdiv	if	ymlp	>	0
+		ymldiv	=	Rdiv	if	ymlp	<	0
+		ymldiv	=	Ydiv	if	ymlp	==	0
 		wmlw	=	wsh['mlw']
 		ymlw	=	ysh['mlw']
 		wmll		=	wsh['mll']
@@ -351,28 +358,28 @@ def	ms(wsh, ysh, week, header=nil, gaptitle	=	'Week', gc	=	0)
 		# now new home dog etc stats
 		outstr	=	"<tr><td>Home and Away Dog and Favorite Stats</td>"
 		p		=	(wsh['hd'][0]-wsh['hd'][1]*1.1).r2
-		sd		=	p	>	0.0	?	"<div id='green'>" : (p	==	0.0	?	"<div id='yellow'>" : "<div id='red'>")
+		sd		=	p	>	0.0	?	Gdiv : (p	==	0.0	?	Ydiv : Rdiv)
 		outstr	+=	"<td>#{sd}Weekly Home Dog Stats - #{wsh['hd'][0].commify} wins #{wsh['hd'][1].commify} loses - Profit is #{p.commify}</div></td>"
 		p		=	(wsh['ad'][0]-wsh['ad'][1]*1.1).r2
-		sd		=	p	>	0.0	?	"<div id='green'>" : (p	==	0.0	?	"<div id='yellow'>" : "<div id='red'>")
+		sd		=	p	>	0.0	?	Gdiv : (p	==	0.0	?	Ydiv : Rdiv)
 		outstr	+=	"<td>#{sd}Weekly Road Dog Stats - #{wsh['ad'][0].commify} wins #{wsh['ad'][1].commify} loses - Profit is #{p.commify}</div></td>"
 		p		=	(wsh['hf'][0]-wsh['hf'][1]*1.1).r2
-		sd		=	p	>	0.0	?	"<div id='green'>" : (p	==	0.0	?	"<div id='yellow'>" : "<div id='red'>")
+		sd		=	p	>	0.0	?	Gdiv : (p	==	0.0	?	Ydiv : Rdiv)
 		outstr	+=	"<td>#{sd}Weekly Home Fav Stats - #{wsh['hf'][0].commify} wins #{wsh['hf'][1].commify} loses - Profit is #{p.commify}</div></td>"
 		p		=	(wsh['af'][0]-wsh['af'][1]*1.1).r2
-		sd		=	p	>	0.0	?	"<div id='green'>" : (p	==	0.0	?	"<div id='yellow'>" : "<div id='red'>")
+		sd		=	p	>	0.0	?	Gdiv : (p	==	0.0	?	Ydiv : Rdiv)
 		outstr	+=	"<td>#{sd}Weekly Road Fav Stats - #{wsh['af'][0].commify} wins #{wsh['af'][1].commify} loses - Profit is #{p.commify}</div></td>"
 		p		=	(ysh['hd'][0]-ysh['hd'][1]*1.1).r2
-		sd		=	p	>	0.0	?	"<div id='green'>" : (p	==	0.0	?	"<div id='yellow'>" : "<div id='red'>")
+		sd		=	p	>	0.0	?	Gdiv : (p	==	0.0	?	Ydiv : Rdiv)
 		outstr	+=	"<td>#{sd}Yearly Home Dog Stats - #{ysh['hd'][0].commify} wins #{ysh['hd'][1].commify} loses - Profit is #{p.commify}</div></td>"
 		p		=	(ysh['ad'][0]-ysh['ad'][1]*1.1).r2
-		sd		=	p	>	0.0	?	"<div id='green'>" : (p	==	0.0	?	"<div id='yellow'>" : "<div id='red'>")
+		sd		=	p	>	0.0	?	Gdiv : (p	==	0.0	?	Ydiv : Rdiv)
 		outstr	+=	"<td>#{sd}Yearly Road Dog Stats - #{ysh['ad'][0].commify} wins #{ysh['ad'][1].commify} loses - Profit is #{p.commify}</div></td>"
 		p		=	(ysh['hf'][0]-ysh['hf'][1]*1.1).r2
-		sd		=	p	>	0.0	?	"<div id='green'>" : (p	==	0.0	?	"<div id='yellow'>" : "<div id='red'>")
+		sd		=	p	>	0.0	?	Gdiv : (p	==	0.0	?	Ydiv : Rdiv)
 		outstr	+=	"<td>#{sd}Yearly Home Fav Stats - #{ysh['hf'][0].commify} wins #{ysh['hf'][1].commify} loses - Profit is #{p.commify}</div></td>"
 		p		=	(ysh['af'][0]-ysh['af'][1]*1.1).r2
-		sd		=	p	>	0.0	?	"<div id='green'>" : (p	==	0.0	?	"<div id='yellow'>" : "<div id='red'>")
+		sd		=	p	>	0.0	?	Gdiv : (p	==	0.0	?	Ydiv : Rdiv)
 		outstr	+=	"<td>#{sd}Yearly Road Fav Stats - #{ysh['af'][0].commify} wins #{ysh['af'][1].commify} loses - Profit is #{p.commify}</div></td>"
 		outstr	+=	"</tr>"
 #		raise "summ #{summ} outstr #{outstr.inspect}"
@@ -654,63 +661,69 @@ def	do_season(newpred,	year,	winprob	=	0.7,	header	=	nil, gap	=	Secondsinthreeda
 	isnhl				=	(lname	==	'National Hockey League')
 	ff				=	File.open('graphdata.txt','a')	if	Makedata
 #	puts "in makeswp with #{lid} and #{pid}"			if	Makedata
-	fdate			=	newpred.first.game_date_time
+	fdate				=	newpred.first.game_date_time
 	ldate				=	newpred.last.game_date_time
 	ff.write("#{sport} -> #{lname}^ #{fdate.strftime("%B %d %Y ")} - #{ldate.strftime("%B %d %Y ")}\n")	if	Makedata
 #	raise "Makedata #{Makedata}"
-	week			=	0
+	week				=	0
 	bet				=	4
-	currentdate		=	nil
-	weeklysummary	=	nil
+	currentdate			=	nil
+	weeklysummary			=	nil
 	returnme			=	[]
 	returnme			<<	header
 	returnme			<<	'<table width="100%"><tr><td><!-- wrapping table --> ' # big table that wraps both games and weekly summary
 	returnme			<<	'<table border="1">'
 	trm				=	[]
 	ysh,	wsh			=	hi()
-	header			=	''
-	theader			=	''
-	gamecount		=	1
+	header				=	''
+	theader				=	''
+	gamecount			=	1
 	gapcount			=	1
 	bankroll			=	0.0
 	utl				=	[]	#	unique team list
 	utlid				=	[]	#	unique team list ids
 	newpred.each{|g|
 #		next if g.actual_home_score	<=	0	or g.actual_away_score	<=	0	or	g.game_total	==	0
+		h	=	nil
+		if isnhl
+			h		=	HockeyBet.find_by_pred_id(g.id)
+			raise "no hockey bet for #{g.id} " if h.nil?
+		end
 		next if (g.actual_home_score	<=	0	or g.actual_away_score	<=	0)	and	g.spread == 0 and g.moneyline_home == 0 && g.moneyline_away == 0
 		unless utlid.include?(g.home_team_id)
 			utl		<<	Team.find(g.home_team_id).name
 			utlid		<<	g.home_team_id
 		end
-		winprob		=	0.65	if	mm	and g.game_date_time	>=	Time.local(2_009,3,20)
-		currentdate	=	g.game_date_time	if	currentdate.nil?
+		winprob			=	0.65	if	mm	and g.game_date_time	>=	Time.local(2_009,3,20)
+		currentdate		=	g.game_date_time	if	currentdate.nil?
 		if (g.game_date_time	-	currentdate)	>	gap
 			logger.warn("(g.game_date_time	-	currentdate) #{(g.game_date_time	-	currentdate)}")
 			#	new week
 #			raise
-			week	+=	1
+			week		+=	1
 			#	render partial here if any data for it
 			trma		=	nil
 			trma,	bankroll	=	ms(wsh, ysh, week,	gaptitle,nil,	gapcount)
 			trm		<<	trma.dup
 			gapcount	+=	1
-			dummy,	wsh		=	hi()
+			dummy,	wsh	=	hi()
 		end
-		currentdate	=	g.game_date_time
+		currentdate		=	g.game_date_time
 		# now build row of predictions,
 		# date, home with moneyline, away with moneyline, spread, ou, spreadpick, ttspreadpick, oupick, ttoupick, moneyline both small and large bet
 		# ysh,	wsh,	supick,	suright,	supush,	atsbet,	oubet,	atsbetright,	atsbetpush,	oubetright,	oubetpush
-		ysh,	wsh,	supick,	suright,	supush,	atsbet,	oubet,	atsbetright,	atsbetpush,	oubetright,	oubetpush	=	calcatsbet(g,	ysh,	wsh,	winprob)
+		ysh,	wsh,	supick,	suright,	supush,	atsbet,	oubet,	atsbetright,	atsbetpush,	oubetright,	oubetpush	=	calcatsbet(g,	ysh,	wsh,	winprob, h)
 		# date	home	away		spread	ou	atspick	
 		thisrow		=	''
 		theader		+=	wrap('Game Date')	if	header.empty?
 		thisrow		+=	wrap('Game # '+gamecount.commify+' '+g.game_date_time.strftime("%b.%d.%Y"))
 		gamecount	+=	1
 		# home team with  moneyline and su pick
-		theader	+=	wrap('Home')	if	header.empty?
+		theader	+=	wrap('Home')		if	header.empty?
+#		raise g.inspect
 		thisrow	+=	wrap(nameconv(Team.find(g.home_team_id).name, 1)+" #{(g.moneyline_home == -110 && g.moneyline_away == -110) ?  "" : g.moneyline_home.commify}", (supick	==	g.home_team_id), suright, supush)
 		# away team with  moneyline and su pick
-		theader	+=	wrap('Away')	if	header.empty?
+		theader	+=	wrap('Away')		if	header.empty?
 		thisrow	+=	wrap(nameconv(Team.find(g.away_team_id).name, 1)+" #{(g.moneyline_away == -110 && g.moneyline_home == -110) ?  "" : g.moneyline_away.commify}", (supick	==	g.away_team_id), suright, supush)
 		# game score
 		theader	+=	wrap('Game Score')	if	header.empty?
@@ -718,7 +731,46 @@ def	do_season(newpred,	year,	winprob	=	0.7,	header	=	nil, gap	=	Secondsinthreeda
 		if isnhl
 			# do both pucklines and ou both odds
 			theader	+=	wrap('Puck Line Home')	if	header.empty?
+			unless	g.actual_home_score	==	-1
+#				plevh	=	convml(h.plhodds)	*	h.plhprob
+#				pleva	=	convml(h.plaodds)	*	h.plaprob
+				hprize,	hlose	=	getpplfml(h.plhodds)
+				aprize,	alose	=	getpplfml(h.plaodds)
+				plevh	=	hprize	*	h.plhprob	+	(hlose	* (1.0 - h.plhprob))
+				pleva	=	aprize	*	h.plaprob	+	(alose	* (1.0 - h.plaprob))
+				puts "plevh #{plevh} pleva #{pleva} hprize #{hprize} aprize #{aprize} g.actual_home_score #{g.actual_home_score} g.actual_away_score #{g.actual_away_score}"
+			end
+			if	plevh	<	0.0		||	g.actual_home_score	==	-1
+				thisrow	+=	wrap("#{h.plhome}(#{h.plhodds})")
+			else
+				puts "********* playing home pl"
+				hdiv	=	nil
+				hdiv	=	Ydiv	if	g.actual_home_score	+	h.plhome	==	g.actual_away_score
+				hdiv	=	Gdiv	if	g.actual_home_score	+	h.plhome	>	g.actual_away_score
+				hdiv	=	Rdiv	if	g.actual_home_score	+	h.plhome	<	g.actual_away_score
+				raise if hdiv.nil?
+				begin
+					thisrow	+=	wrap("#{hdiv}#{h.plhome}(#{h.plhodds})</div>")
+				rescue Exception => e
+					raise "#{e} h.inspect #{h.inspect}"
+				end
+			end
 			theader	+=	wrap('Puck Line Away')	if	header.empty?
+			if	pleva	<	0.0	||	g.actual_home_score	==	-1
+				thisrow	+=	wrap("#{h.plaway}(#{h.plaodds})")
+			else
+				puts "********* playing away pl"
+				adiv	=	nil
+				adiv	=	Ydiv	if	g.actual_away_score	+	h.plaway	==	g.actual_home_score
+				adiv	=	Gdiv	if	g.actual_away_score	+	h.plaway	>	g.actual_home_score
+				adiv	=	Rdiv	if	g.actual_away_score	+	h.plaway	<	g.actual_home_score
+				raise if adiv.nil?
+				begin
+					thisrow	+=	wrap("#{adiv}#{h.plaway}(#{h.plaodds})</div>")
+				rescue Exception => e
+					raise "#{e} h.inspect #{h.inspect}"
+				end
+			end
 		else
 			# spread
 			theader	+=	wrap('Spread')	if	header.empty?
@@ -742,16 +794,16 @@ def	do_season(newpred,	year,	winprob	=	0.7,	header	=	nil, gap	=	Secondsinthreeda
 		end
 
 		# moneyline
-		mlo,	mlm,	mlats,	bbmlprz,	hhf,	ahf,	bh	=	mlhlpr(g)
-		unless	mlm	==	0
+		mlo,	mlm,	mlats,	bbmlprz,	hhf,	ahf,	bh	=	mlhlpr(g,	h)
+		unless	mlm		==	0
 			wsh['mlp']	+=	mlm
-			ysh['mlp']		+=	mlm
+			ysh['mlp']	+=	mlm
 			wsh['mlbb']	+=	bbmlprz	unless	bbmlprz.nil?
 			ysh['mlbb']	+=	bbmlprz	unless	bbmlprz.nil?
 			wsh['mlw']	+=	mlm	>	0	?	1	:	0
 			ysh['mlw']	+=	mlm	>	0	?	1	:	0
-			wsh['mll']		+=	mlm	<	0	?	1	:	0
-			ysh['mll']		+=	mlm	<	0	?	1	:	0
+			wsh['mll']	+=	mlm	<	0	?	1	:	0
+			ysh['mll']	+=	mlm	<	0	?	1	:	0
 		end
 		theader	+=	wrap('Moneyline')	if		header.empty?
 		thisrow	+=	wrap(mlo)		if		bbmlprz.nil?	or mlo.include?('No Opinion')	# if	mlo.nil?
@@ -783,94 +835,99 @@ def	do_season(newpred,	year,	winprob	=	0.7,	header	=	nil, gap	=	Secondsinthreeda
 	@main		=	rm.dup
 end	#	do_season
 
-def	calcatsbet(g,	ysh,	wsh, winprob)
+def	calcatsbet(g,	ysh,	wsh, winprob,	h)
 	supick		=	nil
-	supick		=	g.home_team_id	if	g.prob_home_win_su			>=	winprob
-	supick		=	g.away_team_id	if	g.prob_away_win_su				>=	winprob
+	supick		=	g.home_team_id	if	g.prob_home_win_su	>=	winprob
+	supick		=	g.away_team_id	if	g.prob_away_win_su	>=	winprob
 	suright		=	nil
 	suright		=	(supick	==	g.home_team_id && (g.actual_home_score > g.actual_away_score)) || (supick	==	g.away_team_id && (g.actual_home_score < g.actual_away_score))
 	ysh['suright']	+=	(suright	?	1	:	0) unless suright.nil?
 	wsh['suright']	+=	(suright	?	1	:	0) unless suright.nil?
-	ysh['su']		+=	1 unless supick.nil?
-	wsh['su']		+=	1 unless supick.nil?
+	ysh['su']	+=	1 unless supick.nil?
+	wsh['su']	+=	1 unless supick.nil?
 	supush		=	(g.actual_home_score == g.actual_away_score)
 	wsh['supush']	+=	1 if supush
 
 	atsbet		=	nil
-	atsbet		=	g.home_team_id	if	g.prob_home_win_ats			>=	winprob
-	atsbet		=	g.away_team_id	if	g.prob_away_win_ats			>=	winprob
+	atsbet		=	g.home_team_id	if	g.prob_home_win_ats	>=	winprob
+	atsbet		=	g.away_team_id	if	g.prob_away_win_ats	>=	winprob
 	atsbetright	=	nil
-	if g.spread	>	0
-		wsh['hd'][0]	+=	1	if	(g.actual_home_score + g.spread) > g.actual_away_score # home dog won 
-		wsh['hd'][1]	+=	1	if	(g.actual_home_score + g.spread) < g.actual_away_score # home dog lost 
-		ysh['hd'][0]	+=	1	if	(g.actual_home_score + g.spread) > g.actual_away_score # home dog won 
-		ysh['hd'][1]	+=	1	if	(g.actual_home_score + g.spread) < g.actual_away_score # home dog lost 
-		wsh['af'][0]	+=	1	if	(g.actual_home_score + g.spread) < g.actual_away_score # away fav won 
-		wsh['af'][1]	+=	1	if	(g.actual_home_score + g.spread) > g.actual_away_score # away fav lost 
-		ysh['af'][0]	+=	1	if	(g.actual_home_score + g.spread) < g.actual_away_score # away fav won 
-		ysh['af'][1]	+=	1	if	(g.actual_home_score + g.spread) > g.actual_away_score # away fav lost 
-	else
-		wsh['hf'][0]	+=	1	if	(g.actual_home_score + g.spread) > g.actual_away_score # home fav won 
-		wsh['hf'][1]	+=	1	if	(g.actual_home_score + g.spread) < g.actual_away_score # home fav lost 
-		ysh['hf'][0]	+=	1	if	(g.actual_home_score + g.spread) > g.actual_away_score # home fav won 
-		ysh['hf'][1]	+=	1	if	(g.actual_home_score + g.spread) < g.actual_away_score # home fav lost 
-		wsh['ad'][0]	+=	1	if	(g.actual_home_score + g.spread) < g.actual_away_score # away dog won 
-		wsh['ad'][1]	+=	1	if	(g.actual_home_score + g.spread) > g.actual_away_score # away dog lost 
-		ysh['ad'][0]	+=	1	if	(g.actual_home_score + g.spread) < g.actual_away_score # away dog won 
-		ysh['ad'][1]	+=	1	if	(g.actual_home_score + g.spread) > g.actual_away_score # away dog lost 
-	end
-	atsbetright	=	(atsbet	==	g.home_team_id && (g.actual_home_score + g.spread) > g.actual_away_score) || (atsbet	==	g.away_team_id && (g.actual_home_score + g.spread) < g.actual_away_score)
-	atsbetpush	=	((g.actual_home_score + g.spread) == g.actual_away_score)
-	ysh['atsright']	+=	(atsbetright	?	1	:	0)
-	wsh['atsright']	+=	(atsbetright	?	1	:	0)
-	if atsbetpush
-		wsh['atsbetpush']	+=	1 
-	else
-		ysh['ats']	+=	1 unless atsbet.nil?
-		wsh['ats']	+=	1 unless atsbet.nil?
-	end
-
-	oubet		=	nil
-	oubetright	=	nil
-	oubetpush	=	 nil
-	unless	g.game_total	==	0
-		oubet	=	true		if 	g.prob_game_over_total			>=	winprob
-		oubet	=	false	if 	(1.0	-	g.prob_game_over_total)	>=	winprob
-		unless oubet.nil?
-			if oubet # bet the over
-				oubetright	=	((g.actual_home_score	+	g.actual_away_score)	>	g.game_total)
-			else
-				oubetright	=	((g.actual_home_score	+	g.actual_away_score)	<	g.game_total)
+	if h.nil?	# not nhl
+		if g.spread	>	0
+			wsh['hd'][0]	+=	1	if	(g.actual_home_score + g.spread) > g.actual_away_score # home dog won 
+			wsh['hd'][1]	+=	1	if	(g.actual_home_score + g.spread) < g.actual_away_score # home dog lost 
+			ysh['hd'][0]	+=	1	if	(g.actual_home_score + g.spread) > g.actual_away_score # home dog won 
+			ysh['hd'][1]	+=	1	if	(g.actual_home_score + g.spread) < g.actual_away_score # home dog lost 
+			wsh['af'][0]	+=	1	if	(g.actual_home_score + g.spread) < g.actual_away_score # away fav won 
+			wsh['af'][1]	+=	1	if	(g.actual_home_score + g.spread) > g.actual_away_score # away fav lost 
+			ysh['af'][0]	+=	1	if	(g.actual_home_score + g.spread) < g.actual_away_score # away fav won 
+			ysh['af'][1]	+=	1	if	(g.actual_home_score + g.spread) > g.actual_away_score # away fav lost 
+		else
+			wsh['hf'][0]	+=	1	if	(g.actual_home_score + g.spread) > g.actual_away_score # home fav won 
+			wsh['hf'][1]	+=	1	if	(g.actual_home_score + g.spread) < g.actual_away_score # home fav lost 
+			ysh['hf'][0]	+=	1	if	(g.actual_home_score + g.spread) > g.actual_away_score # home fav won 
+			ysh['hf'][1]	+=	1	if	(g.actual_home_score + g.spread) < g.actual_away_score # home fav lost 
+			wsh['ad'][0]	+=	1	if	(g.actual_home_score + g.spread) < g.actual_away_score # away dog won 
+			wsh['ad'][1]	+=	1	if	(g.actual_home_score + g.spread) > g.actual_away_score # away dog lost 
+			ysh['ad'][0]	+=	1	if	(g.actual_home_score + g.spread) < g.actual_away_score # away dog won 
+			ysh['ad'][1]	+=	1	if	(g.actual_home_score + g.spread) > g.actual_away_score # away dog lost 
+		end
+		atsbetright		=	(atsbet	==	g.home_team_id && (g.actual_home_score + g.spread) > g.actual_away_score) || (atsbet	==	g.away_team_id && (g.actual_home_score + g.spread) < g.actual_away_score)
+		atsbetpush		=	((g.actual_home_score + g.spread) == g.actual_away_score)
+		ysh['atsright']		+=	(atsbetright	?	1	:	0)
+		wsh['atsright']		+=	(atsbetright	?	1	:	0)
+		if atsbetpush
+			wsh['atsbetpush']	+=	1 
+		else
+			ysh['ats']	+=	1 unless atsbet.nil?
+			wsh['ats']	+=	1 unless atsbet.nil?
+		end
+		
+		oubet		=	nil
+		oubetright	=	nil
+		oubetpush	=	nil
+		unless	g.game_total	==	0
+			oubet	=	true		if 	g.prob_game_over_total			>=	winprob
+			oubet	=	false	if 	(1.0	-	g.prob_game_over_total)	>=	winprob
+			unless oubet.nil?
+				if oubet # bet the over
+					oubetright	=	((g.actual_home_score	+	g.actual_away_score)	>	g.game_total)
+				else
+					oubetright	=	((g.actual_home_score	+	g.actual_away_score)	<	g.game_total)
+				end
+			end
+			oubetpush			=	((g.actual_home_score	+	g.actual_away_score)	==	g.game_total)
+			unless oubetpush
+				unless oubetright.nil?
+					ysh['ouright']	+=	(oubetright	?	1	:	0)
+					wsh['ouright']	+=	(oubetright	?	1	:	0)
+					ysh['ou']		+=	1
+					wsh['ou']		+=	1
+				end
 			end
 		end
-		oubetpush			=	((g.actual_home_score	+	g.actual_away_score)	==	g.game_total)
-		unless oubetpush
-			unless oubetright.nil?
-				ysh['ouright']	+=	(oubetright	?	1	:	0)
-				wsh['ouright']	+=	(oubetright	?	1	:	0)
-				ysh['ou']		+=	1
-				wsh['ou']		+=	1
-			end
-		end
+		logger.warn( "oubet #{oubet.inspect} ou total #{g.game_total} over prob #{g.prob_game_over_total} ")
+	else
+		# is nhl - do puck lines and ou with seperate odds
+		
 	end
-	logger.warn( "oubet #{oubet.inspect} ou total #{g.game_total} over prob #{g.prob_game_over_total} ")
 	return ysh,	wsh,	supick,	suright,	supush,	atsbet,	oubet,	atsbetright,	atsbetpush,	oubetright,	oubetpush
 	end
 
-	def	wrap(str, picked=nil, pickright=nil, pickpush=nil, ou=false)
-		#	if ou
-		#		return "<td>#{str}</td>" if picked.nil? # no opinion in ou
-		#		return "<td><div id='yellow'>#{str}</div></td>" if pickpush
-		#		return "<td><div id='green'>#{str}</div></td>" if pickright
-		#		return "<td><div id='red'>#{str}</div></td>" unless pickright
-		#	else
-		return "<td>#{str}</td>" if (picked.nil? or !picked)
-		return "<td><div id='yellow'>#{str}</div></td>" if !picked.nil? && pickpush
-		return "<td><div id='green'>#{str}</div></td>" if !picked.nil? && pickright
-		return "<td><div id='red'>#{str}</div></td>" if !picked.nil? && !pickright
-		#	end
-		raise "str #{str} pick #{picked} pickright #{pickright} pickpush #{pickpush}"
-	end
+def	wrap(str, picked=nil, pickright=nil, pickpush=nil, ou=false)
+	#	if ou
+	#		return "<td>#{str}</td>" if picked.nil? # no opinion in ou
+	#		return "<td><div id='yellow'>#{str}</div></td>" if pickpush
+	#		return "<td><div id='green'>#{str}</div></td>" if pickright
+	#		return "<td><div id='red'>#{str}</div></td>" unless pickright
+	#	else
+	return "<td>#{str}</td>" if (picked.nil? or !picked)
+	return "<td>#{Ydiv}#{str}</div></td>" if !picked.nil? && pickpush
+	return "<td>#{Gdiv}#{str}</div></td>" if !picked.nil? && pickright
+	return "<td>#{Rdiv}#{str}</div></td>" if !picked.nil? && !pickright
+	#	end
+	raise "str #{str} pick #{picked} pickright #{pickright} pickpush #{pickpush}"
+end
 =begin
 =end
 
@@ -1296,23 +1353,27 @@ class Object
 				raise "no such team as "+d[5] if away_id.nil?
 			end
 			p			=	nil
+			pmake			=	nil
 			addedp			=	false
 			if update
 				t		=	d[0].split("/")
 				pa		=	Prediction.find_all_by_game_date_time(Time.local(2000+t[2].to_i, t[1], t[0]))
 #				raise p.inspect
-#				if p.length	
-				pa.delete_if{|dfg|!(dfg["home_team_id"]	==	home_id)}
+#				if p.length
+				pa.delete_if{|dfg|!(dfg["home_team_id"]		==	home_id)}
 				pa.delete_if{|dfg|!(dfg["away_team_id"]		==	away_id)}
 				raise "pa.length #{pa.length} pa.inspect #{pa.inspect}" if pa.length	>	1
 				addedp		=	true		if	pa.length	==	0
+				pmake		=	pa.length
 				p		=	Prediction.new	if	pa.length	==	0
 				p		=	pa.first	if	pa.length	==	1
 			else
 				p		=	Prediction.new
+				pmake		=	-1
 				h		=	Hockeybet.new	if	isnhl
 				addedp		=	true
 			end
+#			raise p.inspect if p.id.nil?
 			begin
 				p['week']		=	d[1].to_i
 			rescue Exception => e
@@ -1344,44 +1405,76 @@ class Object
 				end
 #  0        1          2                 3          4           5                   6         7    8    9   10     11             12              13        14         15             16   17    18   19              20
 # 12/1/08, 305, florida panthers, 2.71256388018983, 3, tampa bay lightning, 2.53656264427579, 5, -1.5, 200, 1.5, -240, 0.229466233097562, 0.535769449796951, 6.0, 0.244208282466363, -135, 115, -140, 120.0, 0.585775697493162
-				h.plhome	=	d[8].to_f
-				h.plhodds	=	d[9].to_i
-				h.plhprob	=	d[12].to_f
-				h.plaway	=	d[10].to_f
-				h.plaodds	=	d[11].to_f
-				h.plaprob	=	d[13].to_f
-				h.ou		=	d[14].to_f
-				h.overodds	=	d[16].to_i
-				h.overprob	=	d[15].to_f
-				h.underodds	=	d[17].to_i
-				h.underprob	=	1.0	-	d[15].to_f
-				h.save!
+				h.plhome		=	d[8].to_f
+				h.plhodds		=	d[9].to_i
+				h.plhprob		=	d[12].to_f
+				h.plaway		=	d[10].to_f
+				h.plaodds		=	d[11].to_i
+				h.plaprob		=	d[13].to_f
+				h.ou			=	d[14].to_f
+				h.overodds		=	d[16].to_i
+				h.overprob		=	d[15].to_f
+				h.underodds		=	d[17].to_i
+				h.underprob		=	1.0	-	d[15].to_f
+				p["moneyline_home"]	=	d[18].to_i
+				p["moneyline_away"]	=	d[19].to_i
+				p["prob_home_win_su"]	=	d[20].to_f
+				p["prob_away_win_su"]	=	1.0-d[20].to_f
+				p["prob_push_su"]	=	0.0
 			else
-				p["spread"]					=	d[8].to_f
-				p["game_total"]				= d[11].to_f
-				p["prob_game_over_total"]		= d[12].to_f
-				p["moneyline_bet"]				= home_id if d[24] .to_i== 1
-				p["moneyline_bet"]				= away_id if d[24].to_i == -1
-				p["moneyline_home"]			= d[13].to_f
-				p["moneyline_away"]			= d[14].to_f
+				p["spread"]			=	d[8].to_f
+				p["game_total"]			= d[11].to_f
+				p["prob_game_over_total"]	= d[12].to_f
+				p["moneyline_bet"]		= home_id if d[24] .to_i== 1
+				p["moneyline_bet"]		= away_id if d[24].to_i == -1
+				p["moneyline_home"]		= d[13].to_f
+				p["moneyline_away"]		= d[14].to_f
+				p["prob_home_win_su"]		= d[9].to_f
+				p["prob_away_win_su"]		= 1.0-d[9].to_f
+				p["prob_push_su"]		= 0.0
 			end
-			p["predicted_home_score"]		= (d[3].to_f+0.5).to_i
-			p["predicted_away_score"]		= (d[6].to_f+0.5).to_i
-			p["actual_home_score"]			= d[4].to_i
-			p["actual_away_score"]			= d[7].to_i
-			p["joe_guys_bet"]				= nil
-			p["joe_guys_bet"]				= home_id if d[22].to_i==1 or d[21].to_i==1
-			p["joe_guys_bet"]				= away_id if d[22].to_i==-1 or d[21].to_i==-1
+			p["predicted_home_score"]	= (d[3].to_f+0.5).to_i
+			p["predicted_away_score"]	= (d[6].to_f+0.5).to_i
+			p["actual_home_score"]		= d[4].to_i
+			p["actual_away_score"]		= d[7].to_i
+			p["joe_guys_bet"]		= nil
+			p["joe_guys_bet"]		= home_id if d[22].to_i==1 or d[21].to_i==1
+			p["joe_guys_bet"]		= away_id if d[22].to_i==-1 or d[21].to_i==-1
 			p["joe_guys_bet_amount"]		= 22
 			p["joe_guys_bet_amount_won"]	= 0
-			p["prob_home_win_su"]			= d[9].to_f
-			p["prob_away_win_su"]			= 1.0-d[9].to_f
-			p["prob_push_su"]				= 0.0
-			p["prob_home_win_ats"]			= d[10].to_f
-			p["prob_away_win_ats"]			= 1.0-d[10].to_f
-			p["prob_push_ats"]				= 0.0
+			p["prob_home_win_ats"]		= d[10].to_f
+			p["prob_away_win_ats"]		= 1.0-d[10].to_f
+			p["prob_push_ats"]		= 0.0
+			pid				= p.id
 			p.save!
+			if isnhl
+				begin
+					h.pred_id		= p.id
+				rescue Exception => e
+					raise "isnhl #{isnhl}"
+					raise "#{e} pmake #{pmake} p.inspect #{p.inspect} h.inspect #{h.inspect}"
+				end
+				raise "pmake #{pmake} h.inspect #{h.inspect} p #{p.inspect}" if h.pred_id.nil?
+				h.save!
+			end
 	}
 	end # class object
+	def getpplfml(ml)
+		ml	=	102	if	ml == 100
+		ml	=	-102	if	ml == -100
+		raise if ml	==	100	or	ml	==	-100
+		if ml	<	100	&&	ml	>	-100
+			# already decimal value
+			tml	=	ml
+			tml	=	ml - 1.0	if ml > 1.0
+			return [tml,	-1]
+		else
+			if	ml	<	-100
+				return	[-100.0 / ml,	-1]
+			else
+				return [(ml / 100.0) -1.0, -1]
+			end
+		end
+	end
 end
 
