@@ -4,6 +4,7 @@ load			'nbaloadr.rb'
 load			'mlhlprr.rb'
 load			'makesummary.rb'
 load			'nc.rb'
+Plnhlevthreshold	=	0.04
 Makedata		=	false	# make data file for images
 Pasttime		=	Time.local(1_962,1,1)
 Seasonone		=	Time.local(2_008,4,7)
@@ -57,6 +58,15 @@ class Numeric
 		return ((((self+0.005)*100.0).to_i) / 100.00)
 	rescue
 #		raise "r2 failed - self is #{self}"
+		return 0.0
+	end
+  end
+  def	r3()
+#	return self
+	begin
+		return ((((self+0.0005)*1000.0).to_i) / 1000.00)
+	rescue
+#		raise "r3 failed - self is #{self}"
 		return 0.0
 	end
   end
@@ -222,17 +232,17 @@ def do_season(newpred,	year,	winprob	=	0.7,	header	=	nil, gap	=	Secondsinthreeda
 		thisrow		+=	wrap('Game # '+gamecount.commify+' '+g.game_date_time.strftime("%b.%d.%Y"))
 		gamecount	+=	1
 		# home team with  moneyline and su pick
-		theader	+=	wrap('Home')		if	header.empty?
+		theader		+=	wrap('Home')		if	header.empty?
 #		raise g.inspect
-		thisrow	+=	wrap(nameconv(Team.find(g.home_team_id).name, 1)+" #{(g.moneyline_home == -110 && g.moneyline_away == -110) ?  "" : g.moneyline_home.commify}", (supick	==	g.home_team_id), suright, supush)
+		thisrow		+=	wrap(nameconv(Team.find(g.home_team_id).name, 1)+" #{(g.moneyline_home == -110 && g.moneyline_away == -110) ?  "" : g.moneyline_home.commify}", (supick	==	g.home_team_id), suright, supush)
 		# away team with  moneyline and su pick
-		theader	+=	wrap('Away')		if	header.empty?
-		thisrow	+=	wrap(nameconv(Team.find(g.away_team_id).name, 1)+" #{(g.moneyline_away == -110 && g.moneyline_home == -110) ?  "" : g.moneyline_away.commify}", (supick	==	g.away_team_id), suright, supush)
+		theader		+=	wrap('Away')		if	header.empty?
+		thisrow		+=	wrap(nameconv(Team.find(g.away_team_id).name, 1)+" #{(g.moneyline_away == -110 && g.moneyline_home == -110) ?  "" : g.moneyline_away.commify}", (supick	==	g.away_team_id), suright, supush)
 		# game score
-		theader	+=	wrap('Game Score')	if	header.empty?
-		thisrow	+=	wrap(g.actual_home_score.to_s+'-'+g.actual_away_score.to_s)
-		hprize	=	nil
-		aprize	=	nil
+		theader		+=	wrap('Game Score')	if	header.empty?
+		thisrow		+=	wrap(g.actual_home_score.to_s+'-'+g.actual_away_score.to_s)
+		hplprize	=	nil
+		aplprize	=	nil
 		if isnhl
 			# do both pucklines and ou both odds
 			theader	+=	wrap('Puck Line Home')	if	header.empty?
@@ -240,43 +250,49 @@ def do_season(newpred,	year,	winprob	=	0.7,	header	=	nil, gap	=	Secondsinthreeda
 #				plevh	=	convml(h.plhodds)	*	h.plhprob
 #				pleva	=	convml(h.plaodds)	*	h.plaprob
 				raise "h #{h.inspect}" if h.plhodds	==	0
-				hprize,	hlose	=	getpplfml(h.plhodds)
-				aprize,	alose	=	getpplfml(h.plaodds)
-				plevh	=	hprize	*	h.plhprob	+	(hlose	* (1.0 - h.plhprob))
-				pleva	=	aprize	*	h.plaprob	+	(alose	* (1.0 - h.plaprob))
-				puts "plevh #{plevh} pleva #{pleva} hprize #{hprize} aprize #{aprize} g.actual_home_score #{g.actual_home_score} g.actual_away_score #{g.actual_away_score}"
+				hwin,	hlose	=	getpplfml(h.plhodds)
+				awin,	alose	=	getpplfml(h.plaodds)
+				plevh		=	hwin	*	h.plhprob	+	(hlose	* (1.0 - h.plhprob))
+				pleva		=	awin	*	h.plaprob	+	(alose	* (1.0 - h.plaprob))
+				puts "plevh #{plevh} pleva #{pleva} hplprize #{hplprize} aplprize #{aplprize} g.actual_home_score #{g.actual_home_score} g.actual_away_score #{g.actual_away_score}"
 			end
 			hpw	=	nil
 			hpl	=	nil
 			apw	=	nil
 			apl	=	nil
-			if	plevh	<=	0.0		||	g.actual_home_score	==	-1
+			if	plevh	<=	Plnhlevthreshold		||	g.actual_home_score	==	-1
 				thisrow	+=	wrap("#{h.plhome}(#{h.plhodds})")
 			else
 				puts "********* playing home pl"
-				hdiv	=	nil
-				hdiv	=	Ydiv	if	g.actual_home_score	+	h.plhome	==	g.actual_away_score
-				hdiv	=	Gdiv	if	g.actual_home_score	+	h.plhome	>	g.actual_away_score
-				hdiv	=	Rdiv	if	g.actual_home_score	+	h.plhome	<	g.actual_away_score
+				hdiv		=	nil
+				hdiv		=	Ydiv	if	g.actual_home_score	+	h.plhome	==	g.actual_away_score
+				hdiv		=	Gdiv	if	g.actual_home_score	+	h.plhome	>	g.actual_away_score
+				hdiv		=	Rdiv	if	g.actual_home_score	+	h.plhome	<	g.actual_away_score
+				hplprize	=	0.0	if	g.actual_home_score	+	h.plhome	==	g.actual_away_score
+				hplprize	=	hwin	if	g.actual_home_score	+	h.plhome	>	g.actual_away_score
+				hplprize	=	hlose	if	g.actual_home_score	+	h.plhome	<	g.actual_away_score
 				raise if hdiv.nil?
 				begin
-					thisrow	+=	wrap("#{hdiv}#{h.plhome}(#{h.plhodds})</div>")
+					thisrow	+=	wrap("#{hdiv}#{h.plhome}(#{h.plhodds})#{plevh.r3}</div>")
 				rescue Exception => e
 					raise "#{e} h.inspect #{h.inspect}"
 				end
 			end
 			theader	+=	wrap('Puck Line Away')	if	header.empty?
-			if	pleva	<=	0.0	||	g.actual_home_score	==	-1
+			if	pleva	<=	Plnhlevthreshold	||	g.actual_home_score	==	-1
 				thisrow	+=	wrap("#{h.plaway}(#{h.plaodds})")
 			else
 				puts "********* playing away pl"
-				adiv	=	nil
-				adiv	=	Ydiv	if	g.actual_away_score	+	h.plaway	==	g.actual_home_score
-				adiv	=	Gdiv	if	g.actual_away_score	+	h.plaway	>	g.actual_home_score
-				adiv	=	Rdiv	if	g.actual_away_score	+	h.plaway	<	g.actual_home_score
+				adiv		=	nil
+				adiv		=	Ydiv	if	g.actual_away_score	+	h.plaway	==	g.actual_home_score
+				adiv		=	Gdiv	if	g.actual_away_score	+	h.plaway	>	g.actual_home_score
+				adiv		=	Rdiv	if	g.actual_away_score	+	h.plaway	<	g.actual_home_score
+				aplprize	=	0.0	if	g.actual_away_score	+	h.plaway	==	g.actual_home_score
+				aplprize	=	awin	if	g.actual_away_score	+	h.plaway	>	g.actual_home_score
+				aplprize	=	alose	if	g.actual_away_score	+	h.plaway	<	g.actual_home_score
 				raise if adiv.nil?
 				begin
-					thisrow	+=	wrap("#{adiv}#{h.plaway}(#{h.plaodds})</div>")
+					thisrow	+=	wrap("#{adiv}#{h.plaway}(#{h.plaodds})#{pleva.r3}</div>")
 				rescue Exception => e
 					raise "#{e} h.inspect #{h.inspect}"
 				end
@@ -304,12 +320,16 @@ def do_season(newpred,	year,	winprob	=	0.7,	header	=	nil, gap	=	Secondsinthreeda
 		end
 
 		# moneyline
-		typpe, mlo,	mlm,	mlats,	bbmlprz,	hhf,	ahf,	bh,	hplprize,	aplprize	=	mlhlpr(g)
-		raise "typpe #{typpe}" if aplprize.nil?
-		raise "typpe #{typpe}" if hplprize.nil?
+		typpe, mlo,	mlm,	mlats,	bbmlprz,	hhf,	ahf,	bh	=	mlhlpr(g, isnhl)
+#		raise "typpe #{typpe}" if aplprize.nil?
+#		raise "typpe #{typpe}" if hplprize.nil?
 #		raise "isnhl 2 #{isnhl} h #{h.inspect}"
 		unless	mlm		==	0
-			wsh['mlp']	+=	mlm
+			begin
+				wsh['mlp']	+=	mlm
+			rescue Exception=>e
+				raise "#{e} wsh['mlp'] #{wsh['mlp']} mlm #{mlm.inspect} typpe #{typpe}"
+			end
 			ysh['mlp']	+=	mlm
 			wsh['mlbb']	+=	bbmlprz	unless	bbmlprz.nil?
 			ysh['mlbb']	+=	bbmlprz	unless	bbmlprz.nil?
@@ -324,7 +344,7 @@ def do_season(newpred,	year,	winprob	=	0.7,	header	=	nil, gap	=	Secondsinthreeda
 			raise "hplprize #{hplprize}" if hdiv == Gdiv && hplprize < 0.0
 			unless hplprize.nil?
 				puts "hplprize #{hplprize}"	unless hplprize == 0 # || hplprize == -1)
-				sleep 5				unless hplprize == 0 # || hplprize == -1)
+#				sleep 5				unless hplprize == 0 # || hplprize == -1)
 				wsh['plhp']	+=	hplprize
 				ysh['plhp']	+=	hplprize
 				wsh['plhw']	+=	hplprize	>	0.0	?	1	:	0
@@ -341,7 +361,7 @@ def do_season(newpred,	year,	winprob	=	0.7,	header	=	nil, gap	=	Secondsinthreeda
 			end
 			unless aplprize.nil?
 				puts "aplprize #{aplprize}"	unless aplprize == 0 # || aplprize == -1)
-				sleep 5				unless aplprize == 0 # || aplprize == -1)
+#				sleep 5				unless aplprize == 0 # || aplprize == -1)
 				wsh['plap']	+=	aplprize
 				ysh['plap']	+=	aplprize
 				wsh['plaw']	+=	aplprize	>	0.0	?	1	:	0

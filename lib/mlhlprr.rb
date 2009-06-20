@@ -1,11 +1,11 @@
-	def	mlhlpr(p)
+def	mlhlpr(p, isnhl)
 #		isnhl		=	!h.nil?
 #		raise "isnhl #{isnhl.inspect}"
 		hprize		=	0.0
 		aprize		=	0.0
 		# process moneyline
 #		unless isnhl
-			return ["No Moneyline", 0.0, nil, 0.0, 0.0, 0.0, false] if p.moneyline_home == -110 and p.moneyline_away == -110 or (p.moneyline_home == 0 or p.moneyline_away == 0)
+			return [-1, "No Moneyline", 0.0, nil, 0.0, 0.0, 0.0, false] if p.moneyline_home == -110 and p.moneyline_away == -110 or (p.moneyline_home == 0 or p.moneyline_away == 0)
 #		end
 		pickhome	=	nil
 		pickaway	=	nil
@@ -42,10 +42,11 @@
 		puts "hev #{hev} hodds #{hodds} p.prob_home_win_su #{p.prob_home_win_su}"
 		puts "aev #{aev} aodds #{aodds} p.prob_away_win_su #{p.prob_away_win_su}"
 #		sleep 1
-#		pickhome	=	(hev	>	0.3)	if	isnhl
-#		pickaway	=	(aev	>	0.3)	if	isnhl
-		pickhome	=	(hev	>	0.6)	# unless	isnhl
-		pickaway	=	(aev	>	0.6)	# unless	isnhl
+#		must still tell it if it's mhl so the criteria for ml picking is different
+		pickhome	=	(hev	>	0.3)	if	isnhl
+		pickaway	=	(aev	>	0.3)	if	isnhl
+		pickhome	=	(hev	>	0.6)	unless	isnhl
+		pickaway	=	(aev	>	0.6)	unless	isnhl
 		# do puck line for nhl
 #		raise "isnhl #{isnhl.inspect}"
 =begin
@@ -76,12 +77,14 @@
 #		raise "hodds #{hodds}"
 =end
 	mlats = ((pickhome and p.spread > 0.0) ? p.home_team_id : ((pickaway and p.spread < 0.0) ? p.away_team_id : nil))	unless	isnhl
-	mlats = p.home_team_id													if	isnhl
+#	mlats = p.home_team_id													if	isnhl
 #	puts "mlats.inspect #{mlats.inspect}"
 #	raise "mlats is zero #{p.inspect}" if mlats == 0
-#	hhf	=	nil
-#	ahf	=	nil
-#	bh	=	nil
+	if isnhl
+		hhf	=	nil
+		ahf	=	nil
+		bh	=	nil
+	end
 #	raise if hprize.nil?
 #	raise if aprize.nil?
 	return [0, "#{Ydiv}No Opinion </div>", 0.0, nil, 0.0, 0.0, 0.0, false]  if pickhome == false and pickaway == false
