@@ -3,7 +3,7 @@ require "migration_helpers"
 extend MigrationHelpers
 Keystring					=	"05b76c924d8d2ebc2f9771c5195a9790e8b5135fad77e9b11eac2848f781c25b53316dc727efef2a7b354c980b5524f499da2237e5a6daa7a9abbd032ca1cad6add5d365d7a189"
 def index
-		passed_key		=	params[:id]
+		passed_key			=	params[:id]
 		# process data from the net if it's ok
 		tl				=	Time.now
 		key				=	Digest::SHA1.hexdigest("#{tl.year}-#{tl.month}-#{tl.day}-#{Keystring}")

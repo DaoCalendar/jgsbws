@@ -224,6 +224,18 @@ def main
 			gaptitle	=	'Day'
 			sport	=	'NCAA Basketball'
 			lname	=	'NCAA Basketball'
+		when 27 # nhl
+			# games run from Oct to Jun
+			startdate	=	Time.local(year, 'oct', 1) 
+			enddate	=	Time.local(year + 1, 'jul', 1)
+			winprob	=	0.62			if year == 2008
+#			winprob	=	11.0 / 21.0	if year == 2008
+			winprob	=	11.0 / 21.0	if year == 2007
+			header	=	"<h3>Joe Guy's #{year} National Hockey League Season - betting threshold is #{winprob}</h3>"
+			gap		=	Secondsperday - 1
+			gaptitle	=	'Day'
+			sport	=	'National Hockey League'
+			lname	=	'National Hockey League'
 		else
 #			logger.warn "main inspect"
 #			logger.warn(@main.inspect)

@@ -2,6 +2,7 @@ class GetSoccer < ActiveRecord::Migration
 	require "migration_helpers"
 	extend MigrationHelpers
   def self.up
+	  return unless ENV['RAILS_ENV'] == 'production'
 #	  puts ApplicationController.methods.sort
 #	  raise
 	ta		=	IO.readlines(File.dirname(__FILE__) + '/../../public/unique soccer games.txt')

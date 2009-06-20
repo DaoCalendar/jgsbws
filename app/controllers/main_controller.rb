@@ -184,35 +184,35 @@ def main
 		when 1 # nfl
 			# games run from sept to febuary
 			startdate	=	Time.local(year, 'sep', 1) 
-			enddate	=	Time.local(year + 1, 'sep', 1) 
-			header	=	"<h3>Joe Guy's #{year} National Football League Season - betting threshold is #{winprob}</h3>"
+			enddate		=	Time.local(year + 1, 'sep', 1) 
+			header		=	"<h3>Joe Guy's #{year} National Football League Season - betting threshold is #{winprob}</h3>"
 			gap		=	Secondsinthreedays
 			gaptitle	=	'Week'
-			sport	=	'National Football League'
-			lname	=	'National Football League'
+			sport		=	'National Football League'
+			lname		=	'National Football League'
 		when 2 # nba
 			# games run from Nov to April
 			startdate	=	Time.local(year, 'nov', 1) 
-			enddate	=	Time.local(year + 1, 'jul', 1)
-			winprob	=	0.62			if year == 2008
-#			winprob	=	11.0 / 21.0	if year == 2008
-			winprob	=	11.0 / 21.0	if year == 2007
-			header	=	"<h3>Joe Guy's #{year} National Basketball Association Season - betting threshold is #{winprob}</h3>"
+			enddate		=	Time.local(year + 1, 'jul', 1)
+			winprob		=	0.62			if year == 2008
+#			winprob		=	11.0 / 21.0	if year == 2008
+			winprob		=	11.0 / 21.0	if year == 2007
+			header		=	"<h3>Joe Guy's #{year} National Basketball Association Season - betting threshold is #{winprob}</h3>"
 			gap		=	Secondsperday - 1
 			gaptitle	=	'Day'
-			sport	=	'National Basketball Association'
-			lname	=	'National Basketball Association'
+			sport		=	'National Basketball Association'
+			lname		=	'National Basketball Association'
 		when 4 # ncaa football
 			# games run from aug to feb
 			startdate	=	Time.local(year, 'aug', 1) 
-			enddate	=	Time.local(year + 1, 'feb', 1)
-			winprob	=	0.8 if year == 2007
-			winprob	=	0.8 if year == 2008
-			header	=	"<h3>Joe Guy's #{year} NCAA Football Season - betting threshold is #{winprob}</h3>"
+			enddate		=	Time.local(year + 1, 'feb', 1)
+			winprob		=	0.8 if year == 2007
+			winprob		=	0.8 if year == 2008
+			header		=	"<h3>Joe Guy's #{year} NCAA Football Season - betting threshold is #{winprob}</h3>"
 			gap		=	Secondsinthreedays - 1
 			gaptitle	=	'Week'
-			sport	=	'NCAA Football'
-			lname	=	'NCAA Football'
+			sport		=	'NCAA Football'
+			lname		=	'NCAA Football'
 		when 5 # ncaa bb
 			# games run from Nov to April
 			startdate	=	Time.local(year, 'nov', 1) 
