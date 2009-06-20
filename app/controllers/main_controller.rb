@@ -185,7 +185,7 @@ def main
 			# games run from sept to febuary
 			startdate	=	Time.local(year, 'sep', 1) 
 			enddate		=	Time.local(year + 1, 'sep', 1) 
-			header		=	"<h3>Joe Guy's #{year} National Football League Season - betting threshold is #{winprob}</h3>"
+			header		=	"<h3>Joe Guy's #{year} National Football League Season</h3>"
 			gap		=	Secondsinthreedays
 			gaptitle	=	'Week'
 			sport		=	'National Football League'
@@ -197,7 +197,7 @@ def main
 			winprob		=	0.62			if year == 2008
 #			winprob		=	11.0 / 21.0	if year == 2008
 			winprob		=	11.0 / 21.0	if year == 2007
-			header		=	"<h3>Joe Guy's #{year} National Basketball Association Season - betting threshold is #{winprob}</h3>"
+			header		=	"<h3>Joe Guy's #{year} National Basketball Association Season</h3>"
 			gap		=	Secondsperday - 1
 			gaptitle	=	'Day'
 			sport		=	'National Basketball Association'
@@ -208,7 +208,7 @@ def main
 			enddate		=	Time.local(year + 1, 'feb', 1)
 			winprob		=	0.8 if year == 2007
 			winprob		=	0.8 if year == 2008
-			header		=	"<h3>Joe Guy's #{year} NCAA Football Season - betting threshold is #{winprob}</h3>"
+			header		=	"<h3>Joe Guy's #{year} NCAA Football Season</h3>"
 			gap		=	Secondsinthreedays - 1
 			gaptitle	=	'Week'
 			sport		=	'NCAA Football'
@@ -219,7 +219,7 @@ def main
 			enddate	=	Time.local(year + 1, 'may', 1)
 			winprob	=	0.85	unless	year	==	2008
 			winprob	=	0.85	if		year	==	2008
-			header	=	"<h3>Joe Guy's #{year} NCAA Basketball Season - betting threshold is #{winprob}</h3>"
+			header	=	"<h3>Joe Guy's #{year} NCAA Basketball Season</h3>"
 			gap		=	Secondsperday - 1
 			gaptitle	=	'Day'
 			sport	=	'NCAA Basketball'
@@ -231,7 +231,7 @@ def main
 			winprob	=	0.62			if year == 2008
 #			winprob	=	11.0 / 21.0	if year == 2008
 			winprob	=	11.0 / 21.0	if year == 2007
-			header	=	"<h3>Joe Guy's #{year} National Hockey League Season - betting threshold is #{winprob}</h3>"
+			header	=	"<h3>Joe Guy's #{year} National Hockey League Season</h3>"
 			gap		=	Secondsperday - 1
 			gaptitle	=	'Day'
 			sport	=	'National Hockey League'

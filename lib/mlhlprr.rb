@@ -45,8 +45,10 @@ def	mlhlpr(p, isnhl)
 #		must still tell it if it's mhl so the criteria for ml picking is different
 		pickhome	=	(hev	>	0.3)	if	isnhl
 		pickaway	=	(aev	>	0.3)	if	isnhl
-		pickhome	=	(hev	>	0.6)	unless	isnhl
-		pickaway	=	(aev	>	0.6)	unless	isnhl
+#		pickhome	=	(hev	>	0.0)	unless	isnhl
+#		pickaway	=	(aev	>	0.0)	unless	isnhl
+		pickhome	=	(p.prob_home_win_su	>	p.prob_away_win_su*NBAmlthreshold)	unless	isnhl
+		pickaway	=	(p.prob_home_win_su*NBAmlthreshold	<	p.prob_away_win_su)	unless	isnhl
 		# do puck line for nhl
 #		raise "isnhl #{isnhl.inspect}"
 =begin

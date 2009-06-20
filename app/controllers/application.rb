@@ -4,6 +4,7 @@ load			'nbaloadr.rb'
 load			'mlhlprr.rb'
 load			'makesummary.rb'
 load			'nc.rb'
+NBAmlthreshold		=	4
 Plnhlevthreshold	=	0.04
 Makedata		=	false	# make data file for images
 Pasttime		=	Time.local(1_962,1,1)
