@@ -250,6 +250,10 @@ def do_season(newpred,	year,	winprob	=	0.7,	header	=	nil, gap	=	Secondsinthreeda
 			unless	g.actual_home_score	==	-1
 #				plevh	=	convml(h.plhodds)	*	h.plhprob
 #				pleva	=	convml(h.plaodds)	*	h.plaprob
+				if h.plhodds	==	0
+					h.plhodds	=	-102	if	h.plaodds	>	0
+					h.plhodds	=	102	if	h.plaodds	<	0
+				end
 				raise "h #{h.inspect}" if h.plhodds	==	0
 				hwin,	hlose	=	getpplfml(h.plhodds)
 				awin,	alose	=	getpplfml(h.plaodds)
