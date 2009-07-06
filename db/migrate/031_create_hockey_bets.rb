@@ -1,5 +1,6 @@
 class CreateHockeyBets < ActiveRecord::Migration
   def self.up
+	  begin
 	create_table :hockey_bets do |t|
 		t.column :pred_id,	:integer
 		t.column :plhome,	:float
@@ -14,12 +15,14 @@ class CreateHockeyBets < ActiveRecord::Migration
 		t.column :underodds,	:integer
 		t.column :underprob,	:float
 		t.timestamps
-    end
+	end
+	rescue
+	end
   end
 
   def self.down
 	begin
-		drop_table :hockey_bets
+		drop_table :hockey_bets	if	ENV['RAILS_ENV'] == 'production'
 	rescue
 	end
   end

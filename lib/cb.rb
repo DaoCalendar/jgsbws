@@ -14,8 +14,8 @@ def	calcatsbet(g,	ysh,	wsh, winprob,	h)
 	atsbet		=	nil
 	hatsev		=	g.prob_home_win_ats - (1.1 * (1.0 - g.prob_home_win_ats))
 	aatsev		=	g.prob_away_win_ats - (1.1 * (1.0 - g.prob_away_win_ats))
-	atsbet		=	g.home_team_id	if	hatsev	>	0.8
-	atsbet		=	g.away_team_id	if	aatsev	>	0.8
+	atsbet		=	g.home_team_id	if	hatsev	>	0.45
+	atsbet		=	g.away_team_id	if	aatsev	>	0.45
 #	atsbet		=	g.home_team_id	if	g.prob_home_win_ats	>=	winprob
 #	atsbet		=	g.away_team_id	if	g.prob_away_win_ats	>=	winprob
 	atsbetright	=	nil
@@ -50,19 +50,18 @@ def	calcatsbet(g,	ysh,	wsh, winprob,	h)
 			wsh['ats']	+=	1 unless atsbet.nil?
 		end
 		
-		oubet		=	nil
+		oubeto		=	nil
+		oubetu		=	nil
 		oubetright	=	nil
 		oubetpush	=	nil
 		unless	g.game_total	==	0
-			oubet	=	true		if 	g.prob_game_over_total			>=	winprob
-			oubet	=	false		if	(1.0	-	g.prob_game_over_total)	>=	winprob
-			unless oubet.nil?
-				if oubet # bet the over
-					oubetright	=	((g.actual_home_score	+	g.actual_away_score)	>	g.game_total)
-				else
-					oubetright	=	((g.actual_home_score	+	g.actual_away_score)	<	g.game_total)
-				end
-			end
+#			oubet	=	true		if 	g.prob_game_over_total			>=	winprob
+#			oubet	=	false		if	(1.0	-	g.prob_game_over_total)	>=	winprob
+			oubeto	=	(g.prob_game_over_total > (1.5*(1.0-g.prob_game_over_total)))
+			oubetu	=	(g.prob_game_over_total < ((1.0/1.5)*(1.0-g.prob_game_over_total)))
+			raise if oubeto.nil? || oubetu.nil?
+			oubetright	=	((g.actual_home_score	+	g.actual_away_score)	>	g.game_total) if oubeto # bet the over
+			oubetright	=	((g.actual_home_score	+	g.actual_away_score)	<	g.game_total) if oubetu # bet the under
 			oubetpush			=	((g.actual_home_score	+	g.actual_away_score)	==	g.game_total)
 			unless oubetpush
 				unless oubetright.nil?
@@ -73,11 +72,11 @@ def	calcatsbet(g,	ysh,	wsh, winprob,	h)
 				end
 			end
 		end
-		logger.warn( "oubet #{oubet.inspect} ou total #{g.game_total} over prob #{g.prob_game_over_total} ")
+		logger.warn( "oubetu #{oubetu.inspect} ou total #{g.game_total} over prob #{g.prob_game_over_total} ")
 	else
 		# is nhl - do puck lines and ou with seperate odds
 		
 	end
-	return ysh,	wsh,	supick,	suright,	supush,	atsbet,	oubet,	atsbetright,	atsbetpush,	oubetright,	oubetpush
+	return ysh,	wsh,	supick,	suright,	supush,	atsbet,	oubeto,	oubetu,	atsbetright,	atsbetpush,	oubetright,	oubetpush
 	end
 

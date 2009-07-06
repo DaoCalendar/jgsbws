@@ -1,6 +1,8 @@
 # Filters added to this controller apply to all controllers in the application.
 # Likewise, all the methods added will be available for all controllers.
 load			'nbaloadr.rb'
+load			'mlbloadr.rb'
+load			'makms.rb'
 load			'mlhlprr.rb'
 load			'makesummary.rb'
 load			'nc.rb'

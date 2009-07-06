@@ -152,47 +152,6 @@ end
       foreign key (#{from_column})
       references #{to_table}(id)}
   end
-
-  def gs(ig)
-    ig.map{|l|l=l.gsub!("Arizona","Arizona Cardinals")}
-    ig.map{|l|l=l.gsub!("Atlanta","Atlanta Falcons")}
-    ig.map{|l|l=l.gsub!("Baltimore","Baltimore Ravens")}
-    ig.map{|l|l=l.gsub!("Buffalo","Buffalo Bills")}
-    ig.map{|l|l=l.gsub!("Carolina","Carolina Panthers")}
-    ig.map{|l|l=l.gsub!("Chicago","Chicago Bears")}
-    ig.map{|l|l=l.gsub!("Cincinnati","Cincinnati Bengals")}
-    ig.map{|l|l=l.gsub!("Cleveland","Cleveland Browns")}
-    ig.map{|l|l=l.gsub!("Dallas","Dallas Cowboys")}
-    ig.map{|l|l=l.gsub!("Denver","Denver Broncos")}
-    ig.map{|l|l=l.gsub!("Detroit","Detroit Lions")}
-    ig.map{|l|l=l.gsub!("Green Bay","Green Bay Packers")}
-    ig.map{|l|l=l.gsub!("Houston Oilers","Houston Texans")}
-    ig.map{|l|l=l.gsub!("Houston","Houston Texans")}
-    ig.map{|l|l=l.gsub!("Indianapolis","Indianapolis Colts")}
-    ig.map{|l|l=l.gsub!("Jacksonville","Jacksonville Jaguars")}
-    ig.map{|l|l=l.gsub!("Kansas City","Kansas City Chiefs")}
-    ig.map{|l|l=l.gsub!("Miami","Miami Dolphins")}
-    ig.map{|l|l=l.gsub!("Minnesota","Minnesota Vikings")}
-    ig.map{|l|l=l.gsub!("New England","New England Patriots")}
-    ig.map{|l|l=l.gsub!("New Orleans","New Orleans Saints")}
-    ig.map{|l|l=l.gsub!("Oakland","Oakland Raiders")}
-    ig.map{|l|l=l.gsub!("Philadelphia","Philadelphia Eagles")}
-    ig.map{|l|l=l.gsub!("Pittsburgh","Pittsburgh Steelers")}
-    ig.map{|l|l=l.gsub!("San Diego","San Diego Chargers")}
-    ig.map{|l|l=l.gsub!("San Francisco","San Francisco 49ers")}
-    ig.map{|l|l=l.gsub!("San Francisco 49ers  49ers","San Francisco 49ers")}
-    ig.map{|l|l=l.gsub!("Seattle","Seattle Seahawks")}
-    ig.map{|l|l=l.gsub!("St. Louis","St. Louis Rams")}
-    ig.map{|l|l=l.gsub!("Tampa Bay","Tampa Bay Buccaneers")}
-    ig.map{|l|l=l.gsub!("Tennessee","Tennessee Titans")}
-    ig.map{|l|l=l.gsub!("Washington","Washington Redskins")}
-    # nba
-    ig.map{|l|l=l.gsub!("oklahoma city","Oklahoma City Thunder")}
-    ig.map{|l|l=l.gsub!("portland trailblazers","Portland Trail Blazers")}
-    ig.map{|l|l=l.gsub!("los angeles lakers","L.A. Lakers")}
-    ig.map{|l|l=l.gsub!("los angeles clippers","L.A. Clippers")}
-    return ig
-  end
   
   def updatenflweekly(updatea)
     updatea = gs(updatea)
@@ -280,64 +239,5 @@ end
 	  #return ((p*(ml > 0 ? ml/100.0 : -100.0/ml)) > 2.0)
 	  return p > 0.5
   end
-  
-  def	nbaloader(nba2008a)
-		teamleague	=	League.find_by_name("National Basketball Association").id
-		raise "no league!" if teamleague.nil?
-		#		0		 1				2					3	 4				 5								 6		 7	 8									9															 10									 11								 12		 se						 13	 14		15								16												17				 18		19	20		21	22	23 24	24
-		# 14/9/08,2,St. Louis,8.0,13,N.Y. Giants,23.6875,41,9.0,0.0204550479789872,0.228046242969888,42.0,0.0554413784828847,-110,-110,N O,TT Spread bet right,TT OU wrong,N O,N O,N O,	 0,	 -1,	 0, -1,	0
-		nba2008a		=	gs(nba2008a)
-		seasonnumber	=	0
-		prevdate		=	nil
-		nba2008a.each{|g|
-			d	=	g.split(",")
-		#	puts "g.inspect #{g.inspect}"
-			begin
-				home_id	=	Team.find_by_name(d[2]).id
-			rescue
-				raise "no such team as "+d[2] if home_id.nil?
-			end
-			begin
-				away_id	=	Team.find_by_name(d[5]).id
-			rescue
-				raise "no such team as "+d[5] if away_id.nil?
-			end
-			p			=	Prediction.new
-			p['week']		=	d[1].to_i
-			p['season']	=	seasonnumber
-			t			=	d[0].split("/")
-			p["game_date_time"]	=	Time.local(2000+t[2].to_i, t[1], t[0])
-			seasonnumber		+=	1	if	! prevdate.nil? and ((p["game_date_time"] - prevdate) / Secondsperday)  > 60 # time diff in days
-			prevdate						=	p["game_date_time"].dup
-			p["league"]					=	teamleague
-			p["home_team_id"]				=	home_id
-			p["away_team_id"]				=	away_id
-			p["actual_home_score"]			= d[6].to_i
-			p["actual_away_score"]			= d[7].to_i
-			p["spread"]					= d[8].to_f
-			p["predicted_home_score"]		= (d[3].to_f+0.5).to_i
-			p["predicted_away_score"]		= (d[6].to_f+0.5).to_i
-			p["actual_home_score"]			= d[4].to_i
-			p["actual_away_score"]			= d[7].to_i
-			p["joe_guys_bet"]				= nil
-			p["joe_guys_bet"]				= home_id if d[22].to_i==1 or d[21].to_i==1
-			p["joe_guys_bet"]				= away_id if d[22].to_i==-1 or d[21].to_i==-1
-			p["joe_guys_bet_amount"]		= 22
-			p["joe_guys_bet_amount_won"]	= 0
-			p["prob_home_win_su"]			= d[9].to_f
-			p["prob_away_win_su"]			= 1.0-d[9].to_f
-			p["prob_push_su"]				= 0.0
-			p["prob_home_win_ats"]			= d[10].to_f
-			p["prob_away_win_ats"]			= 1.0-d[10].to_f
-			p["prob_push_ats"]				= 0.0
-			p["game_total"]				= d[11].to_f
-			p["prob_game_over_total"]		= d[12].to_f
-			p["moneyline_bet"]				= home_id if d[24] .to_i== 1
-			p["moneyline_bet"]				= away_id if d[24].to_i == -1
-			p["moneyline_home"]			= d[13].to_f
-			p["moneyline_away"]			= d[14].to_f
-			p.save!
-	}
-  end
-  
+    
 end

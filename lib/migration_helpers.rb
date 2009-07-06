@@ -3,6 +3,7 @@ module MigrationHelpers
 Cok	=	'^changeok'
 Sea	=	'^season'
 
+
 def	writeseasons(sh2)
 	ff2	=	File.new('public/soccer seasons.txt','w')
 	sh2.sort!

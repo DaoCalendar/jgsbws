@@ -5,6 +5,7 @@ class CreateSoccerBets < ActiveRecord::Migration
 #	Ba	=	%w(B365H B365D B365A BWH BWD BWA GBH GBD GBA IWH IWD IWA LBH LBD LBA SBH SBD SBA WHH WHD WHA SJH SJD SJA VCH VCD VCA BSH BSD BSA)
 #	Oua	=	%w(BbMxgt2p5 BbMxlt2p5 BbAvgt2p5 BbAvlt2p5 GBgt2p5 GBlt2p5 B365gt2p5 B365lt2p5)
 def self.up
+	begin
 	create_table :soccer_bets do |t|
 #		t.column :prediction_id,	:integer
 		t.column :B365H, :float
@@ -88,9 +89,11 @@ def self.up
 	end
 	#	def foreign_key(from_table, from_column, to_table)
 #	foreign_key(:soccer_bets,	:prediction_id,	:predictions)
+	rescue
+	end
   end
 
   def self.down
-	drop_table :soccer_bets
+	drop_table :soccer_bets	if	ENV['RAILS_ENV'] == 'production'
   end
 end

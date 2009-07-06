@@ -2,12 +2,13 @@
 	  	teamleague		=	League.find_by_name(doleague).id
 		isnhl			=	(doleague	==	"National Hockey League")
 		raise "no league!" if teamleague.nil?
-		#		0		 1				2					3	 4				 5								 6		 7	 8									9															 10									 11								 12		 se						 13	 14		15								16												17				 18		19	20		21	22	23 24	24
+		#	0		 1				2					3	 4				 5								 6		 7	 8									9															 10									 11								 12		 se						 13	 14		15								16												17				 18		19	20		21	22	23 24	24
 		# 14/9/08,2,St. Louis,8.0,13,N.Y. Giants,23.6875,41,9.0,0.0204550479789872,0.228046242969888,42.0,0.0554413784828847,-110,-110,N O,TT Spread bet right,TT OU wrong,N O,N O,N O,	 0,	 -1,	 0, -1,	0
 		dataarray			=	gs(dataarray)
 		seasonnumber			=	0
 		prevdate			=	nil
 		dataarray.each{|g|
+			next if g.include?('outdate')
 			d			=	g.split(",")
 		#	puts "g.inspect #{g.inspect}"
 			begin

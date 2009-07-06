@@ -2,7 +2,7 @@ class NcaaFb < ActiveRecord::Migration
 require "migration_helpers"
 extend MigrationHelpers
 def self.up
-#	return unless ENV['RAILS_ENV'] == 'production'
+	return unless ENV['RAILS_ENV'] == 'production'
 	ncaafba = IO.readlines(File.dirname(__FILE__) + '/../../public/jgsbws ncaafb2008.dat')
 	puts "ncaafba.length is #{ncaafba.length}"
 #    sleep 3
