@@ -1,0 +1,82 @@
+<% @heading = "Joe Guy's Sports Betting Web Site"-%>
+<% @content = "Opening Screen - here be found National Football League predictions and more to come" -%>
+<% @desc    = "Opening Screen - here be found National Football League predictions and more to come" %>
+<div id="Originalcontent">
+   Hello and welcome to Joe Guy's Sports Betting Web Site.<br>
+   <br>
+   My name is Terry Smith. I have been writing software for betting sporting events since the 80s, when I started with a QBASIC program on an IBM XT clone with a 10 MB hard drive.<br>
+   <br>
+   I have since moved this program to Visual Basic, then Java and now, Ruby. The hardware has changed from a 8088 chip to a 286 then a 386 and now a series of Pentiums.<br>
+   <br>
+   I have never stopped studying, developing and improving this model.<br>
+   <br>
+   'Joe Guy' is a theoretical member of the sports betting public. He makes bets with a bookie at the standard odds of 11 to 10, that is, he has to bet 11 dollars in order to win 10. If he loses, he loses the 11 dollars.<br>
+   <br>
+   This web page follows his year as he plays the NFL, the NBA, NCAA Football, NCAA Basketball and English Premier League Soccer starting with a bankroll of $1,000 for each sport.<br>
+   <br>
+   However, unlike the average member of the sports betting public, he make two changes in his behaviour.<br>
+   <br>
+   One - he is smart enough to only ever bet about four percent of his bankroll, or $40, per game no matter how attractive the bet is and<br>
+   <br>
+   Two - My software picks all his bets for him.<br>
+   <br>
+   Not all my work has been brought to this site yet, but it will be shortly.<br>
+<% # <!--   You can look around all the league pages and the forums. But as an unpaid member you can't read the latest messages and you can't post.<br> --> %>
+   <br>
+   <table>
+   	<tr>
+   		<td>
+   <%= link_to "Joe Guy's 2008 National Football League Season", :action => :main, :id=>'012008' %><br>
+   <%= link_to ".....Joe Guy's 2007 National Football League Season", :action => :main, :id=>'012007' %><br>
+   <%= link_to "Joe Guy's 2008 National Basketball Association Season", :action => :main, :id=>'022008' %><br>
+   <%= link_to "..Joe Guy's 2007 National Basketball Association Season", :action => :main, :id=>'022007' %><br>
+   <%= link_to "Joe Guy's 2008 NCAA Football League Season", :action => :main, :id=>'042008' %><br>
+   <%= link_to "...Joe Guy's 2007 NCAA Football League Season", :action => :main, :id=>'042007' %><br>
+   <%= link_to "Joe Guy's 2008 NCAA Basketball Season", :action => :main, :id=>'052008' %><br>
+   <%= link_to "...Joe Guy's 2007 NCAA Basketball Season", :action => :main, :id=>'052007' %><br>
+   <%= link_to "Joe Guy's SOCCER!", :action => :soccer %>
+   </td>
+<!--   <%= link_to "Joe Guy's 2008 National Basketball Association Season", :action => :notdone %><br>
+   <%= link_to "Joe Guy's 2007 English Premier League Season", :action => :main, :league=>3, :id=>2007  %>
+   <%= link_to "Joe Guy's 2008 NCAA Football League Season", :action => :notdone %><br>
+   <%= link_to "Joe Guy's 2008 NCAA Basketball Season", :action => :notdone %><br>
+   <%= link_to "Joe Guy's 2007 English Premier League Season", :action => :notdone %> -->
+   <td>
+<br><br><b>Buy me a beer! Five bucks Canadian! <br>As this site grows and I put all my data on it, I'll remember and reward my beer buyers!</b><br>
+
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="4702358">
+
+<input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+<img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
+</form>
+ </td>
+  <td>
+<!-- Facebook Badge START --><a href="http://en-gb.facebook.com/people/Terry-Smith/1420912927" title="Terry Smith&#039;s Facebook Profile" target="_TOP" style="font-family: &quot;lucida grande&quot;,tahoma,verdana,arial,sans-serif; font-size: 11px; font-variant: normal;font-style: normal; font-weight: normal; color: #3B5998; text-decoration: none;">Terry Smith's Profile</a><br /><a href="http://en-gb.facebook.com/people/Terry-Smith/1420912927" title="Terry Smith&#039;s Facebook Profile" target="_TOP"><img src="http://badge.facebook.com/badge/1420912927.603.829814383.png" alt="Terry Smith&#039;s Facebook Profile" style="border: 0px;" /></a><br /><a href="http://en-gb.facebook.com/badges.php" title="Make your own badge!" target="_TOP" style="font-family: &quot;lucida grande&quot;,tahoma,verdana,arial,sans-serif; font-size: 11px; font-variant: normal;font-style: normal; font-weight: normal; color: #3B5998; text-decoration: none;">Create your badge</a><!-- Facebook Badge END -->
+ </td>
+ <td>
+ 	<a href="http://www.jgsbws.com/jgsbht1.pdf"><h1>FREE BOOK!</h1><h2>Get your FREE copy of <br>Joe Guy's Sports Betting How-to # 1 here!</h2></a>
+</td>
+  </tr>
+  </table>
+</div>
+
+      <div class="pad2"></div>
+<!--
+      <div id="footer">
+           JGSBWS is under constant development, please drop in regularly! - &copy; 2009 Terry Smith - All Commercial Rights Reserved<br>
+                      <a href="/comments/new">Send Terry a Comment</a>-->
+           It's April 14, 2009 07:18 
+      </div>
+   <!-- </div>container -->
+	<script type="text/javascript">
+	var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+	document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+	</script>
+	<script type="text/javascript">
+	try {
+	var pageTracker = _gat._getTracker("UA-8372391-1");
+	pageTracker._trackPageview();
+	} catch(err) {}</script>
+</div>
