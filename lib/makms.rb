@@ -66,7 +66,7 @@ def	makrmlbstruc(g, gs)
 	gstruct.homerunlinespread	=	d[15].to_f
 	gstruct.homerunline		=	d[16].to_i
 	gstruct.probhrlcover		=	d[17].to_f
-	gstruct.awayrunlinespread	=	d[18].to_i
+	gstruct.awayrunlinespread	=	d[18].to_f
 	gstruct.awayrunline		=	d[19].to_i
 	gstruct.probarlcover		=	d[20].to_f
 #	puts
