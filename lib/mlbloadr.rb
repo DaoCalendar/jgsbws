@@ -13,7 +13,7 @@ def	mlbloader(dataarray)
 	dataarray.each{|g|
 		next if g.include?('outdate')
 		gstruct		=	makrmlbstruc(g, mlbstruc)
-#		raise "g.inspect #{g.inspect} gstruct #{gstruct.inspect}"
+		puts "dataarray.length #{dataarray.length} g.inspect #{g.inspect} gstruct #{gstruct.inspect}"
 		p		=	nil
 		pmake		=	nil
 		addedp		=	false
@@ -73,8 +73,12 @@ def	mlbloader(dataarray)
 	:awayrunline, :probarlcover)
 =end
 		bbb		= BaseballBet.find_by_pred_id(pid)
-		nbp		= BaseballBet.new if bbb.length == 0 # not found
-		nbp		= bbb.first unless   bbb.length == 0
+#		raise "bbb.type #{bbb.type} bbb.nil? #{bbb.nil?}"
+		if bbb.nil?  # not found
+			nbp		= BaseballBet.new
+		else
+			nbp		= bbb.dup
+		end
 		nbp.pred_id	= pid
 		nbp.rlhome	= gstruct.homerunlinespread
 		nbp.rlhodds	= gstruct.homerunline
