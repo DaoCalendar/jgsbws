@@ -26,29 +26,37 @@ def	mlbloader(dataarray)
 		pa.delete_if{|dfg|!(dfg["away_team_id"]		==	gstruct.away)}
 		raise "pa.length #{pa.length} pa.inspect #{pa.inspect}" if pa.length	>	1
 		addedp		=	true		if	pa.length	==	0
+		puts "added prediction" if addedp
+		puts "prediction already there" unless addedp
+		# sleep 2
 		pmake		=	pa.length
 		p		=	Prediction.new	if	pa.length	==	0
 		p		=	pa.first	if	pa.length	==	1
 #		raise "pa.length #{pa.length} p.inspect #{p.inspect}" if p.id.nil?
 		begin
-			p.week		=	gstruct.day
+			p.week	=	gstruct.day
 		rescue Exception => e
 #			print e, "\n"
 			raise "e #{e.inspect} d[1].to_i #{d[1].to_i} d[1] #{d[1].inspect} d.inspect #{d.inspect} p.inspect #{p.inspect}"
 		end
-		p['season']			=	seasonnumber
-		p["game_date_time"]		=	gstruct.date
-		seasonnumber			+=	1	if	! prevdate.nil? and ((p["game_date_time"] - prevdate) / Secondsperday)  > 60 # time diff in days
-		prevdate			=	p["game_date_time"].dup
-		p["league"]			=	teamleague
-		p["home_team_id"]		=	gstruct.home
-		p["away_team_id"]		=	gstruct.away
-		p["actual_home_score"]		=	gstruct.homescore
-		p["actual_away_score"]		=	gstruct.awayscore
-		p["predicted_home_score"]	=	gstruct.hlambda
-		p["predicted_away_score"]	=	gstruct.alambda
-		pid				=	p.id
-		p.save!
+		p.season		=	seasonnumber
+		p.game_date_time	=	gstruct.date
+		seasonnumber		+=	1 if ! prevdate.nil? and ((p.game_date_time - prevdate) / Secondsperday)  > 60 # time diff in days
+		prevdate		=	p.game_date_time.dup
+		p.league		=	teamleague
+		p.home_team_id		=	gstruct.home
+		p.away_team_id		=	gstruct.away
+		p.actual_home_score	=	gstruct.homescore
+		p.actual_away_score	=	gstruct.awayscore
+		p.predicted_home_score	=	gstruct.hlambda
+		p.predicted_away_score	=	gstruct.alambda
+		pid			=	p.id
+		pidwn = pid.nil?
+		blah			=	p.save
+		puts "prediction saved #{blah.inspect} pid is #{pid}"
+		puts "pid was nil #{p.inspect} pid is now #{p.id}" if pidwn
+		pid			=	p.id
+		# sleep 3
 		# now create or update the baseball bet table
 =begin
   create_table "baseball_bets", :force => true do |t|
@@ -75,23 +83,36 @@ def	mlbloader(dataarray)
 		bbb		= BaseballBet.find_by_pred_id(pid)
 #		raise "bbb.type #{bbb.type} bbb.nil? #{bbb.nil?}"
 		if bbb.nil?  # not found
-			nbp		= BaseballBet.new
+			nbp	= BaseballBet.new
+			puts "made new bb bet"
 		else
-			nbp		= bbb.dup
+			nbp	= bbb.dup
+			puts "bb bet already there #{bbb.inspect}"
+			puts "bb bet created because predid is #{nbp.pred_id}"  unless nbp.pred_id == pid
+			nbp	= BaseballBet.new unless nbp.pred_id == pid
 		end
-		nbp.pred_id	= pid
+		nbp.pred_id	= pid # copy over 
 		nbp.rlhome	= gstruct.homerunlinespread
 		nbp.rlhodds	= gstruct.homerunline
 		nbp.rlhprob	= gstruct.probhrlcover
+		nbp.homeml	= gstruct.homemoneyline
+		nbp.probhsuw	= gstruct.probhomewin
 		nbp.rlaway	= gstruct.awayrunlinespread
 		nbp.rlaodds	= gstruct.awayrunline
 		nbp.rlaprob	= gstruct.probarlcover
+		nbp.awayml	= gstruct.awaymoneyline
+		nbp.probasuw	= (1.0 - gstruct.probhomewin)
 		nbp.ou		= gstruct.overunder
 		nbp.overodds	= gstruct.oline
 		nbp.overprob	= gstruct.probtotalover
 		nbp.underodds	= gstruct.uline
 		nbp.underprob	= (1.0 - gstruct.probtotalover)
-		nbp.save!
+		bbid		= nbp.id
+		blah2		= nbp.save
+		puts "nbp #{nbp.inspect}"
+		puts "save of bb bet is #{blah2.inspect} bb id is #{bbid.inspect}"
+		# sleep 3
+		puts
 	}
 end # nba loader
 
