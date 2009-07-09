@@ -11,6 +11,6 @@ class CreateSums < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table :sums	if	ENV['RAILS_ENV'] == 'production'
+    drop_table :sums	# if	ENV['RAILS_ENV'] == 'production'
   end
 end

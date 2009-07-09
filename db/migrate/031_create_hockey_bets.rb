@@ -22,7 +22,7 @@ class CreateHockeyBets < ActiveRecord::Migration
 
   def self.down
 	begin
-		drop_table :hockey_bets	if	ENV['RAILS_ENV'] == 'production'
+		drop_table :hockey_bets	# if	ENV['RAILS_ENV'] == 'production'
 	rescue
 	end
   end

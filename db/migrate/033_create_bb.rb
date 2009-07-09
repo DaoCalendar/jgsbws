@@ -6,9 +6,13 @@ class CreateBb < ActiveRecord::Migration
 	t.column :rlhome,	:float
 	t.column :rlhodds,	:integer
 	t.column :rlhprob,	:float
+	t.column :homeml,	:integer
+	t.column :probhsuw,	:float
 	t.column :rlaway,	:float
 	t.column :rlaodds,	:integer
 	t.column :rlaprob,	:float
+	t.column :awayml,	:integer
+	t.column :probasuw,	:float
 	t.column :ou,		:float
 	t.column :overodds,	:integer
 	t.column :overprob,	:float
@@ -22,7 +26,7 @@ class CreateBb < ActiveRecord::Migration
 
   def self.down
 	begin
-		drop_table :baseball_bets	if	ENV['RAILS_ENV'] == 'production'
+		drop_table :baseball_bets	# if	ENV['RAILS_ENV'] == 'production'
 	rescue
 	end
   end

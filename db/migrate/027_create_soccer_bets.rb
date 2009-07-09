@@ -94,6 +94,6 @@ def self.up
   end
 
   def self.down
-	drop_table :soccer_bets	if	ENV['RAILS_ENV'] == 'production'
+	drop_table :soccer_bets	# if	ENV['RAILS_ENV'] == 'production'
   end
 end
