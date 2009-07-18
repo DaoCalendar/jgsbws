@@ -1,4 +1,5 @@
 #require 'ruby-prof'
+require 'mlbsn.rb'
 class MainController < ApplicationController
 	caches_page :index, :nfl, :notdone, :soccer, :makscr, :main
 
@@ -216,26 +217,35 @@ def main
 		when 5 # ncaa bb
 			# games run from Nov to April
 			startdate	=	Time.local(year, 'nov', 1) 
-			enddate	=	Time.local(year + 1, 'may', 1)
-			winprob	=	0.85	unless	year	==	2008
-			winprob	=	0.85	if		year	==	2008
-			header	=	"<h3>Joe Guy's #{year} NCAA Basketball Season</h3>"
+			enddate		=	Time.local(year + 1, 'may', 1)
+			winprob		=	0.85	unless	year	==	2008
+			winprob		=	0.85	if		year	==	2008
+			header		=	"<h3>Joe Guy's #{year} NCAA Basketball Season</h3>"
 			gap		=	Secondsperday - 1
 			gaptitle	=	'Day'
-			sport	=	'NCAA Basketball'
-			lname	=	'NCAA Basketball'
+			sport		=	'NCAA Basketball'
+			lname		=	'NCAA Basketball'
 		when 27 # nhl
 			# games run from Oct to Jun
 			startdate	=	Time.local(year, 'oct', 1) 
-			enddate	=	Time.local(year + 1, 'jul', 1)
-			winprob	=	0.62			if year == 2008
-#			winprob	=	11.0 / 21.0	if year == 2008
-			winprob	=	11.0 / 21.0	if year == 2007
-			header	=	"<h3>Joe Guy's #{year} National Hockey League Season</h3>"
+			enddate		=	Time.local(year + 1, 'jul', 1)
+			winprob		=	0.62		if year == 2008
+#			winprob		=	11.0 / 21.0	if year == 2008
+			winprob		=	11.0 / 21.0	if year == 2007
+			header		=	"<h3>Joe Guy's #{year} National Hockey League Season</h3>"
 			gap		=	Secondsperday - 1
 			gaptitle	=	'Day'
-			sport	=	'National Hockey League'
-			lname	=	'National Hockey League'
+			sport		=	'National Hockey League'
+			lname		=	'National Hockey League'
+		when 28	# mlb
+			# games run from april to october
+			startdate	=	Time.local(year, 'apr', 1) 
+			enddate		=	Time.local(year + 1, 'oct', 31)
+			header		=	"<h3>Joe Guy's #{year} Major League Baseball Season</h3>"
+			gap		=	Secondsperday - 1
+			gaptitle	=	'Day'
+			sport		=	'Major League Baseball'
+			lname		=	'Major League Baseball'
 		else
 #			logger.warn "main inspect"
 #			logger.warn(@main.inspect)
@@ -248,7 +258,12 @@ def main
 		newpred	<<	g	if	g.game_date_time	>=	startdate	&&	g.game_date_time	<=	enddate
 	}
 #	raise
-	@main	=	do_season(newpred,	year,	winprob,	header,	gap,	gaptitle, (leagueid	==	5),	sport,	lname)
+	case leagueid
+	when 28 # mlb
+		@main	=	mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle, sport,	lname)
+	else
+		@main	=	do_season(newpred,	year,	winprob,	header,	gap,	gaptitle, (leagueid	==	5),	sport,	lname)
+	end # case
 end
 =begin
 =end

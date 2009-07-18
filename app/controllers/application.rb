@@ -169,7 +169,6 @@ def	hi
 	return ysh,	wsh
 end
 
-
 def do_season(newpred,	year,	winprob	=	0.7,	header	=	nil, gap	=	Secondsinthreedays,	gaptitle	=	"Week", mm = false, sport	=	nil,	lname	=	nil)
 	raise 'need a sport'		if	sport.nil?
 	raise 'need a gaptitle'		if	gaptitle.empty?
