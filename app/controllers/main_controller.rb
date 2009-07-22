@@ -171,9 +171,9 @@ def main
 		proba	<<	g.prob_home_win_ats.r2 unless proba.include?(g.prob_home_win_ats.r2)
 		proba	<<	g.prob_away_win_ats.r2 unless proba.include?(g.prob_away_win_ats.r2)
 		proba	<<	g.prob_game_over_total.r2 unless proba.include?(g.prob_game_over_total.r2)
-		proba	<<	(1.0	-	g.prob_home_win_ats).r2 unless proba.include?((1.0	-	g.prob_home_win_ats).r2)
-		proba	<<	(1.0	-	g.prob_away_win_ats).r2 unless proba.include?((1.0	-	g.prob_away_win_ats).r2)
-		proba	<<	(1.0	-	g.prob_game_over_total).r2 unless proba.include?((1.0	-	g.prob_game_over_total).r2)
+		proba	<<	(1.0 - g.prob_home_win_ats).r2 unless proba.include?((1.0 - g.prob_home_win_ats).r2)
+		proba	<<	(1.0 - g.prob_away_win_ats).r2 unless proba.include?((1.0 - g.prob_away_win_ats).r2)
+		proba	<<	(1.0 - g.prob_game_over_total).r2 unless proba.include?((1.0 - g.prob_game_over_total).r2)
 	}
 #	logger.warn proba.sort.inspect
 #	raise
