@@ -1,7 +1,12 @@
 Mlbgame = Struct.new(:date, :datestr, :day, :home, :away, :probhomewsu, :probawaywsu, :homepitcher, 
 	:awaypitcher, :homemoneyline, :awaymoneyline, :overunder, :uline, :oline, :uprob, :oprob, 
-	:homerunlinespread, :homerunline, :awayrunlinespread, :awayrunline, :homescore, :awayscore, 
-	:daysback, :discount, :adjhomescore, :adjawayscore, :div)
+	:homerunlinespread, :homerunline, :probhrlcover, :awayrunlinespread, :awayrunline, 
+	:probarlcover, :homescore, :awayscore, :daysback, :discount, :adjhomescore, :adjawayscore, :div)
+
+Betml		= 1.5
+Rlthreshold	= 1.15
+Betou		= 1.0
+Ediv		= '</div>'
 
 #<Prediction id: 5405, game_date_time: "2009-04-05 04:00:00", league: 28, soccer_bet: nil, week: 426, 
 #		season: 0, home_team_id: 134, away_team_id: 115, spread: nil, predicted_home_score: 6, 
@@ -47,8 +52,10 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 		bbg.uprob		= bbb.underprob
 		bbg.homerunlinespread	= bbb.rlhome
 		bbg.homerunline		= bbb.rlhodds
+		bbg.probhrlcover	= bbb.rlhprob
 		bbg.awayrunlinespread	= bbb.rlaway
 		bbg.awayrunline		= bbb.rlaodds
+		bbg.probarlcover	= bbb.rlaprob
 		bbg.homescore		= p.actual_home_score
 		bbg.awayscore		= p.actual_away_score
 		bbg.daysback		= 0
@@ -68,7 +75,8 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 	ba << '<table "border"=1>'
 	ba << '<th>'
 	ha = ['Game Number', 'Day', 'Date', 'Home', 'Away', 'Home Money Line', 'Away Money Line', 
-	'Over Line - Over/Under - Under Line', 'Home Run Line Spread & Odds', 'Away Run Line Spread & Odds']
+	'Over Line - Over/Under - Under Line', 'Home Run Line Spread & Odds', 'Away Run Line Spread & Odds', 
+	'Streak Bet']
 	ha.each{|h|
 		ba << wrap(h)
 	}
@@ -76,29 +84,48 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 	ba << '<br>'
 	uta 	= []
 	ss	= []
+	sh	= {} # streak hash
 	od	= bba.first.day
 	sur	= suw	= ysur	= ysuw	= 0
 	mlr	= mlw	= ymlr	= ymlw	= 0
 	br	= ybr			= 0.0
+	our	= ouw	= your	= youw	= 0
+	oubr	= youbr			= 0.0
+	smlr	= smlw	= ysmlr	= ysmlw	= 0
+	smlbr	= ysmlbr		= 0.0
 	bba.each_with_index{|b, gn|
 		if od == b.day
 			outstr =  '<tr><td></td>'
 			outstr += wrap((gn+1).commify)
 			outstr += wrap(b.day.commify)
 			outstr += wrap(b.date.strftime("%A %B %d %Y"))
-			
+
 			# dealing with home and away straight up wins and losses
-			hw 	= (b.homescore > b.awayscore)
+			hw		= (b.homescore > b.awayscore)
+			# maintain streak hash
+			# set up if not there
+			sh[b.home]	=	0	unless sh.has_key?(b.home)
+			sh[b.away]	=	0	unless sh.has_key?(b.away)
+
+			# streak over?
+			sh[b.home]	=	0	if sh[b.home] > 0 && !hw
+			sh[b.away]	=	0	if sh[b.away] > 0 && hw
+
+			# maintain streak
+			sh[b.home]	+=	1	if hw
+			sh[b.home]	-=	1	unless hw
+			sh[b.away]	+=	1	unless hw
+			sh[b.away]	-=	1	if hw
 			ph	= (b.probhomewsu > b.probawaywsu)
 			ehdiv	= hdiv	= ''
 			eadiv	= adiv	= ''
 			if ph # picked home to win
-				hdiv, ehdiv	= Gdiv, '</div>'	if hw
-				hdiv, ehdiv	= Rdiv, '</div>'	unless hw
+				hdiv, ehdiv	= Gdiv, Ediv	if hw
+				hdiv, ehdiv	= Rdiv, Ediv	unless hw
 			else
 				# picked away to win
-				adiv, eadiv	= Gdiv, '</div>'	unless hw
-				adiv, eadiv	= Rdiv, '</div>'	if hw
+				adiv, eadiv	= Gdiv, Ediv	unless hw
+				adiv, eadiv	= Rdiv, Ediv	if hw
 			end
 			ehdiv	= hdiv	= '' if b.homescore == -1
 			eadiv	= adiv	= '' if b.homescore == -1
@@ -112,25 +139,25 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 			# done
 			
 			uta << b.home # unique team array for keywords
-			uta << b.away
+			uta << b.away                                        
 			
 			# moneylines
 			
-			bethome = ((convml(b.homemoneyline) * b.probhomewsu) > 1.5)
-			betaway = ((convml(b.awaymoneyline) * b.probawaywsu) > 1.5)
+			bethome = ((convml(b.homemoneyline) * b.probhomewsu) > Betml)
+			betaway = ((convml(b.awaymoneyline) * b.probawaywsu) > Betml)
 			
 			hdiv	= hediv = ''
 			if bethome
-				hdiv, ehdiv = Gdiv, '</div>' if hw
-				hdiv, ehdiv = Rdiv, '</div>' unless hw
+				hdiv, ehdiv = Gdiv, Ediv if hw
+				hdiv, ehdiv = Rdiv, Ediv unless hw
 			end
 			
 			outstr += wrap(hdiv+b.homemoneyline.to_s+ehdiv)
 			
 			adiv	= aediv = ''
 			if betaway
-				adiv, eadiv = Gdiv, '</div>' unless hw
-				adiv, eadiv = Rdiv, '</div>' if hw
+				adiv, eadiv = Gdiv, Ediv unless hw
+				adiv, eadiv = Rdiv, Ediv if hw
 			end
 			
 			ehdiv	= hdiv	= '' if b.homescore == -1
@@ -158,11 +185,74 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 			outstr += wrap("#{adiv+b.awaymoneyline.to_s+eadiv} M-> #{m} %")
 
 			# ou lines
-			outstr += wrap(b.oline.to_s+' '+b.overunder.to_s+' '+b.uline.to_s)
+			oea	= convml(b.overunder) * b.oprob
+			uea	= convml(b.overunder) * b.uprob
+			eodiv	= odiv = eudiv = udiv = ''
+			if oea	> Betou
+				eodiv	= Ediv
+				odiv	= Gdiv	if ((b.homescore+b.awayscore) > b.overunder)
+				odiv	= Rdiv	if ((b.homescore+b.awayscore) < b.overunder)
+			end
+			if uea	> Betou
+				eudiv	= Ediv
+				udiv	= Gdiv	if ((b.homescore+b.awayscore) < b.overunder)
+				udiv	= Rdiv	if ((b.homescore+b.awayscore) > b.overunder)
+			end
+			eodiv	= odiv = eudiv = udiv = ''	if b.homescore == -1
+			br	+= -1 if odiv	== Rdiv
+			br	+= -1 if udiv	== Rdiv
+			br	+= convml(b.oline) - 1.0 if odiv == Gdiv
+			br	+= convml(b.uline) - 1.0 if udiv == Gdiv
+
+			oubr	+= -1 if odiv	== Rdiv
+			oubr	+= -1 if udiv	== Rdiv
+			oubr	+= convml(b.oline) - 1.0 if odiv == Gdiv
+			oubr	+= convml(b.uline) - 1.0 if udiv == Gdiv
+
+			our	+= 1 if odiv == Gdiv
+			ouw	+= 1 if odiv == Rdiv
+			our	+= 1 if udiv == Gdiv
+			ouw	+= 1 if udiv == Rdiv
+			outstr += wrap(odiv+b.oline.to_s+eodiv+' '+b.overunder.to_s+' '+udiv+b.uline.to_s+eudiv)
 			
 			# runlines
-			outstr += wrap(b.homerunlinespread.to_s+' '+b.homerunline.to_s)
-			outstr += wrap(b.awayrunlinespread.to_s+' '+b.awayrunline.to_s)
+			hrlev	= convml(b.homerunline) * b.probhrlcover
+			arlev	= convml(b.awayrunline) * b.probarlcover
+			hrlcovr	= ((b.homescore + b.homerunlinespread) > b.awayscore)
+			arlcovr	= ((b.awayscore + b.awayrunlinespread) > b.homescore)
+			
+			hdiv	= hediv = ''
+			if hrlev > Rlthreshold
+				hdiv, hediv = Gdiv, Ediv if hrlcovr
+				hdiv, hediv = Rdiv, Ediv unless hrlcovr
+			end
+			
+			adiv	= aediv = ''
+			if arlev > Rlthreshold
+				adiv, aediv = Gdiv, Ediv if arlcovr
+				adiv, aediv = Rdiv, Ediv unless arlcovr
+			end
+			hdiv	= hediv = adiv	= aediv = '' if b.homescore == -1
+			
+			if hdiv == Gdiv
+				smlbr	+= convml(b.homerunline) - 1.0
+				smlr	+= 1
+			end
+			if hdiv == Rdiv
+				smlbr	-= 1.0
+				smlw	+= 1
+			end
+			if adiv == Gdiv
+				smlbr	+= convml(b.awayrunline) - 1.0
+				smlr	+= 1
+			end
+			if adiv == Rdiv
+				smlbr	-= 1.0
+				smlw	+= 1
+			end
+			
+			outstr += wrap(hdiv+b.homerunlinespread.to_s+' '+b.homerunline.to_s+hediv)
+			outstr += wrap(adiv+b.awayrunlinespread.to_s+' '+b.awayrunline.to_s+aediv)
 			outstr += '</tr>'
 			ss << outstr.dup
 		else
@@ -172,8 +262,26 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 			
 			# bankroll
 			ybr	+=	br
-			tstr +=  "<td>Won #{br.r2.commify} this day Won #{ybr.r2.commify} this season so far"
+			ybr	+=	oubr
+			ybr	+=	smlbr
+			tstr	+= 	"<td>Won #{br.r2.commify} this day Won #{ybr.r2.commify} this season so far"
 			br	=	0.0
+			
+			# sml
+			ysmlr	+= smlr
+			ysmlw	+= smlw
+			ysmlbr	+= smlbr
+			tstr	+= "<td>spread moneyline #{smlr} Right #{smlw} Wrong #{ysmlr} Right this year #{ysmlw} Wrong this year #{smlbr.r2} won #{ysmlbr.r2.commify} Won this season #{(100.00*ysmlr/(ysmlr+ysmlw)).r2} %"
+			smlr	= smlw = 0
+			smlbr	= 0.0
+			
+			# ou
+			your	+= our
+			youw	+= ouw
+			youbr	+= oubr
+			tstr	+= "<td>Over/Under #{our} Right #{ouw} Wrong #{your} Right this year #{youw} Wrong this year #{oubr.r2} won #{youbr.r2.commify} Won this season #{(100.00*your/(your+youw)).r2} %"
+			our	= ouw = 0
+			oubr	= 0.0
 			
 			# moneyline	
 			ymlr	+=	mlr
