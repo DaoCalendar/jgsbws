@@ -6,7 +6,16 @@ Mlbgame = Struct.new(:date, :datestr, :day, :home, :away, :probhomewsu, :probawa
 Betml		= 1.5
 Rlthreshold	= 1.15
 Betou		= 1.0
-Ediv		= '</div>'
+Streakcriteria	= 1
+Streakbethwin	= 1
+Streakbethlose	= -1
+Streakbetawin	= 2
+Streakbetalose	= -2
+
+def marginmaker(a, b)
+	return (((1.0/convml(a)+1.0/convml(b))-1.0)*100.0).r2
+end
+
 
 #<Prediction id: 5405, game_date_time: "2009-04-05 04:00:00", league: 28, soccer_bet: nil, week: 426, 
 #		season: 0, home_team_id: 134, away_team_id: 115, spread: nil, predicted_home_score: 6, 
@@ -69,53 +78,84 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 		bba << bbg.dup
 		bbg = nil
 	}
+	fdate	= bba.first.date
+	ldate	= bba.last.date
 #	raise bba.inspect
 	# now create a big array to send to the view
-	ba=[]
+	ba = []
 	ba << '<table "border"=1>'
-	ba << '<th>'
-	ha = ['Game Number', 'Day', 'Date', 'Home', 'Away', 'Home Money Line', 'Away Money Line', 
-	'Over Line - Over/Under - Under Line', 'Home Run Line Spread & Odds', 'Away Run Line Spread & Odds', 
-	'Streak Bet']
+	ba << '<th><tr>'
+	ha = ['Date', 'Game Number', 'Day', 'Home', 'Away', 'Home Money Line', 'Away Money Line', 
+	'Over Line - Over/Under - Under Line', 'Home Run Line Spread & Odds', 'Away Run Line Spread & Odds']
 	ha.each{|h|
 		ba << wrap(h)
 	}
-	ba << '</th>'
+	ba << '</tr></th>'
 	ba << '<br>'
 	uta 	= []
 	ss	= []
 	sh	= {} # streak hash
 	od	= bba.first.day
+	ybr				= 0.0
 	sur	= suw	= ysur	= ysuw	= 0
 	mlr	= mlw	= ymlr	= ymlw	= 0
-	br	= ybr			= 0.0
+	mlbr	= ymlbr			= 0.0
 	our	= ouw	= your	= youw	= 0
 	oubr	= youbr			= 0.0
 	smlr	= smlw	= ysmlr	= ysmlw	= 0
 	smlbr	= ysmlbr		= 0.0
+	stbr	= ystbr			= 0.0
+	yuc	= uc 	= yoc	= oc	= 0
+	yobr	= obr	= yubr	= ubr	= 0.0
+	diddata	= false
+	predgame= false
+	dayadj	= bba.first.day - 1
 	bba.each_with_index{|b, gn|
+		predgame = (b.homescore == -1)
 		if od == b.day
-			outstr =  '<tr><td></td>'
-			outstr += wrap((gn+1).commify)
-			outstr += wrap(b.day.commify)
-			outstr += wrap(b.date.strftime("%A %B %d %Y"))
+			diddata		= true
+			outstr		= '<tr>'
+			outstr		+= wrap(b.date.strftime("%A %B %d %Y"))
+			outstr		+= wrap((gn+1).commify)
+			outstr		+= wrap((b.day-dayadj).commify)
 
 			# dealing with home and away straight up wins and losses
 			hw		= (b.homescore > b.awayscore)
+			
+			# do streak bet before updating streak
+			sbet 	= nil
+			sbetstr	= ''
+			if sh.has_key?(b.home) && sh.has_key?(b.away)
+				sbh = (sh[b.home] > Streakcriteria || sh[b.home] < -Streakcriteria)
+				sba = (sh[b.away] > Streakcriteria || sh[b.away] < -Streakcriteria)
+				unless (sbh && sba) # don't bet when both are on streaks
+					if sbh
+						sbet = sh[b.home] > Streakcriteria ? Streakbethwin : Streakbethlose
+					else
+						sbet = sh[b.away] > Streakcriteria ? Streakbetawin : Streakbetalose
+					end
+				end
+			end
+			
 			# maintain streak hash
 			# set up if not there
 			sh[b.home]	=	0	unless sh.has_key?(b.home)
 			sh[b.away]	=	0	unless sh.has_key?(b.away)
 
-			# streak over?
-			sh[b.home]	=	0	if sh[b.home] > 0 && !hw
-			sh[b.away]	=	0	if sh[b.away] > 0 && hw
+			unless predgame
+				# streak over?
+				sh[b.home]	=	0	if sh[b.home] > 0 && !hw
+				sh[b.home]	=	0	if sh[b.home] < 0 && hw
+				sh[b.away]	=	0	if sh[b.away] > 0 && hw
+				sh[b.away]	=	0	if sh[b.away] < 0 && !hw
 
-			# maintain streak
-			sh[b.home]	+=	1	if hw
-			sh[b.home]	-=	1	unless hw
-			sh[b.away]	+=	1	unless hw
-			sh[b.away]	-=	1	if hw
+				# maintain streak
+				sh[b.home]	+=	1	if hw
+				sh[b.home]	-=	1	unless hw
+				sh[b.away]	+=	1	unless hw
+ 				sh[b.away]	-=	1	if hw
+			end
+
 			ph	= (b.probhomewsu > b.probawaywsu)
 			ehdiv	= hdiv	= ''
 			eadiv	= adiv	= ''
@@ -127,15 +167,27 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 				adiv, eadiv	= Gdiv, Ediv	unless hw
 				adiv, eadiv	= Rdiv, Ediv	if hw
 			end
-			ehdiv	= hdiv	= '' if b.homescore == -1
-			eadiv	= adiv	= '' if b.homescore == -1
+			hdiv, ehdiv	= Ydiv, Ediv if predgame && !hdiv.empty?
+			adiv, eadiv	= Ydiv, Ediv if predgame && !adiv.empty?
 			sur	+=	1 if hdiv == Gdiv
 			suw	+=	1 if hdiv == Rdiv
-			outstr += wrap(hdiv + b.home+' '+b.homescore.to_s + ehdiv)
+			streakstring	= ''
+			hsstr	=	b.homescore == -1 ? '' : b.homescore.to_s
+#			streakstring	= " - Streak is #{sh[b.home]} win " if sh[b.home] == 1
+#			streakstring	= " - Streak is #{sh[b.home]} wins " if sh[b.home] > 1
+#			streakstring	= " - Streak is #{-sh[b.home]} loss " if sh[b.home] == -1
+#			streakstring	= " - Streak is #{-sh[b.home]} losses " if sh[b.home] < -1
+			outstr += wrap(hdiv + b.home+' '+hsstr + streakstring + ehdiv)
 
 			sur	+=	1 if adiv == Gdiv
 			suw	+=	1 if adiv == Rdiv
-			outstr += wrap(adiv + b.away+' '+b.awayscore.to_s + eadiv)
+			streakstring	= ''
+			asstr	=	b.awayscore == -1 ? '' : b.awayscore.to_s
+#			streakstring	= " - Streak is #{sh[b.away]} win " if sh[b.away] == 1
+#			streakstring	= " - Streak is #{sh[b.away]} wins " if sh[b.away] > 1
+#			streakstring	= " - Streak is #{-sh[b.away]} loss " if sh[b.away] == -1
+#			streakstring	= " - Streak is #{-sh[b.away]} losses " if sh[b.away] < -1
+			outstr += wrap(adiv + b.away+' '+asstr + streakstring + eadiv)
 			# done
 			
 			uta << b.home # unique team array for keywords
@@ -160,49 +212,97 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 				adiv, eadiv = Rdiv, Ediv if hw
 			end
 			
-			ehdiv	= hdiv	= '' if b.homescore == -1
-			eadiv	= adiv	= '' if b.homescore == -1
+			hdiv, ehdiv	= Ydiv, Ediv if predgame && !hdiv.empty?
+			adiv, eadiv	= Ydiv, Ediv if predgame && !adiv.empty?
 			
 			if hdiv == Gdiv
 				mlr	+= 1
-				br	+= convml(b.homemoneyline) - 1.0
+				mlbr	+= convml(b.homemoneyline) - 1.0
+				unless sbet.nil?
+					if sbet == 1 # streakbet home to win
+						stbr += convml(b.homemoneyline) - 1.0 
+						sbetstr = "#{Gdiv}#{b.home} to win#{Ediv}"
+					end
+					if sbet == -1 # streakbet home to lose
+						stbr -= 1.0 
+						sbetstr = "#{Rdiv}#{b.home} to lose#{Ediv}"
+					end
+				end
 			end
 			if hdiv == Rdiv
 				mlw	+= 1
-				br	-= 1.0
+				mlbr	-= 1.0
+				unless sbet.nil?
+					if sbet == -1 # streakbet home to lose
+						stbr += convml(b.homemoneyline) - 1.0 
+						sbetstr = "#{Gdiv}#{b.home} to lose#{Ediv}"
+					end
+					if sbet == 1 # streakbet home to win
+						stbr -= 1.0 
+						sbetstr = "#{Rdiv}#{b.home} to win#{Ediv}"
+					end
+				end
 			end
 
 			if adiv == Gdiv
 				mlr	+= 1
-				br	+= convml(b.awaymoneyline) - 1.0
+				mlbr	+= convml(b.awaymoneyline) - 1.0
+				unless sbet.nil?
+					if sbet == Streakcriteria # streakbet away to win
+						stbr += convml(b.awaymoneyline) - 1.0 
+						sbetstr = "#{Gdiv}#{b.away} to win#{Ediv}"
+					end
+					if sbet == -Streakcriteria # streakbet away to lose
+						stbr -= 1.0 
+						sbetstr = "#{Rdiv}#{b.away} to lose#{Ediv}"
+					end
+				end
 			end
 			if adiv == Rdiv
 				mlw	+= 1
-				br	-= 1.0
+				mlbr	-= 1.0
+				unless sbet.nil?
+					if sbet == -Streakcriteria # streakbet away to lose
+						stbr += convml(b.awaymoneyline) - 1.0 
+						sbetstr = "#{Gdiv}#{b.away} to lose#{Ediv}"
+					end
+					if sbet == Streakcriteria # streakbet away to win
+						stbr -= 1.0 
+						sbetstr = "#{Rdiv}#{b.away} to win#{Ediv}"
+					end
+				end
 			end
 
-			m	= (((1.0/convml(b.homemoneyline) + 1.0/convml(b.awaymoneyline))-1.0)*100.0).r2
+			m	= marginmaker(b.homemoneyline, b.awaymoneyline)
 			outstr += wrap("#{adiv+b.awaymoneyline.to_s+eadiv} M-> #{m} %")
 
 			# ou lines
+			itsunder= (b.homescore+b.awayscore) < b.overunder
+			uc	+= 1 if itsunder
+			oc	+= 1 unless itsunder
+			ubr	+= (itsunder ? convml(b.uline) - 1.0 : -1)
+			obr	+= (itsunder ? -1 : convml(b.oline) - 1.0)
+			
 			oea	= convml(b.overunder) * b.oprob
 			uea	= convml(b.overunder) * b.uprob
 			eodiv	= odiv = eudiv = udiv = ''
 			if oea	> Betou
 				eodiv	= Ediv
-				odiv	= Gdiv	if ((b.homescore+b.awayscore) > b.overunder)
-				odiv	= Rdiv	if ((b.homescore+b.awayscore) < b.overunder)
+				odiv	= Gdiv	unless itsunder
+				odiv	= Rdiv	if itsunder
 			end
 			if uea	> Betou
 				eudiv	= Ediv
-				udiv	= Gdiv	if ((b.homescore+b.awayscore) < b.overunder)
-				udiv	= Rdiv	if ((b.homescore+b.awayscore) > b.overunder)
+				udiv	= Gdiv	if itsunder
+				udiv	= Rdiv	unless itsunder
 			end
-			eodiv	= odiv = eudiv = udiv = ''	if b.homescore == -1
-			br	+= -1 if odiv	== Rdiv
-			br	+= -1 if udiv	== Rdiv
-			br	+= convml(b.oline) - 1.0 if odiv == Gdiv
-			br	+= convml(b.uline) - 1.0 if udiv == Gdiv
+#			eodiv	= odiv = eudiv = udiv = ''	if predgame
+			odiv, eodiv	= Ydiv, Ediv if predgame && !odiv.empty?
+			udiv, eodiv	= Ydiv, Ediv if predgame && !udiv.empty?
+#			br	+= -1 if odiv	== Rdiv
+#			br	+= -1 if udiv	== Rdiv
+#			br	+= convml(b.oline) - 1.0 if odiv == Gdiv
+#			br	+= convml(b.uline) - 1.0 if udiv == Gdiv
 
 			oubr	+= -1 if odiv	== Rdiv
 			oubr	+= -1 if udiv	== Rdiv
@@ -213,7 +313,7 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 			ouw	+= 1 if odiv == Rdiv
 			our	+= 1 if udiv == Gdiv
 			ouw	+= 1 if udiv == Rdiv
-			outstr += wrap(odiv+b.oline.to_s+eodiv+' '+b.overunder.to_s+' '+udiv+b.uline.to_s+eudiv)
+			outstr += wrap(odiv+b.oline.to_s+eodiv+' '+b.overunder.to_s+' '+udiv+b.uline.to_s+eudiv+" M->#{marginmaker(b.oline, b.uline)}%")
 			
 			# runlines
 			hrlev	= convml(b.homerunline) * b.probhrlcover
@@ -232,7 +332,9 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 				adiv, aediv = Gdiv, Ediv if arlcovr
 				adiv, aediv = Rdiv, Ediv unless arlcovr
 			end
-			hdiv	= hediv = adiv	= aediv = '' if b.homescore == -1
+#			hdiv	= hediv = adiv	= aediv = '' if predgame
+			hdiv,  hediv	= Ydiv, Ediv if predgame && !hdiv.empty?
+			adiv,  aediv	= Ydiv, Ediv if predgame && !adiv.empty?
 			
 			if hdiv == Gdiv
 				smlbr	+= convml(b.homerunline) - 1.0
@@ -253,59 +355,79 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 			
 			outstr += wrap(hdiv+b.homerunlinespread.to_s+' '+b.homerunline.to_s+hediv)
 			outstr += wrap(adiv+b.awayrunlinespread.to_s+' '+b.awayrunline.to_s+aediv)
+#			outstr += wrap(sbetstr)
 			outstr += '</tr>'
 			ss << outstr.dup
 		else
-			# stats
-			tstr = ''
-			tstr +=  "<tr>"
-			
-			# bankroll
-			ybr	+=	br
-			ybr	+=	oubr
-			ybr	+=	smlbr
-			tstr	+= 	"<td>Won #{br.r2.commify} this day Won #{ybr.r2.commify} this season so far"
-			br	=	0.0
-			
-			# sml
-			ysmlr	+= smlr
-			ysmlw	+= smlw
-			ysmlbr	+= smlbr
-			tstr	+= "<td>spread moneyline #{smlr} Right #{smlw} Wrong #{ysmlr} Right this year #{ysmlw} Wrong this year #{smlbr.r2} won #{ysmlbr.r2.commify} Won this season #{(100.00*ysmlr/(ysmlr+ysmlw)).r2} %"
-			smlr	= smlw = 0
-			smlbr	= 0.0
-			
-			# ou
-			your	+= our
-			youw	+= ouw
-			youbr	+= oubr
-			tstr	+= "<td>Over/Under #{our} Right #{ouw} Wrong #{your} Right this year #{youw} Wrong this year #{oubr.r2} won #{youbr.r2.commify} Won this season #{(100.00*your/(your+youw)).r2} %"
-			our	= ouw = 0
-			oubr	= 0.0
-			
-			# moneyline	
-			ymlr	+=	mlr
-			ymlw	+=	mlw
-			tstr +=  "<td>#{mlr} MLR #{mlw} MLW #{(100.0*mlr/(mlr+mlw)).r2}%</td><td>Season #{ymlr.commify} MLR #{ymlw.commify} MLW #{(100.0*ymlr/(ymlr+ymlw)).r2}%</td>"
-			mlr = mlw = 0
-			
-			# straight up
-			ysur	+=	sur
-			ysuw	+=	suw
-			tstr +=  "<td>#{sur} SUR #{suw} SUW #{(100.0*sur/(sur+suw)).r2}%</td><td>Season #{ysur.commify} SUR #{ysuw.commify} SUW #{(100.0*ysur/(ysur+ysuw)).r2}%</td>"
-			sur = suw = 0
+			if diddata
+				# stats
+				diddata	= false
+				tstr =  "<tr><td>Day #{(od-dayadj).commify} Statistics</td>"
 
-			tstr +=  '</tr>'
-			ss << tstr
+				# bankroll
+				ymlbr	+=	mlbr
+				todaybr	=	mlbr + oubr + smlbr # + obr + ubr
+				#			ybr	+=	stbr  # streak bet
+				ybr	+=	mlbr  # money line
+				ybr	+=	oubr  # over under
+				ybr	+=	smlbr # spread money line
+#				ybr	+=	obr + ubr # over and under
+				tstr	+= 	"<td>Won $#{todaybr.r2.commify} this day Won $#{ybr.r2.commify} this season so far"
+				mlbr	=	0.0
+
+				# streak bet
+				ystbr	+=	stbr
+				#		tstr	+=	"<td>Streak Bet Won $#{stbr.r2} today Won $#{ystbr.r2} this season</td>"
+				stbr	=	0.0
+
+				# sml
+				ysmlr	+= smlr
+				ysmlw	+= smlw
+				ysmlbr	+= smlbr
+				tstr	+= "<td>Spread moneyline - #{smlr} Right #{smlw} Wrong today - #{ysmlr} Right #{ysmlw} Wrong this year - $#{smlbr.r2} won today $#{ysmlbr.r2.commify} - Won this season #{(100.00*ysmlr/(ysmlr+ysmlw)).r2} % hit rate"
+				smlr	= smlw = 0
+				smlbr	= 0.0
+				
+				# dr traal 905 826 2881
+				
+				# ou
+				your	+= our
+				youw	+= ouw
+				youbr	+= oubr
+				yoc	+= oc
+				yuc	+= uc
+				yobr	+= obr
+				yubr	+= ubr
+				tstr	+= "<td>Over/Under - #{our} Right #{ouw} Wrong today - #{your} Right #{youw} Wrong this year - $#{oubr.r2} Won today $#{youbr.r2.commify} Won this season - #{(100.00*your/(your+youw)).r2} % hit rate - #{oc} over #{uc} under today - #{yoc.commify} over #{yuc.commify} under this season - $#{obr.r2} won by over $#{ubr.r2} won by under today - $#{yobr.r2} - won by over $#{yubr.r2} won by under this year "
+				our	= ouw = oc = uc = obr = ubr = 0
+				oubr	= 0.0
+
+				# moneyline	
+				ymlr	+=	mlr
+				ymlw	+=	mlw
+				tstr	+=  "<td>#{mlr} Moneyline right #{mlw} Moneyline wrong #{(100.0*mlr/(mlr+mlw)).r2}% Won $#{mlbr.r2.commify} today $#{ymlbr.r2.commify} this year<br> Season #{ymlr.commify} Moneyline right #{ymlw.commify} Moneyline wrong #{(100.0*ymlr/(ymlr+ymlw)).r2}%</td>"
+				mlr	= mlw = 0
+
+				# straight up
+				ysur	+=	sur
+				ysuw	+=	suw
+				tstr	+=  "<td>#{sur} Straight Up Right #{suw} Straight Up Wrong #{(100.0*sur/(sur+suw)).r2}%</td><td>Season #{ysur.commify} Straight Up Right #{ysuw.commify} Straight Up Wrong #{(100.0*ysur/(ysur+ysuw)).r2}%</td>"
+				sur	= suw = 0
+
+				tstr	+= '</tr>'
+				ss << tstr
+			end
 			od = b.day
 		end
 	}
 	puta = uta.uniq.sort.join(', ')
 	@main			=	{}
 	@main['pad']		=	false
-	@main['desc']		=	"Joe Guy's Baseball #{puta}"
-	@main['content']	=	"Joe Guy's Baseball"
-	@main['rollwith']	=	ba + ss.reverse + ['</table>']
+	@main['heading']	=	"Joe Guy's #{lname} Betting - #{year} - #{fdate.strftime("%B %d %Y  ")} to #{ldate.strftime("%B %d %Y  ")} "
+	@main['desc']		=	"Joe Guy's Baseball #{year} #{puta}"
+	@main['content']	=	"Joe Guy's Baseball #{year} #{puta}"
+	@main['rollwith']	=	[header]
+	@main['rollwith']	<<	ba + ss.reverse + ['</table>']
 	render :template=>"main/main.rhtml"
 end
 
