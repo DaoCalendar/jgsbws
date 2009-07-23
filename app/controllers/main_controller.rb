@@ -185,7 +185,7 @@ def main
 		when 1 # nfl
 			# games run from sept to febuary
 			startdate	=	Time.local(year, 'sep', 1) 
-			enddate		=	Time.local(year + 1, 'sep', 1) 
+			enddate		=	Time.local(year + 1, 'mar', 1) 
 			header		=	"<h3>Joe Guy's #{year} National Football League Season</h3>"
 			gap		=	Secondsinthreedays
 			gaptitle	=	'Week'
@@ -195,7 +195,7 @@ def main
 			# games run from Nov to April
 			startdate	=	Time.local(year, 'nov', 1) 
 			enddate		=	Time.local(year + 1, 'jul', 1)
-			winprob		=	0.62			if year == 2008
+			winprob		=	0.62		if year == 2008
 #			winprob		=	11.0 / 21.0	if year == 2008
 			winprob		=	11.0 / 21.0	if year == 2007
 			header		=	"<h3>Joe Guy's #{year} National Basketball Association Season</h3>"
@@ -240,7 +240,7 @@ def main
 		when 28	# mlb
 			# games run from april to october
 			startdate	=	Time.local(year, 'apr', 1) 
-			enddate		=	Time.local(year + 1, 'oct', 31)
+			enddate		=	Time.local(year, 'oct', 31)
 			header		=	"<h3>Joe Guy's #{year} Major League Baseball Season</h3>"
 			gap		=	Secondsperday - 1
 			gaptitle	=	'Day'
