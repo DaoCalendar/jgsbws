@@ -1,9 +1,11 @@
 <% @heading		=	"Joe Guy's Sports Betting Web Site"-%>
 <% @content		=	"Opening Screen - here be found National Football League predictions && more to come" -%>
 <% @desc		=	"Opening Screen - here be found National Football League predictions && more to come" %>
-
-<%=	'<p><img src="'+@main['image']+' width="800" height="600"></p>' %>
 <div id			=	"Originalcontent">
+<% begin %>
+<%=	'<div id="replaced-box"><img  src="'+@main['image']+' /></div>' %>
+<%rescue%>
+<% end %>
 <%	rw			=	@main['rollwith']	%>
 <%	@heading	=	@main['heading']	if@main.has_key?('heading')		-%>
 <%	@content	=	@main['content']	-%>
