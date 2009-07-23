@@ -19,6 +19,7 @@ NO			=	"No Opinion"
 Gdiv			=	"<div id='green'>"
 Rdiv			=	"<div id='red'>"
 Ydiv			=	"<div id='yellow'>"
+Ediv			=	'</div>'
 Fpc			=	0.045
 Tpf			=	2.5
 Td			=	"<td>"
