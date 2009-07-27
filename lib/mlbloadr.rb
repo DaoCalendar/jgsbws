@@ -1,3 +1,46 @@
+def 	makeprecord(p, gstruct)
+	p.game_date_time	=  gstruct.date
+	seasonnumber		+= 1 if ! prevdate.nil? and ((p.game_date_time - prevdate) / Secondsperday)  > 60 # time diff in days
+	prevdate		=  p.game_date_time.dup
+	p.league		=  teamleague
+	p.home_team_id		=  gstruct.home
+	p.away_team_id		=  gstruct.away
+	p.actual_home_score	=  gstruct.homescore
+	p.actual_away_score	=  gstruct.awayscore
+	p.predicted_home_score	=  gstruct.hlambda
+	p.predicted_away_score	=  gstruct.alambda
+	pid			=  p.id
+	pidwn			=  pid.nil?
+	blah			=  p.save
+	puts "prediction saved #{blah.inspect} pid is #{pid}"
+	puts "pid was nil #{p.inspect} pid is now #{p.id}" if pidwn
+	return p
+end
+
+def	makebbrecord(nbp, gstruct)
+	nbp.rlhome	= gstruct.homerunlinespread
+	nbp.rlhodds	= gstruct.homerunline
+	nbp.rlhprob	= gstruct.probhrlcover
+	nbp.homeml	= gstruct.homemoneyline
+	nbp.probhsuw	= gstruct.probhomewin
+	nbp.rlaway	= gstruct.awayrunlinespread
+	nbp.rlaodds	= gstruct.awayrunline
+	nbp.rlaprob	= gstruct.probarlcover
+	nbp.awayml	= gstruct.awaymoneyline
+	nbp.probasuw	= (1.0 - gstruct.probhomewin)
+	nbp.ou		= gstruct.overunder
+	nbp.overodds	= gstruct.oline
+	nbp.overprob	= gstruct.probtotalover
+	nbp.underodds	= gstruct.uline
+	nbp.underprob	= (1.0 - gstruct.probtotalover)
+	bbid		= nbp.id
+	blah2		= nbp.save
+	puts "nbp #{nbp.inspect}"
+	puts "save of bb bet is #{blah2.inspect} bb id is #{bbid.inspect}"
+	# sleep 3
+	puts
+end
+
 def	mlbloader(dataarray)
 	teamleague		=	League.find_by_name('Major League Baseball').id
 	raise "no league!" if teamleague.nil?
@@ -40,21 +83,7 @@ def	mlbloader(dataarray)
 			raise "e #{e.inspect} d[1].to_i #{d[1].to_i} d[1] #{d[1].inspect} d.inspect #{d.inspect} p.inspect #{p.inspect}"
 		end
 		p.season		=	seasonnumber
-		p.game_date_time	=	gstruct.date
-		seasonnumber		+=	1 if ! prevdate.nil? and ((p.game_date_time - prevdate) / Secondsperday)  > 60 # time diff in days
-		prevdate		=	p.game_date_time.dup
-		p.league		=	teamleague
-		p.home_team_id		=	gstruct.home
-		p.away_team_id		=	gstruct.away
-		p.actual_home_score	=	gstruct.homescore
-		p.actual_away_score	=	gstruct.awayscore
-		p.predicted_home_score	=	gstruct.hlambda
-		p.predicted_away_score	=	gstruct.alambda
-		pid			=	p.id
-		pidwn = pid.nil?
-		blah			=	p.save
-		puts "prediction saved #{blah.inspect} pid is #{pid}"
-		puts "pid was nil #{p.inspect} pid is now #{p.id}" if pidwn
+		p			=	makeprecord(p, gstruct)
 		pid			=	p.id
 		# sleep 3
 		# now create or update the baseball bet table
@@ -92,27 +121,6 @@ def	mlbloader(dataarray)
 			nbp	= BaseballBet.new unless nbp.pred_id == pid
 		end
 		nbp.pred_id	= pid # copy over 
-		nbp.rlhome	= gstruct.homerunlinespread
-		nbp.rlhodds	= gstruct.homerunline
-		nbp.rlhprob	= gstruct.probhrlcover
-		nbp.homeml	= gstruct.homemoneyline
-		nbp.probhsuw	= gstruct.probhomewin
-		nbp.rlaway	= gstruct.awayrunlinespread
-		nbp.rlaodds	= gstruct.awayrunline
-		nbp.rlaprob	= gstruct.probarlcover
-		nbp.awayml	= gstruct.awaymoneyline
-		nbp.probasuw	= (1.0 - gstruct.probhomewin)
-		nbp.ou		= gstruct.overunder
-		nbp.overodds	= gstruct.oline
-		nbp.overprob	= gstruct.probtotalover
-		nbp.underodds	= gstruct.uline
-		nbp.underprob	= (1.0 - gstruct.probtotalover)
-		bbid		= nbp.id
-		blah2		= nbp.save
-		puts "nbp #{nbp.inspect}"
-		puts "save of bb bet is #{blah2.inspect} bb id is #{bbid.inspect}"
-		# sleep 3
-		puts
+		makebbrecord(nbp, gstruct)
 	}
 end # nba loader
-
