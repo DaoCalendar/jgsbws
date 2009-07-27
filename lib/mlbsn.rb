@@ -78,6 +78,7 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 		bba << bbg.dup
 		bbg = nil
 	}
+#	raise "#{bba[0]} #{bba[1].inspect} "
 	fdate	= bba.first.date
 	ldate	= bba.last.date
 #	raise bba.inspect
