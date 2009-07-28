@@ -374,7 +374,6 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 				ybr	+=	smlbr # spread money line
 #				ybr	+=	obr + ubr # over and under
 				tstr	+= 	"<td>Won $#{todaybr.r2.commify} this day Won $#{ybr.r2.commify} this season so far"
-				mlbr	=	0.0
 
 				# streak bet
 				ystbr	+=	stbr
@@ -408,6 +407,7 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 				ymlw	+=	mlw
 				tstr	+=  "<td>#{mlr} Moneyline right #{mlw} Moneyline wrong #{(100.0*mlr/(mlr+mlw)).r2}% Won $#{mlbr.r2.commify} today $#{ymlbr.r2.commify} this year<br> Season #{ymlr.commify} Moneyline right #{ymlw.commify} Moneyline wrong #{(100.0*ymlr/(ymlr+ymlw)).r2}%</td>"
 				mlr	= mlw = 0
+				mlbr	=	0.0
 
 				# straight up
 				ysur	+=	sur
