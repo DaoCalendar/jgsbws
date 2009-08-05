@@ -89,19 +89,19 @@ def	mlhlpr(p, isnhl)
 	end
 #	raise if hprize.nil?
 #	raise if aprize.nil?
-	return [0, "#{Ydiv}No Opinion </div>", 0.0, nil, 0.0, 0.0, 0.0, false]  if pickhome == false and pickaway == false
+	return [0, "#{Ydiv}No Opinion #{Ediv}", 0.0, nil, 0.0, 0.0, 0.0, false]  if pickhome == false and pickaway == false
 	# picked home and was right 
-	return [1, "#{Gdiv} #{nameconv(Team.find(p.home_team_id).name, p.league)}  ->  #{(hwinprize).to_s[0,6]}</div>", hwinprize, mlats, hbbmlwin, hhf, ahf, bh] if pickhome and p.actual_home_score > p.actual_away_score
+	return [1, "#{Gdiv} #{nameconv(Team.find(p.home_team_id).name, p.league)}  ->  #{(hwinprize).to_s[0,6]}#{Ediv}", hwinprize, mlats, hbbmlwin, hhf, ahf, bh] if pickhome and p.actual_home_score > p.actual_away_score
 	# picked home and was wrong
-	return [2, "#{Rdiv} #{nameconv(Team.find(p.home_team_id).name, p.league)}  ->  #{hlose.to_s[0,6]}</div>", hlose, mlats, hbbmllose, hhf, ahf, bh] if pickhome and p.actual_home_score < p.actual_away_score
+	return [2, "#{Rdiv} #{nameconv(Team.find(p.home_team_id).name, p.league)}  ->  #{hlose.to_s[0,6]}#{Ediv}", hlose, mlats, hbbmllose, hhf, ahf, bh] if pickhome and p.actual_home_score < p.actual_away_score
 	# picked home and was draw
-	return [3, "#{Ydiv} #{nameconv(Team.find(p.home_team_id).name, p.league)}  ->  0.0</div>", 0.0, mlats, 0.0, 0.0, 0.0, false] if pickhome and p.actual_home_score == p.actual_away_score
+	return [3, "#{Ydiv} #{nameconv(Team.find(p.home_team_id).name, p.league)}  ->  0.0#{Ediv}", 0.0, mlats, 0.0, 0.0, 0.0, false] if pickhome and p.actual_home_score == p.actual_away_score
 	# picked away and was right
-	return [4, "#{Gdiv} #{nameconv(Team.find(p.away_team_id).name, p.league)}  ->  #{(awinprize).to_s[0,6]}</div>", awinprize, mlats, abbmlwin, hhf, ahf, bh] if pickaway and p.actual_away_score > p.actual_home_score
+	return [4, "#{Gdiv} #{nameconv(Team.find(p.away_team_id).name, p.league)}  ->  #{(awinprize).to_s[0,6]}#{Ediv}", awinprize, mlats, abbmlwin, hhf, ahf, bh] if pickaway and p.actual_away_score > p.actual_home_score
 	# picked away and was wrong
-	return [5, "#{Rdiv} #{nameconv(Team.find(p.away_team_id).name, p.league)}  ->  #{alose.to_s[0,6]}</div>", alose, mlats, abbmllose, hhf, ahf, bh] if pickaway and p.actual_away_score < p.actual_home_score
+	return [5, "#{Rdiv} #{nameconv(Team.find(p.away_team_id).name, p.league)}  ->  #{alose.to_s[0,6]}#{Ediv}", alose, mlats, abbmllose, hhf, ahf, bh] if pickaway and p.actual_away_score < p.actual_home_score
 	# picked away and was draw
-	return [6, "#{Ydiv} #{nameconv(Team.find(p.away_team_id).name, p.league)}  ->  0.0</div>", 0.0, mlats, 0.0, 0.0, 0.0, false] if pickaway and p.actual_away_score == p.actual_home_score
+	return [6, "#{Ydiv} #{nameconv(Team.find(p.away_team_id).name, p.league)}  ->  0.0#{Ediv}", 0.0, mlats, 0.0, 0.0, 0.0, false] if pickaway and p.actual_away_score == p.actual_home_score
 	raise "why am i here"
 end
 
