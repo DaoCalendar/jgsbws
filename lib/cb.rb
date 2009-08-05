@@ -39,7 +39,12 @@ def	calcatsbet(g,	ysh,	wsh, winprob,	h)
 			ysh['ad'][0]	+=	1	if	(g.actual_home_score + g.spread) < g.actual_away_score # away dog won 
 			ysh['ad'][1]	+=	1	if	(g.actual_home_score + g.spread) > g.actual_away_score # away dog lost 
 		end
-		atsbetright		=	(atsbet	==	g.home_team_id && (g.actual_home_score + g.spread) > g.actual_away_score) || (atsbet	==	g.away_team_id && (g.actual_home_score + g.spread) < g.actual_away_score)
+		# raise "atsbet is bad #{atsbet.inspect}" unless (atsbet == g.home_team_id or atsbet == g.away_team_id)
+		
+		atsbetright		=	(atsbet	==	g.home_team_id && 
+			(g.actual_home_score + g.spread) > g.actual_away_score) || 
+			(atsbet	==	g.away_team_id && 
+			(g.actual_home_score + g.spread) < g.actual_away_score)
 		atsbetpush		=	((g.actual_home_score + g.spread) == g.actual_away_score)
 		ysh['atsright']		+=	(atsbetright	?	1	:	0)
 		wsh['atsright']		+=	(atsbetright	?	1	:	0)
