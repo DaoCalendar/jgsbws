@@ -126,11 +126,11 @@ def soccer
 #				sleep 1
 				ss		=	Sum.find_by_key(keyy2)
 				puts "ss.inspect #{ss.inspect}"
-				outstr2	=	"<div id='yellow'>No Betting Info</div>"
-				div		=	"<div id='yellow'>$"
-				div		=	"<div id='red'>$"	if	!ss.nil?	&&	ss.amount	<	0.0
-				div		=	"<div id='green'>$"	if	!ss.nil?	&&	ss.amount	>	0.0
-				outstr2	=	div+ss.amount.r2.commify+'</div>'	unless	ss.nil?
+				outstr2	=	"#{Ydiv}No Betting Info#{Ediv}"
+				div		=	"#{Ydiv}$"
+				div		=	"#{Rdiv}$"	if	!ss.nil?	&&	ss.amount	<	0.0
+				div		=	"#{Gdiv}$"	if	!ss.nil?	&&	ss.amount	>	0.0
+				outstr2	=	div+ss.amount.r2.commify+Ediv	unless	ss.nil?
 				#		<a href="/main/main/2008?league=5">Joe Guy's 2008 NCAA Basketball Season</a><br>
 				title		=	"#{l[1][0]} - Season #{yh[keyy].chomp} - #{y}"
 #				ls		=	'<a href="/main/makscr/'+"#{season}?league=#{l[0]}"+'"'+"title='#{title}'>"+outstr2+'</a>'	unless	ss.nil?
@@ -163,6 +163,7 @@ def main
 	leagueid	=	params[:id][0,2].to_i
 #	raise "year #{year} leagueid #{leagueid}"
 	pred		=	Prediction.find_all_by_league(leagueid)
+	puts "pred length is #{pred.length.commify}"
 #	logger.warn pred.inspect
 	pred.sort!{|a,b|a["game_date_time"]<=>b["game_date_time"]}
 	proba	=	[]
@@ -177,6 +178,7 @@ def main
 	}
 #	logger.warn proba.sort.inspect
 #	raise
+	puts " proba length is #{proba.length}"
 	@main	=	[]
 	winprob	=	0.7
 	header	=	''
