@@ -16,6 +16,11 @@ def marginmaker(a, b)
 	return (((1.0/convml(a)+1.0/convml(b))-1.0)*100.0).r2
 end
 
+def makediv(mstr, oppsie = false)
+	return mstr.r2.commify if oppsie
+	(mstr.r2 > 0 ? Gdiv : (mstr.r2 == 0.0 ? Ydiv : Rdiv)) + "#{mstr.r2.commify}#{Ediv}"
+end
+
 
 #<Prediction id: 5405, game_date_time: "2009-04-05 04:00:00", league: 28, soccer_bet: nil, week: 426, 
 #		season: 0, home_team_id: 134, away_team_id: 115, spread: nil, predicted_home_score: 6, 
@@ -85,14 +90,17 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 	# now create a big array to send to the view
 	ba = []
 	ba << '<table "border"=1>'
-	ba << '<th><tr>'
-	ha = ['Date', 'Game Number', 'Day', 'Home', 'Away', 'Home Money Line', 'Away Money Line', 
-	'Over Line - Over/Under - Under Line', 'Home Run Line Spread & Odds', 'Away Run Line Spread & Odds']
+	headerrow = []
+	headerrow << '<tr>'
+	ha = ['Date, Game Number and Day', 'Home', 'Away', 'Home/Away Money Line', 
+		'Over Line - Over/Under - Under Line', 'Home/Away Run Line Spread & Odds']
 	ha.each{|h|
-		ba << wrap(h)
+		headerrow << wrap(h)
 	}
-	ba << '</tr></th>'
-	ba << '<br>'
+	headerrow << '</tr>'
+	ba 	<< "<th>" # install as header here
+	ba 	<< headerrow
+	ba 	<< '</th><br>'
 	uta 	= []
 	ss	= []
 	sh	= {} # streak hash
@@ -112,13 +120,12 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 	predgame= false
 	dayadj	= bba.first.day - 1
 	bba.each_with_index{|b, gn|
+		raise "bad score #{b.inspect}" unless ((b.homescore == -1 && b.awayscore == -1) || (b.homescore > -1 && b.awayscore > -1))
 		predgame = (b.homescore == -1)
 		if od == b.day
 			diddata		= true
 			outstr		= '<tr>'
-			outstr		+= wrap(b.date.strftime("%A %B %d %Y"))
-			outstr		+= wrap((gn+1).commify)
-			outstr		+= wrap((b.day-dayadj).commify)
+			outstr		+= wrap(b.date.strftime("%A %B %d %Y") +" - Day #{(b.day-dayadj).commify} - Game # #{(gn+1).commify}")
 
 			# dealing with home and away straight up wins and losses
 			hw		= (b.homescore > b.awayscore)
@@ -205,7 +212,7 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 				hdiv, ehdiv = Rdiv, Ediv unless hw
 			end
 			
-			outstr += wrap(hdiv+b.homemoneyline.to_s+ehdiv)
+#			outstr += wrap(hdiv+b.homemoneyline.to_s+ehdiv)
 			
 			adiv	= aediv = ''
 			if betaway
@@ -275,7 +282,7 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 			end
 
 			m	= marginmaker(b.homemoneyline, b.awaymoneyline)
-			outstr += wrap("#{adiv+b.awaymoneyline.to_s+eadiv} M-> #{m} %")
+			outstr += wrap(hdiv+b.homemoneyline.to_s+ehdiv+"/#{adiv+b.awaymoneyline.to_s+eadiv} M-> #{m} %")
 
 			# ou lines
 			itsunder= (b.homescore+b.awayscore) < b.overunder
@@ -314,7 +321,8 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 			ouw	+= 1 if odiv == Rdiv
 			our	+= 1 if udiv == Gdiv
 			ouw	+= 1 if udiv == Rdiv
-			outstr += wrap(odiv+b.oline.to_s+eodiv+' '+b.overunder.to_s+' '+udiv+b.uline.to_s+eudiv+" M->#{marginmaker(b.oline, b.uline)}%")
+			outstr	+= wrap(odiv+b.oline.to_s+eodiv+' '+b.overunder.to_s+' '+
+				udiv+b.uline.to_s+eudiv+" M->#{marginmaker(b.oline, b.uline)}%")
 			
 			# runlines
 			hrlev	= convml(b.homerunline) * b.probhrlcover
@@ -354,8 +362,8 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 				smlw	+= 1
 			end
 			
-			outstr += wrap(hdiv+b.homerunlinespread.to_s+' '+b.homerunline.to_s+hediv)
-			outstr += wrap(adiv+b.awayrunlinespread.to_s+' '+b.awayrunline.to_s+aediv)
+			outstr += wrap(hdiv+b.homerunlinespread.to_s+' '+b.homerunline.to_s+hediv+" / "+adiv+b.awayrunlinespread.to_s+' '+b.awayrunline.to_s+aediv+" M->#{marginmaker(b.homerunline, b.awayrunline)}%")
+#			outstr += wrap()
 #			outstr += wrap(sbetstr)
 			outstr += '</tr>'
 			ss << outstr.dup
@@ -373,8 +381,10 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 				ybr	+=	oubr  # over under
 				ybr	+=	smlbr # spread money line
 #				ybr	+=	obr + ubr # over and under
-				tstr	+= 	"<td>Won $#{todaybr.r2.commify} this day Won $#{ybr.r2.commify} this season so far"
-
+				todaybrstr	= makediv(todaybr)
+				ybrstr		= makediv(ybr)
+				tstr	+= 	"<td>Won #{todaybrstr} units this day 
+						Won #{ybrstr} units this season so far"
 				# streak bet
 				ystbr	+=	stbr
 				#		tstr	+=	"<td>Streak Bet Won $#{stbr.r2} today Won $#{ystbr.r2} this season</td>"
@@ -384,7 +394,12 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 				ysmlr	+= smlr
 				ysmlw	+= smlw
 				ysmlbr	+= smlbr
-				tstr	+= "<td>Spread moneyline - #{smlr} Right #{smlw} Wrong today - #{ysmlr} Right #{ysmlw} Wrong this year - $#{smlbr.r2} won today $#{ysmlbr.r2.commify} - Won this season #{(100.00*ysmlr/(ysmlr+ysmlw)).r2} % hit rate"
+				smlbrstr= makediv(smlbr)
+				ysmlbrstr = makediv(ysmlbr)
+				tstr	+= "<td>Spread moneyline - #{smlr} Right #{smlw} Wrong today - 
+					#{ysmlr} Right #{ysmlw} Wrong this year - 
+					#{smlbrstr} units won today #{ysmlbrstr} units won this season 
+					#{(100.00*ysmlr/(ysmlr+ysmlw)).r2} % hit rate"
 				smlr	= smlw = 0
 				smlbr	= 0.0
 				
@@ -398,25 +413,47 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 				yuc	+= uc
 				yobr	+= obr
 				yubr	+= ubr
-				tstr	+= "<td>Over/Under - #{our} Right #{ouw} Wrong today - #{your} Right #{youw} Wrong this year - $#{oubr.r2} Won today $#{youbr.r2.commify} Won this season - #{(100.00*your/(your+youw)).r2} % hit rate - #{oc} over #{uc} under today - #{yoc.commify} over #{yuc.commify} under this season - $#{obr.r2} won by over $#{ubr.r2} won by under today - $#{yobr.r2} - won by over $#{yubr.r2} won by under this year "
+				oubrstr	= makediv(oubr)
+				youbrstr= makediv(youbr)
+				yobrstr	= makediv(yobr)
+				yubrstr	= makediv(yubr)
+				obrstr	= makediv(obr)
+				ubrstr	= makediv(ubr)
+				tstr	+= "<td>Over/Under - #{our} Right #{ouw} Wrong today - #{your} Right #{youw} Wrong this year - #{oubrstr} units won today #{youbrstr} units won this season - #{(100.00*your/(your+youw)).r2} % hit rate - #{oc} over #{uc} under today - #{yoc.commify} over #{yuc.commify} under this season - 
+					#{obrstr} units won by over #{ubrstr} units won by under today - 
+					#{yobrstr} units won by over #{yubrstr} units won by under this year "
 				our	= ouw = oc = uc = obr = ubr = 0
 				oubr	= 0.0
 
 				# moneyline	
 				ymlr	+=	mlr
 				ymlw	+=	mlw
-				tstr	+=  "<td>#{mlr} Moneyline right #{mlw} Moneyline wrong #{(100.0*mlr/(mlr+mlw)).r2}% Won $#{mlbr.r2.commify} today $#{ymlbr.r2.commify} this year<br> Season #{ymlr.commify} Moneyline right #{ymlw.commify} Moneyline wrong #{(100.0*ymlr/(ymlr+ymlw)).r2}%</td>"
+				mlrstr	=	makediv(mlr, true)
+				mlwstr	=	makediv(mlw, true)
+				mlbrstr	=	makediv(mlbr)
+				ymlbrstr=	makediv(ymlbr)
+				ymlrstr	=	makediv(ymlr, true)
+				ymlwstr	=	makediv(ymlw, true)
+				tstr	+=	"<td>Moneyline - #{mlrstr} right #{mlwstr} wrong #{(100.0*mlr/(mlr+mlw)).r2}% - 
+						Won #{mlbrstr} units today #{ymlbrstr} units this year<br> 
+						Season - #{ymlrstr} right #{ymlwstr} wrong #{(100.0*ymlr/(ymlr+ymlw)).r2}%</td>"
 				mlr	= mlw = 0
 				mlbr	=	0.0
 
 				# straight up
 				ysur	+=	sur
 				ysuw	+=	suw
-				tstr	+=  "<td>#{sur} Straight Up Right #{suw} Straight Up Wrong #{(100.0*sur/(sur+suw)).r2}%</td><td>Season #{ysur.commify} Straight Up Right #{ysuw.commify} Straight Up Wrong #{(100.0*ysur/(ysur+ysuw)).r2}%</td>"
+				surstr	=	makediv(sur, true)
+				suwstr	=	makediv(suw, true)
+				ysurstr	=	makediv(ysur, true)
+				ysuwstr	=	makediv(ysuw, true)
+				tstr	+=	"<td>#{surstr} Straight Up Right #{suwstr} Straight Up Wrong #{(100.0*sur/(sur+suw)).r2}%</td><td>Season 
+						#{ysurstr} Straight Up Right #{ysuwstr} Straight Up Wrong #{(100.0*ysur/(ysur+ysuw)).r2}%</td>"
 				sur	= suw = 0
 
 				tstr	+= '</tr>'
-				ss << tstr
+				ss	<< headerrow
+				ss	<< tstr
 			end
 			od = b.day
 		end
