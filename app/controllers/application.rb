@@ -16,10 +16,10 @@ Futuretime		=	Time.local(2_012,1,1)
 Secondsperday		=	24	*	3_600
 Secondsinthreedays	=	2.5	*	24	*	3600	#	days*hour/day*seconds/hour
 NO			=	"No Opinion"
-Gdiv			=	"<div id='green'>"
-Rdiv			=	"<div id='red'>"
-Ydiv			=	"<div id='yellow'>"
-Ediv			=	'</div>'
+Rdiv			=	'<span class="red">'
+Gdiv			=	'<span class="green">'
+Ydiv			=	'<span class="yellow">'
+Ediv			=	'</span>'
 Fpc			=	0.045
 Tpf			=	2.5
 Td			=	"<td>"
@@ -51,7 +51,7 @@ class Numeric
 		  retme	=	retme	+	'0' unless (retme.length - retme.index('.'))	==	3
 	  end
 	  return retme
-  end 
+  end
   def	currency()
     sstr = to_s+".00"
     sstr.gsub!("..",".") if sstr.include?("..")
@@ -60,7 +60,9 @@ class Numeric
   def	r2()
 #	return self
 	begin
-		return ((((self+0.005)*100.0).to_i) / 100.00)
+		retval	= ((((self+0.005)*100.0).to_i) / 100.00)
+		return retval.to_i if retval == retval.to_i
+		return retval
 	rescue
 #		raise "r2 failed - self is #{self}"
 		return 0.0
@@ -281,7 +283,7 @@ def do_season(newpred,	year,	winprob	=	0.7,	header	=	nil, gap	=	Secondsinthreeda
 				hplprize	=	hlose	if	g.actual_home_score	+	h.plhome	<	g.actual_away_score
 				raise if hdiv.nil?
 				begin
-					thisrow	+=	wrap("#{hdiv}#{h.plhome}(#{h.plhodds})#{plevh.r3}</div>")
+					thisrow	+=	wrap("#{hdiv}#{h.plhome}(#{h.plhodds})#{plevh.r3}#{Ediv}")
 				rescue Exception => e
 					raise "#{e} h.inspect #{h.inspect}"
 				end
@@ -300,21 +302,25 @@ def do_season(newpred,	year,	winprob	=	0.7,	header	=	nil, gap	=	Secondsinthreeda
 				aplprize	=	alose	if	g.actual_away_score	+	h.plaway	<	g.actual_home_score
 				raise if adiv.nil?
 				begin
-					thisrow	+=	wrap("#{adiv}#{h.plaway}(#{h.plaodds})#{pleva.r3}</div>")
+					thisrow	+=	wrap("#{adiv}#{h.plaway}(#{h.plaodds})#{pleva.r3}#{Ediv}")
 				rescue Exception => e
 					raise "#{e} h.inspect #{h.inspect}"
 				end
 			end
-		else
+		else # is NOT nhl
 			# spread
 			theader	+=	wrap('Spread')	if	header.empty?
 			thisrow	+=	wrap(g.spread)
 			# ats pick
 			theader	+=	wrap('Spread Pick')	if	header.empty?
 			spick	=	'Wierd'
-			spick	=	" - "+nameconv(Team.find(g.home_team_id).name, 1)+" - "+g.prob_home_win_ats.r2.to_s if g.prob_home_win_ats	>	0.5
-			spick	=	" - "+nameconv(Team.find(g.away_team_id).name, 1)+" - "+g.prob_away_win_ats.r2.to_s if g.prob_away_win_ats	>	0.5
-			wrapme	=	(!atsbet.nil? ? (atsbet == g.home_team_id ? nameconv(Team.find(g.home_team_id).name, 1) : nameconv(Team.find(g.away_team_id).name, 1))	:	NO) 
+			spick	=	" - "+nameconv(Team.find(g.home_team_id).name, 1)+" - "+
+				g.prob_home_win_ats.r2.to_s if g.prob_home_win_ats	>	0.5
+			spick	=	" - "+nameconv(Team.find(g.away_team_id).name, 1)+" - "+
+				g.prob_away_win_ats.r2.to_s if g.prob_away_win_ats	>	0.5
+			wrapme	=	(!atsbet.nil? ? (atsbet == g.home_team_id ? 
+				nameconv(Team.find(g.home_team_id).name, 1) : 
+				nameconv(Team.find(g.away_team_id).name, 1))	:	NO) 
 			wrapme	+=	spick if wrapme	== NO
 			thisrow	+=	wrap(wrapme,	atsbet,	atsbetright,	atsbetpush)
 			# ou
@@ -411,14 +417,14 @@ end	#	do_season
 def	wrap(str, picked=nil, pickright=nil, pickpush=nil, ou=false)
 	#	if ou
 	#		return "<td>#{str}</td>" if picked.nil? # no opinion in ou
-	#		return "<td><div id='yellow'>#{str}</div></td>" if pickpush
-	#		return "<td><div id='green'>#{str}</div></td>" if pickright
-	#		return "<td><div id='red'>#{str}</div></td>" unless pickright
+	#		return "<td><div id='yellow'>#{str}#{Ediv}</td>" if pickpush
+	#		return "<td><div id='green'>#{str}#{Ediv}</td>" if pickright
+	#		return "<td><div id='red'>#{str}#{Ediv}</td>" unless pickright
 	#	else
 	return "<td>#{str}</td>" if (picked.nil? or !picked)
-	return "<td>#{Ydiv}#{str}</div></td>" if !picked.nil? && pickpush
-	return "<td>#{Gdiv}#{str}</div></td>" if !picked.nil? && pickright
-	return "<td>#{Rdiv}#{str}</div></td>" if !picked.nil? && !pickright
+	return "<td>#{Ydiv}#{str}#{Ediv}</td>" if !picked.nil? && pickpush
+	return "<td>#{Gdiv}#{str}#{Ediv}</td>" if !picked.nil? && pickright
+	return "<td>#{Rdiv}#{str}#{Ediv}</td>" if !picked.nil? && !pickright
 	#	end
 	raise "str #{str} pick #{picked} pickright #{pickright} pickpush #{pickpush}"
 end
@@ -445,7 +451,7 @@ def	summarytime(pweek,	oldweek,	sumhash,	beta,	outstr,	bph,	prevweeksprofit,	for
 		}
 		div		=	Gdiv	if	st	>	0
 		div		=	Rdiv	if	st	<	0
-		toutstr	=	Tr+"<td>#{div}Week #{oldweek} - #{wc.commify} bets Total -> $#{st.r2.commify} yyyyWeeks profit -> $xxxxxxxxxx</div></div></td>"
+		toutstr	=	Tr+"<td>#{div}Week #{oldweek} - #{wc.commify} bets Total -> $#{st.r2.commify} yyyyWeeks profit -> $xxxxxxxxxx#{Ediv}#{Ediv}</td>"
 		oldweek	=	pweek
 		oldleague	=	''
 		beta.each{|b|
@@ -462,10 +468,10 @@ def	summarytime(pweek,	oldweek,	sumhash,	beta,	outstr,	bph,	prevweeksprofit,	for
 					nl		=	b[0,	2]
 #					puts "nl #{nl}"
 					tstr		=	"Total Profit from #{Bookienamehash[nl]} -> $#{bph[nl].r2.commify}"	if	bph[nl]	>	0.0
-					tstr		=	Rdiv+"Total Loss from #{Bookienamehash[nl]} -> $#{bph[nl].r2.commify}</div>"	if	bph[nl]	<	0.0
+					tstr		=	Rdiv+"Total Loss from #{Bookienamehash[nl]} -> $#{bph[nl].r2.commify}#{Ediv}"	if	bph[nl]	<	0.0
 					oldleague	=	nl
 				end
-				toutstr	+=	wrap(div	+	tstr + wc.commify+' '+b+' '+(wc > 1 ? ' bets -> $' : ' bet -> $' )+	profit.r2.commify	+	'</div>')
+				toutstr	+=	wrap(div	+	tstr + wc.commify+' '+b+' '+(wc > 1 ? ' bets -> $' : ' bet -> $' )+	profit.r2.commify	+	'#{Ediv}')
 				profit	=	nil
 			rescue
 				toutstr	+=	Na
@@ -706,7 +712,7 @@ def	makeswp(lid,	pid,	bet	=	45.0)
 					rescue
 						bph[bookie[0,2]]	=	prize
 					end
-					thisrow	+=	wrap(odiv+s[b].to_s+' -> '+s[b+'_ev'].to_s+"<br> -> $#{bankroll.r2.commify}"+margintext+'</div>')
+					thisrow	+=	wrap(odiv+s[b].to_s+' -> '+s[b+'_ev'].to_s+"<br> -> $#{bankroll.r2.commify}"+margintext+'#{Ediv}')
 				else
 					thisrow	+=	wrap(s[b].to_s+' -> '+s[b+'_ev'].to_s+"<br> -> $#{bankroll.r2.commify}"+margintext)
 				end
@@ -752,7 +758,7 @@ def	makeswp(lid,	pid,	bet	=	45.0)
 		begin
 			div	=	Gdiv	if	sumhash['year'+b]	>	0
 			div	=	Rdiv	if	sumhash['year'+b]	<	0
-			toutstr	+=	wrap(div	+	sumhash['yearcount'+b].commify	+	((sumhash['yearcount'+b] > 1) ? ' bets -> $' : ' bet -> $' )	+	sumhash['year'+b].r2.commify	+	'</div>')
+			toutstr	+=	wrap(div	+	sumhash['yearcount'+b].commify	+	((sumhash['yearcount'+b] > 1) ? ' bets -> $' : ' bet -> $' )	+	sumhash['year'+b].r2.commify	+	'#{Ediv}')
 		rescue
 			toutstr	+=	Na
 		end
