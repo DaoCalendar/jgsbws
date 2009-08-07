@@ -48,7 +48,7 @@ def ssdec(sur,suw)
 	retstr = "<br><br>Statistical Hypotheses Test<br><br>Sample size is #{sum.commify}
 	<br><br>Null Hypothesis is #{nh.r2.commify}
 	<br><br>Std Dev is #{sd.r2}
-	<br><br>95% confidence chance interval is #{lc.r2.commify} to #{hc.r2.commify} 
+	<br><br>95% confidence chance interval is #{lc.commify} to #{hc.commify} 
 	<br><br>Number selected correctly is #{sur.commify} 
 
 	"
@@ -144,7 +144,7 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 	yuc	= uc 	= yoc	= oc	= 0
 	yobr	= obr	= yubr	= ubr	= 0.0
 	oupc	= youpc = 0 			# ou push count
-	gc	= 0				# daily game count
+	gc	= ygc	= 0			# daily and yearly game count
 	diddata	= false
 	predgame= false
 	dayadj	= bba.first.day - 1
@@ -152,10 +152,11 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 		raise "bad score #{b.inspect}" unless ((b.homescore == -1 && b.awayscore == -1) || (b.homescore > -1 && b.awayscore > -1))
 		predgame = (b.homescore == -1)
 		if od == b.day
+			ygc 		+= 1
 			gc 		+= 1
 			diddata		= true
 			outstr		= '<tr>'
-			outstr		+= wrap(b.date.strftime("%A %B %d %Y") +" - Day #{(b.day-dayadj).commify} - Game # #{(gn+1).commify}")
+			outstr		+= wrap(b.date.strftime("%A %B %d %Y") +" - Day #{(b.day-dayadj).commify} - Game # #{ygc.commify}")
 
 			# dealing with home and away straight up wins and losses
 			hw		= (b.homescore > b.awayscore)
