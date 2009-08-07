@@ -36,24 +36,23 @@ def makehr(substr='')
 end
 
 
-def ssdec(sur,suw)
-	sum = sur+suw
-	nh  = sum / 2.0
-	sd = Math.sqrt(sum * 0.25)
-	lc = ((nh - 1.96*sd)+0.5).to_i
-	hc = ((nh + 1.96*sd)+0.5).to_i
+def ssdec(sur, suw)
+	sum	= sur+suw
+	nh	= sum / 2.0
+	sd	= Math.sqrt(sum * 0.25)
+	lc	= ((nh - 1.96*sd)+0.5).to_i
+	hc	= ((nh + 1.96*sd)+0.5).to_i
 #	compfac = Math.sqrt(0.25/sum)
 #	clc = nh - 1.96*sd*compfac
 #	chc = nh + 1.96*sd*compfac
-	retstr = "<br><br>Statistical Hypotheses Test<br><br>Sample size is #{sum.commify}
+	retstr	= "<br><br>Statistical Hypotheses Test<br><br>Sample size is #{sum.commify}
 	<br><br>Null Hypothesis is #{nh.r2.commify}
 	<br><br>Std Dev is #{sd.r2}
-	<br><br>95% confidence chance interval is #{lc.commify} to #{hc.commify} 
-	<br><br>Number selected correctly is #{sur.commify} 
-
+	<br><br>95% confidence chance interval is #{lc.commify} to #{hc.commify}
+	<br><br>Number selected correctly is #{sur.commify}
 	"
-	retstr += "<br><br>This is statistically signficantly better than chance to 95% confidence" if sur < lc or sur > hc
-	retstr += "<br><br>This is NOT statistically signficantly better than chance to 95% confidence" unless (sur < lc or sur > hc)
+	retstr	+= "<br><br>This is statistically signficantly better than chance to 95% confidence." if sur < lc or sur > hc
+	retstr	+= "<br><br>This is NOT statistically signficantly better than chance to 95% confidence." unless (sur < lc or sur > hc)
 	return retstr
 end
 
@@ -143,7 +142,8 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 	stbr	= ystbr			= 0.0
 	yuc	= uc 	= yoc	= oc	= 0
 	yobr	= obr	= yubr	= ubr	= 0.0
-	oupc	= youpc = 0 			# ou push count
+	alloupc	= yalloupc 		= 0	# all ou push count
+	soupc	= ysoupc 		= 0	# ou push count for games we selected
 	gc	= ygc	= 0			# daily and yearly game count
 	diddata	= false
 	predgame= false
@@ -320,12 +320,14 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 			uea	= convml(b.overunder) * b.uprob
 			eodiv	= odiv = eudiv = udiv = ''
 			if ((b.homescore+b.awayscore) == b.overunder) # push code
-				oupc += 1
+				alloupc += 1
 				if oea	> Betou
+					soupc	+= 1
 					eodiv	= Ediv
 					odiv	= Ydiv
 				end
 				if uea	> Betou
+					soupc	+= 1
 					eudiv	= Ediv
 					udiv	= Ydiv
 				end
@@ -444,8 +446,10 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 				ysmlbr	+= smlbr
 				smlbrstr= makediv(smlbr)
 				ysmlbrstr = makediv(ysmlbr)
-				tstr	+= "<td>Spread moneyline<br><br>#{smlr} Right #{smlw} Wrong today<br><br>
-					#{ysmlr} Right #{ysmlw} Wrong this year<br><br>
+				tstr	+= "<td>Spread moneyline<br><br>#{smlr} Right 
+					<br>#{smlw} Wrong today<br><br>
+					#{ysmlr} Right 
+					<br>#{ysmlw} Wrong this season<br><br>
 					#{smlbrstr} units won today #{ysmlbrstr} units won this season 
 					#{(100.00*ysmlr/(ysmlr+ysmlw)).r2} % hit rate"
 				smlr	= smlw = 0
@@ -461,24 +465,33 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 				yuc	+= uc
 				yobr	+= obr
 				yubr	+= ubr
-				youpc	+= oupc
+				yalloupc+= alloupc
+				ysoupc	+= soupc
 				oubrstr	= makediv(oubr)
 				youbrstr= makediv(youbr)
 				yobrstr	= makediv(yobr)
 				yubrstr	= makediv(yubr)
 				obrstr	= makediv(obr)
 				ubrstr	= makediv(ubr)
-				pushstr = oupc > 0 ? "#{oupc} Pushes" : ""
-				ypshstr = youpc > 0 ? "#{youpc.commify} Pushes" : ""
-				tstr	+= "<td>Over/Under<br><br>#{our} Right #{ouw} Wrong #{pushstr} today<br><br>
-					#{your} Right #{youw} Wrong #{ypshstr} this year<br><br>#{oubrstr} units won today 
-					#{youbrstr} units won this season<br><br>#{(100.00*your/(your+youw)).r2} % hit rate<br><br>
-					#{oc} over #{uc} under today<br><br>#{yoc.commify} over #{yuc.commify} under this season<br><br>
-					#{obrstr} units won by over #{ubrstr} units won by under today<br><br>
-					#{yobrstr} units won by over #{yubrstr} units won by under this year "
+				spushstr= soupc > 0 ? "<br>#{soupc} Selected Pushes" : ""
+				ypshstr = ysoupc > 0 ? "<br>#{ysoupc.commify} Selected Pushes" : ""
+				apushstr= alloupc > 0 ? "<br>#{alloupc} Total Pushes" : ""
+				yapshstr= yalloupc > 0 ? "<br>#{yalloupc.commify} Total Pushes" : ""
+				tstr	+= "<td>Over/Under<br><br>#{our} Right 
+					<br>#{ouw} Wrong #{spushstr} today
+					<br><br>#{your} Right
+					<br>#{youw} Wrong #{ypshstr} this season
+					<br><br>#{oubrstr} units won today 
+					#{youbrstr} units won this season
+					<br><br>#{(100.00*your/(your+youw)).r2} % hit rate
+					<br><br>#{oc} over #{uc} under today
+					<br><br>#{yoc.commify} over #{yuc.commify} under #{yapshstr} this season
+					<br><br>#{obrstr} units won by over #{ubrstr} units won by under today
+					<br><br>#{yobrstr} units won by over #{yubrstr} units won by under this season"
 				our	= ouw = oc = uc = obr = ubr = 0
 				oubr	= 0.0
-				oupc	= 0
+				alloupc	= 0
+				soupc	= 0
 
 				# moneyline	
 				ymlr	+=	mlr
@@ -489,9 +502,11 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 				ymlbrstr=	makediv(ymlbr)
 				ymlrstr	=	makediv(ymlr, true)
 				ymlwstr	=	makediv(ymlw, true)
-				tstr	+=	"<td>Moneyline<br><br>#{mlrstr} right #{mlwstr} wrong #{(100.0*mlr/(mlr+mlw)).r2}%<br><br>
-						Won #{mlbrstr} units today #{ymlbrstr} units this year<br><br> 
-						Season<br><br>#{ymlrstr} right #{ymlwstr} wrong #{(100.0*ymlr/(ymlr+ymlw)).r2}%</td>"
+				tstr	+=	"<td>Moneyline<br><br>#{mlrstr} right 
+						<br>#{mlwstr} wrong #{(100.0*mlr/(mlr+mlw)).r2}%<br><br>
+						Won #{mlbrstr} units today #{ymlbrstr} units this season<br><br> 
+						Season<br><br>#{ymlrstr} right 
+						<br>#{ymlwstr} wrong #{(100.0*ymlr/(ymlr+ymlw)).r2}%</td>"
 				mlr	= mlw = 0
 				mlbr	=	0.0
 
@@ -502,10 +517,13 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 				suwstr	=	makediv(suw, true)
 				ysurstr	=	makediv(ysur, true)
 				ysuwstr	=	makediv(ysuw, true)
-				tstr	+=	"<td>#{surstr} Straight Up Right 
-						#{suwstr} Straight Up Wrong #{(100.0*sur/(sur+suw)).r2}%</td>
-						<td>#{ysurstr} Straight Up Right 
-						#{ysuwstr} Straight Up Wrong 
+				tstr	+=	"<td>Straight Up 
+						<br><br>#{surstr} Right
+						<br>#{suwstr} Wrong
+						#{(100.0*sur/(sur+suw)).r2}%</td>
+						<td>Straight Up
+						<br><br>#{ysurstr} Right
+						<br>#{ysuwstr} Wrong
 						#{(100.0*ysur/(ysur+ysuw)).r2}% #{ssdec(ysur,ysuw)}</td>"
 				sur	= suw = 0
 
