@@ -21,6 +21,41 @@ def makediv(mstr, oppsie = false)
 	(mstr.r2 > 0 ? Gdiv : (mstr.r2 == 0.0 ? Ydiv : Rdiv)) + "#{mstr.r2.commify}#{Ediv}"
 end
 
+def makehr(substr='')
+	headerrow = []
+	headerrow << '<tr>'
+	s0	= "Date, Game Number and Dayzzz"
+	s0.gsub!('zzz',substr)
+	ha = [s0, 'Home', 'Away', 'Home/Away Money Line', 
+		'Over Line - Over/Under - Under Line', 'Home/Away Run Line Spread & Odds']
+	ha.each{|h|
+		headerrow << wrap(h)
+	}
+	headerrow << '</tr>'
+	return headerrow
+end
+
+
+def ssdec(sur,suw)
+	sum = sur+suw
+	nh  = sum / 2.0
+	sd = Math.sqrt(sum * 0.25)
+	lc = ((nh - 1.96*sd)+0.5).to_i
+	hc = ((nh + 1.96*sd)+0.5).to_i
+#	compfac = Math.sqrt(0.25/sum)
+#	clc = nh - 1.96*sd*compfac
+#	chc = nh + 1.96*sd*compfac
+	retstr = "<br><br>Statistical Hypotheses Test<br><br>Sample size is #{sum.commify}
+	<br><br>Null Hypothesis is #{nh.r2.commify}
+	<br><br>Std Dev is #{sd.r2}
+	<br><br>95% confidence chance interval is #{lc.r2.commify} to #{hc.r2.commify} 
+	<br><br>Number selected correctly is #{sur.commify} 
+
+	"
+	retstr += "<br><br>This is statistically signficantly better than chance to 95% confidence" if sur < lc or sur > hc
+	retstr += "<br><br>This is NOT statistically signficantly better than chance to 95% confidence" unless (sur < lc or sur > hc)
+	return retstr
+end
 
 #<Prediction id: 5405, game_date_time: "2009-04-05 04:00:00", league: 28, soccer_bet: nil, week: 426, 
 #		season: 0, home_team_id: 134, away_team_id: 115, spread: nil, predicted_home_score: 6, 
@@ -90,17 +125,9 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 	# now create a big array to send to the view
 	ba = []
 	ba << '<table "border"=1>'
-	headerrow = []
-	headerrow << '<tr>'
-	ha = ['Date, Game Number and Day', 'Home', 'Away', 'Home/Away Money Line', 
-		'Over Line - Over/Under - Under Line', 'Home/Away Run Line Spread & Odds']
-	ha.each{|h|
-		headerrow << wrap(h)
-	}
-	headerrow << '</tr>'
 	ba 	<< "<th>" # install as header here
-	ba 	<< headerrow
-	ba 	<< '</th><br>'
+	ba 	<< makehr
+	ba 	<< '</th><br><br>'
 	uta 	= []
 	ss	= []
 	sh	= {} # streak hash
@@ -116,6 +143,8 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 	stbr	= ystbr			= 0.0
 	yuc	= uc 	= yoc	= oc	= 0
 	yobr	= obr	= yubr	= ubr	= 0.0
+	oupc	= youpc = 0 			# ou push count
+	gc	= 0				# daily game count
 	diddata	= false
 	predgame= false
 	dayadj	= bba.first.day - 1
@@ -123,6 +152,7 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 		raise "bad score #{b.inspect}" unless ((b.homescore == -1 && b.awayscore == -1) || (b.homescore > -1 && b.awayscore > -1))
 		predgame = (b.homescore == -1)
 		if od == b.day
+			gc 		+= 1
 			diddata		= true
 			outstr		= '<tr>'
 			outstr		+= wrap(b.date.strftime("%A %B %d %Y") +" - Day #{(b.day-dayadj).commify} - Game # #{(gn+1).commify}")
@@ -285,45 +315,60 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 			outstr += wrap(hdiv+b.homemoneyline.to_s+ehdiv+"/#{adiv+b.awaymoneyline.to_s+eadiv} M-> #{m} %")
 
 			# ou lines
-			itsunder= (b.homescore+b.awayscore) < b.overunder
-			uc	+= 1 if itsunder
-			oc	+= 1 unless itsunder
-			ubr	+= (itsunder ? convml(b.uline) - 1.0 : -1)
-			obr	+= (itsunder ? -1 : convml(b.oline) - 1.0)
-			
 			oea	= convml(b.overunder) * b.oprob
 			uea	= convml(b.overunder) * b.uprob
 			eodiv	= odiv = eudiv = udiv = ''
-			if oea	> Betou
-				eodiv	= Ediv
-				odiv	= Gdiv	unless itsunder
-				odiv	= Rdiv	if itsunder
-			end
-			if uea	> Betou
-				eudiv	= Ediv
-				udiv	= Gdiv	if itsunder
-				udiv	= Rdiv	unless itsunder
-			end
-#			eodiv	= odiv = eudiv = udiv = ''	if predgame
-			odiv, eodiv	= Ydiv, Ediv if predgame && !odiv.empty?
-			udiv, eodiv	= Ydiv, Ediv if predgame && !udiv.empty?
-#			br	+= -1 if odiv	== Rdiv
-#			br	+= -1 if udiv	== Rdiv
-#			br	+= convml(b.oline) - 1.0 if odiv == Gdiv
-#			br	+= convml(b.uline) - 1.0 if udiv == Gdiv
-
-			oubr	+= -1 if odiv	== Rdiv
-			oubr	+= -1 if udiv	== Rdiv
-			oubr	+= convml(b.oline) - 1.0 if odiv == Gdiv
-			oubr	+= convml(b.uline) - 1.0 if udiv == Gdiv
-
-			our	+= 1 if odiv == Gdiv
-			ouw	+= 1 if odiv == Rdiv
-			our	+= 1 if udiv == Gdiv
-			ouw	+= 1 if udiv == Rdiv
+			if ((b.homescore+b.awayscore) == b.overunder) # push code
+				oupc += 1
+				if oea	> Betou
+					eodiv	= Ediv
+					odiv	= Ydiv
+				end
+				if uea	> Betou
+					eudiv	= Ediv
+					udiv	= Ydiv
+				end
+			else 
+				# not a push
+				itsunder= (b.homescore+b.awayscore) < b.overunder
+				uc	+= 1 if itsunder
+				oc	+= 1 unless itsunder
+				ubr	+= (itsunder ? convml(b.uline) - 1.0 : -1)
+				obr	+= (itsunder ? -1 : convml(b.oline) - 1.0)
+				
+#				oea	= convml(b.overunder) * b.oprob
+#				uea	= convml(b.overunder) * b.uprob
+#				eodiv	= odiv = eudiv = udiv = ''
+				if oea	> Betou
+					eodiv	= Ediv
+					odiv	= Gdiv	unless itsunder
+					odiv	= Rdiv	if itsunder
+				end
+				if uea	> Betou
+					eudiv	= Ediv
+					udiv	= Gdiv	if itsunder
+					udiv	= Rdiv	unless itsunder
+				end
+#				eodiv	= odiv = eudiv = udiv = ''	if predgame
+				odiv, eodiv	= Ydiv, Ediv if predgame && !odiv.empty?
+				udiv, eodiv	= Ydiv, Ediv if predgame && !udiv.empty?
+#				br	+= -1 if odiv	== Rdiv
+#				br	+= -1 if udiv	== Rdiv
+#				br	+= convml(b.oline) - 1.0 if odiv == Gdiv
+#				br	+= convml(b.uline) - 1.0 if udiv == Gdiv
+	
+				oubr	+= -1 if odiv	== Rdiv
+				oubr	+= -1 if udiv	== Rdiv
+				oubr	+= convml(b.oline) - 1.0 if odiv == Gdiv
+				oubr	+= convml(b.uline) - 1.0 if udiv == Gdiv
+			
+				our	+= 1 if odiv == Gdiv
+				ouw	+= 1 if odiv == Rdiv
+				our	+= 1 if udiv == Gdiv
+				ouw	+= 1 if udiv == Rdiv
+			end # push code
 			outstr	+= wrap(odiv+b.oline.to_s+eodiv+' '+b.overunder.to_s+' '+
 				udiv+b.uline.to_s+eudiv+" M->#{marginmaker(b.oline, b.uline)}%")
-			
 			# runlines
 			hrlev	= convml(b.homerunline) * b.probhrlcover
 			arlev	= convml(b.awayrunline) * b.probarlcover
@@ -362,7 +407,9 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 				smlw	+= 1
 			end
 			
-			outstr += wrap(hdiv+b.homerunlinespread.to_s+' '+b.homerunline.to_s+hediv+" / "+adiv+b.awayrunlinespread.to_s+' '+b.awayrunline.to_s+aediv+" M->#{marginmaker(b.homerunline, b.awayrunline)}%")
+			outstr += wrap(hdiv+b.homerunlinespread.to_s+' '+b.homerunline.to_s+hediv+
+				" / "+adiv+b.awayrunlinespread.to_s+' '+b.awayrunline.to_s+aediv+
+				" M->#{marginmaker(b.homerunline, b.awayrunline)}%")
 #			outstr += wrap()
 #			outstr += wrap(sbetstr)
 			outstr += '</tr>'
@@ -396,15 +443,15 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 				ysmlbr	+= smlbr
 				smlbrstr= makediv(smlbr)
 				ysmlbrstr = makediv(ysmlbr)
-				tstr	+= "<td>Spread moneyline - #{smlr} Right #{smlw} Wrong today - 
-					#{ysmlr} Right #{ysmlw} Wrong this year - 
+				tstr	+= "<td>Spread moneyline<br><br>#{smlr} Right #{smlw} Wrong today<br><br>
+					#{ysmlr} Right #{ysmlw} Wrong this year<br><br>
 					#{smlbrstr} units won today #{ysmlbrstr} units won this season 
 					#{(100.00*ysmlr/(ysmlr+ysmlw)).r2} % hit rate"
 				smlr	= smlw = 0
 				smlbr	= 0.0
-				
+
 				# dr traal 905 826 2881
-				
+
 				# ou
 				your	+= our
 				youw	+= ouw
@@ -413,17 +460,24 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 				yuc	+= uc
 				yobr	+= obr
 				yubr	+= ubr
+				youpc	+= oupc
 				oubrstr	= makediv(oubr)
 				youbrstr= makediv(youbr)
 				yobrstr	= makediv(yobr)
 				yubrstr	= makediv(yubr)
 				obrstr	= makediv(obr)
 				ubrstr	= makediv(ubr)
-				tstr	+= "<td>Over/Under - #{our} Right #{ouw} Wrong today - #{your} Right #{youw} Wrong this year - #{oubrstr} units won today #{youbrstr} units won this season - #{(100.00*your/(your+youw)).r2} % hit rate - #{oc} over #{uc} under today - #{yoc.commify} over #{yuc.commify} under this season - 
-					#{obrstr} units won by over #{ubrstr} units won by under today - 
+				pushstr = oupc > 0 ? "#{oupc} Pushes" : ""
+				ypshstr = youpc > 0 ? "#{youpc.commify} Pushes" : ""
+				tstr	+= "<td>Over/Under<br><br>#{our} Right #{ouw} Wrong #{pushstr} today<br><br>
+					#{your} Right #{youw} Wrong #{ypshstr} this year<br><br>#{oubrstr} units won today 
+					#{youbrstr} units won this season<br><br>#{(100.00*your/(your+youw)).r2} % hit rate<br><br>
+					#{oc} over #{uc} under today<br><br>#{yoc.commify} over #{yuc.commify} under this season<br><br>
+					#{obrstr} units won by over #{ubrstr} units won by under today<br><br>
 					#{yobrstr} units won by over #{yubrstr} units won by under this year "
 				our	= ouw = oc = uc = obr = ubr = 0
 				oubr	= 0.0
+				oupc	= 0
 
 				# moneyline	
 				ymlr	+=	mlr
@@ -434,9 +488,9 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 				ymlbrstr=	makediv(ymlbr)
 				ymlrstr	=	makediv(ymlr, true)
 				ymlwstr	=	makediv(ymlw, true)
-				tstr	+=	"<td>Moneyline - #{mlrstr} right #{mlwstr} wrong #{(100.0*mlr/(mlr+mlw)).r2}% - 
-						Won #{mlbrstr} units today #{ymlbrstr} units this year<br> 
-						Season - #{ymlrstr} right #{ymlwstr} wrong #{(100.0*ymlr/(ymlr+ymlw)).r2}%</td>"
+				tstr	+=	"<td>Moneyline<br><br>#{mlrstr} right #{mlwstr} wrong #{(100.0*mlr/(mlr+mlw)).r2}%<br><br>
+						Won #{mlbrstr} units today #{ymlbrstr} units this year<br><br> 
+						Season<br><br>#{ymlrstr} right #{ymlwstr} wrong #{(100.0*ymlr/(ymlr+ymlw)).r2}%</td>"
 				mlr	= mlw = 0
 				mlbr	=	0.0
 
@@ -447,12 +501,17 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 				suwstr	=	makediv(suw, true)
 				ysurstr	=	makediv(ysur, true)
 				ysuwstr	=	makediv(ysuw, true)
-				tstr	+=	"<td>#{surstr} Straight Up Right #{suwstr} Straight Up Wrong #{(100.0*sur/(sur+suw)).r2}%</td><td>Season 
-						#{ysurstr} Straight Up Right #{ysuwstr} Straight Up Wrong #{(100.0*ysur/(ysur+ysuw)).r2}%</td>"
+				tstr	+=	"<td>#{surstr} Straight Up Right 
+						#{suwstr} Straight Up Wrong #{(100.0*sur/(sur+suw)).r2}%</td>
+						<td>#{ysurstr} Straight Up Right 
+						#{ysuwstr} Straight Up Wrong 
+						#{(100.0*ysur/(ysur+ysuw)).r2}% #{ssdec(ysur,ysuw)}</td>"
 				sur	= suw = 0
 
 				tstr	+= '</tr>'
-				ss	<< headerrow
+				repstr	= "<br><br>#{gc.commify} Games This Day"
+				gc	= 0
+				ss	<< makehr(repstr)
 				ss	<< tstr
 			end
 			od = b.day
