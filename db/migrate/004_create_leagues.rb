@@ -8,11 +8,11 @@ class CreateLeagues < ActiveRecord::Migration
       t.column :created_at,   	:timestamp
       t.column :updated_at,   	:timestamp
     end
-    League.create(:name=>"National Football League")
-    League.create(:name=>"National Basketball Association")
+    League.create(:name=>"National Football League") # september to febuary
+    League.create(:name=>"National Basketball Association") # end of october to june
     League.create(:name=>"English Premier League",	:short_league=>'E0') # start of august through to end of May
-    League.create(:name=>"NCAA Football")
-    League.create(:name=>"NCAA Basketball")
+    League.create(:name=>"NCAA Football") # august to January
+    League.create(:name=>"NCAA Basketball") 
     League.create(:name=>"Belgian First Division",		:short_league=>'B1') # start of august through to end of May
     League.create(:name=>"Bundesliga",	:short_league=>'D1') # start of august through to end of May
     League.create(:name=>"2nd Bundesliga",	:short_league=>'D2') # start of august through to end of May
