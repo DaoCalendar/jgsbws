@@ -35,25 +35,33 @@ def makehr(substr='')
 	return headerrow
 end
 
-
 def ssdec(sur, suw)
 	sum	= sur+suw
 	nh	= sum / 2.0
 	sd	= Math.sqrt(sum * 0.25)
-	lc	= ((nh - 1.96*sd)+0.5).to_i
-	hc	= ((nh + 1.96*sd)+0.5).to_i
+	lc80	= ((nh - 1.282*sd)+0.5).to_i
+	hc80	= ((nh + 1.282*sd)+0.5).to_i
+	lc95	= ((nh - 1.96*sd)+0.5).to_i
+	hc95	= ((nh + 1.96*sd)+0.5).to_i
+	lc99	= ((nh - 2.58*sd)+0.5).to_i
+	hc99	= ((nh + 2.58*sd)+0.5).to_i
 #	compfac = Math.sqrt(0.25/sum)
 #	clc = nh - 1.96*sd*compfac
 #	chc = nh + 1.96*sd*compfac
+	ss95	= (sur < lc95 || sur > hc95)
+	ss99	= (sur < lc99 || sur > hc99)
+	ss80	= (sur < lc80 || sur > hc80)
+	return "" unless (ss95 || ss99 || ss80)
 	retstr	= "<br><br>Statistical Hypotheses Test<br><br>Sample size is #{sum.commify}
-	<br><br>Null Hypothesis is #{nh.r2.commify}
-	<br><br>Std Dev is #{sd.r2}
-	<br><br>95% confidence chance interval is #{lc.commify} to #{hc.commify}
-	<br><br>Number selected correctly is #{sur.commify}
-	"
-	retstr	+= "<br><br>This is statistically signficantly better than chance to 95% confidence." if sur < lc or sur > hc
-	retstr	+= "<br><br>This is NOT statistically signficantly better than chance to 95% confidence." unless (sur < lc or sur > hc)
-	return retstr
+		<br><br>Null Hypothesis is #{nh.r2.commify}
+		<br><br>Std Dev is #{sd.r2}
+		<br><br>aaaaa
+		<br><br>Number selected correctly is #{sur.commify}
+		<br><br>This is statistically signficantly better than chance to bbbbb% confidence."
+	return (retstr.gsub('aaaaa',"99% confidence chance interval is #{lc99.commify} to #{hc99.commify}")).gsub('bbbbb','99') if ss99
+	return (retstr.gsub('aaaaa',"95% confidence chance interval is #{lc95.commify} to #{hc95.commify}")).gsub('bbbbb','95') if ss95
+	return (retstr.gsub('aaaaa',"80% confidence chance interval is #{lc80.commify} to #{hc80.commify}")).gsub('bbbbb','80') if ss80
+	raise "How can I possibly be here?"
 end
 
 #<Prediction id: 5405, game_date_time: "2009-04-05 04:00:00", league: 28, soccer_bet: nil, week: 426, 
