@@ -257,14 +257,14 @@ def main
 	end
 	newpred	=	[]
 	pred.each{|g|
-		newpred	<<	g	if	g.game_date_time	>=	startdate	&&	g.game_date_time	<=	enddate
+		newpred	<< g if g.game_date_time.localtime >= startdate && g.game_date_time.localtime <= enddate
 	}
 #	raise
 	case leagueid
 	when 28 # mlb
-		@main	=	mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle, sport,	lname)
+		@main	= mlbseason(newpred, year, winprob, header, gap, gaptitle, sport, lname)
 	else
-		@main	=	do_season(newpred,	year,	winprob,	header,	gap,	gaptitle, (leagueid	==	5),	sport,	lname)
+		@main	= do_season(newpred, year, winprob, header, gap, gaptitle, (leagueid == 5), sport, lname)
 	end # case
 end
 =begin
