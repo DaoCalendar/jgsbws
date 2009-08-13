@@ -35,7 +35,7 @@ def makehr(substr='')
 	return headerrow
 end
 
-def ssdec(sur, suw)
+def ssdec(sur, suw, short=false)
 	sum	= sur+suw
 	nh	= sum / 2.0
 	sd	= Math.sqrt(sum * 0.25)
@@ -52,16 +52,24 @@ def ssdec(sur, suw)
 	ss99	= (sur < lc99 || sur > hc99)
 	ss80	= (sur < lc80 || sur > hc80)
 	return "" unless (ss95 || ss99 || ss80)
-	retstr	= "<br><br>Statistical Hypotheses Test<br><br>Sample size is #{sum.commify}
-		<br><br>Null Hypothesis is #{nh.r2.commify}
-		<br><br>Std Dev is #{sd.r2}
-		<br><br>aaaaa
-		<br><br>Number selected correctly is #{sur.commify}
-		<br><br>This is statistically signficantly better than chance to bbbbb% confidence."
-	return (retstr.gsub('aaaaa',"99% confidence chance interval is #{lc99.commify} to #{hc99.commify}")).gsub('bbbbb','99') if ss99
-	return (retstr.gsub('aaaaa',"95% confidence chance interval is #{lc95.commify} to #{hc95.commify}")).gsub('bbbbb','95') if ss95
-	return (retstr.gsub('aaaaa',"80% confidence chance interval is #{lc80.commify} to #{hc80.commify}")).gsub('bbbbb','80') if ss80
-	raise "How can I possibly be here?"
+	if short
+		return "<br><br>This is statistically signficantly better than chance to 99% confidence." if ss99
+		return "<br><br>This is statistically signficantly better than chance to 95% confidence." if ss95
+		return "<br><br>This is statistically signficantly better than chance to 80% confidence." if ss80
+		raise "How can I possibly be here? 0"
+	else
+		retstr	= "<br><br>Statistical Hypotheses Test<br><br>Sample size is #{sum.commify}
+			<br><br>Null Hypothesis is #{nh.r2.commify}
+			<br><br>Std Dev is #{sd.r2}
+			<br><br>aaaaa
+			<br><br>Number selected correctly is #{sur.commify}
+			<br><br>This is statistically signficantly better than chance to bbbbb% confidence."
+		return (retstr.gsub('aaaaa',"99% confidence chance interval is #{lc99.commify} to #{hc99.commify}")).gsub('bbbbb','99') if ss99
+		return (retstr.gsub('aaaaa',"95% confidence chance interval is #{lc95.commify} to #{hc95.commify}")).gsub('bbbbb','95') if ss95
+		return (retstr.gsub('aaaaa',"80% confidence chance interval is #{lc80.commify} to #{hc80.commify}")).gsub('bbbbb','80') if ss80
+		raise "How can I possibly be here? 1"
+	end
+	raise "How can I possibly be here? 2"
 end
 
 #<Prediction id: 5405, game_date_time: "2009-04-05 04:00:00", league: 28, soccer_bet: nil, week: 426, 
@@ -88,13 +96,16 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 #		raise "#{p.inspect} 
 		#{bbb.inspect}"
 		bbg			= Mlbgame.new
-		bbg.date		= p.game_date_time
+		bbg.date		= p.game_date_time.localtime
 		bbg.day			= p.week
 		th[p.home_team_id]	= Team.find(p.home_team_id).name unless th.has_key?(p.home_team_id)
 		bbg.home		= th[p.home_team_id]
 		th[p.away_team_id]	= Team.find(p.away_team_id).name unless th.has_key?(p.away_team_id)
 		bbg.away		= th[p.away_team_id]
-		bbg.datestr		= p.game_date_time.day.to_s+'/'+p.game_date_time.month.to_s+'/'+p.game_date_time.year.to_s
+#		bbg.datestr		= p.game_date_time.day.to_s+'/'+p.game_date_time.month.to_s+'/'
+#					 +p.game_date_time.year.to_s+
+#					(p.game_date_time.hour > 0 ? 
+#					 ' - '+p.game_date_time.hour.to_s+':'+p.game_date_time.min.to_s : '')
 #		bbg.homepitcher		= bbb.homepitcher
 #		bbg.awaypitcher		= bbb.awaypitcher
 		bbg.homemoneyline	= bbb.homeml
@@ -164,7 +175,11 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 			gc 		+= 1
 			diddata		= true
 			outstr		= '<tr>'
-			outstr		+= wrap(b.date.strftime("%A %B %d %Y") +" - Day #{(b.day-dayadj).commify} - Game # #{ygc.commify}")
+		#	raise "b.date #{b.date.inspect}" if b.date.hour > 0
+			outstr		+= wrap(b.date.strftime("%A %B %d %Y") +
+				" - Day #{(b.day-dayadj).commify} - Game # #{ygc.commify}") unless b.date.hour > 0
+			outstr		+= wrap(b.date.strftime("%A %B %d %Y - %H:%M") +
+				" - Day #{(b.day-dayadj).commify} - Game # #{ygc.commify}") if b.date.hour > 0
 
 			# dealing with home and away straight up wins and losses
 			hw		= (b.homescore > b.awayscore)
@@ -454,11 +469,13 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 				ysmlbr	+= smlbr
 				smlbrstr= makediv(smlbr)
 				ysmlbrstr = makediv(ysmlbr)
-				tstr	+= "<td>Spread moneyline<br><br>#{smlr} Right 
-					<br>#{smlw} Wrong today<br><br>
-					#{ysmlr} Right 
-					<br>#{ysmlw} Wrong this season<br><br>
-					#{smlbrstr} units won today #{ysmlbrstr} units won this season 
+				tstr	+= "<td>Spread moneyline
+					<br><br>#{smlr} Right 
+					<br>#{smlw} Wrong today
+					<br><br>#{ysmlr} Right 
+					<br>#{ysmlw} Wrong this season
+					#{ssdec(ysmlr, ysmlw, true)}
+					<br><br>#{smlbrstr} units won today #{ysmlbrstr} units won this season 
 					#{(100.00*ysmlr/(ysmlr+ysmlw)).r2} % hit rate"
 				smlr	= smlw = 0
 				smlbr	= 0.0
@@ -488,7 +505,9 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 				tstr	+= "<td>Over/Under<br><br>#{our} Right 
 					<br>#{ouw} Wrong #{spushstr} today
 					<br><br>#{your} Right
-					<br>#{youw} Wrong #{ypshstr} this season
+					<br>#{youw} Wrong #{(100.0*(your/((your+youw) > 0 ? (your+youw) : 1.0))).r2}% 
+					#{ypshstr} this season
+					#{ssdec(your, youw, true)}
 					<br><br>#{oubrstr} units won today 
 					#{youbrstr} units won this season
 					<br><br>#{(100.00*your/(your+youw)).r2} % hit rate

@@ -10,15 +10,15 @@ def index
 	return unless key == passed_key
 	da				=	IO.readlines(File.dirname(__FILE__) + '/../../app/procdata/procdata.dat')
 	return unless key == da.first.chomp
-	ula				=	[]	# build unique league array
+	ula				=	[] # build unique league array
 	da.each_with_index{|l,	i|
 		next if	i	==	0
 		league	=	l.split(',')[0]
 		ula	<<	league	unless	ula.include?(league)
 	}
-	#	home and away scores are -1 for future games
-	#	date league home away homescore awayscore spread homeml awayml drawml probhomewinSU probawaywinSU probdrawSU probhomecoverATS probawaycoverATS probpushATS
-	#	for individual bookie odds post like this xxx->1.23 - check all items for -> for this.
+	# home and away scores are -1 for future games
+	# date league home away homescore awayscore spread homeml awayml drawml probhomewinSU probawaywinSU probdrawSU probhomecoverATS probawaycoverATS probpushATS
+	# for individual bookie odds post like this xxx->1.23 - check all items for -> for this.
 	ula.each{|l|
 		case	l
 			when	'NBA'
@@ -58,7 +58,11 @@ def index
 					#remove mlb at the beginning of each line
 					nmlb	<<	n.gsub('MLB,','')
 				}
-#				raise "nmlb #{nmlb.inspect}"
+#				raise "nmlb size #{nmlb.length} nmlb #{nmlb.inspect}"
+#				ffsao	=	File.new("checkdata.txt",'w')
+#				ffsao.write(nmlb)
+#				ffsao.close
+#				raise
 				mlbloader(nmlb)
 		end
 	}

@@ -3,6 +3,7 @@ class CreatePredictions < ActiveRecord::Migration
     create_table :predictions do |t|
       t.column :game_date_time,          :timestamp
       t.column :league,                  :integer
+	t.column :soccer_bet,		:integer
       t.column :week,                    :integer, :default=>0
       t.column :season,                  :integer, :default=>0
       t.column :home_team_id,            :integer

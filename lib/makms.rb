@@ -37,8 +37,13 @@ def	makrmlbstruc(g, gs)
 =end
 	d				=	g.split(",")
 	gstruct				=	gs.new
-	t				=	d[0].split("/")
+	t				=	d[0].split(" - ")[0].split("/")
+	gt				=	d[0].split(" - ")[1].split(":")
+#	raise "d #{d.inspect} t #{t.inspect} gt #{gt.inspect}"
 	gstruct.date			=	Time.local(2000+t[2].to_i, t[1], t[0])
+	gstruct.gametime		=	Time.local(2000+t[2].to_i, t[1], t[0],gt[0].to_i,gt[1].to_i)
+#	outdate				=	g.date.day.to_s+"/"+g.date.month.to_s+"/"+
+#		g.date.year.to_s[2,2]+' - '+g.gametime.hour.to_s+':'+g.gametime.min.to_s
 	#	puts "g.inspect #{g.inspect}"
 	gstruct.day			=	d[1].to_i
 	begin

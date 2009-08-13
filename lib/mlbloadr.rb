@@ -1,5 +1,5 @@
 def 	makeprecord(p, gstruct, prevdate, teamleague)
-	p.game_date_time	=  gstruct.date
+	p.game_date_time	=  gstruct.gametime
 	seasonnumber		+= 1 if ! prevdate.nil? and ((p.game_date_time - prevdate) / Secondsperday)  > 60 # time diff in days
 	prevdate		=  p.game_date_time.dup
 	p.league		=  teamleague
@@ -42,6 +42,7 @@ def	makebbrecord(nbp, gstruct)
 end
 
 def	mlbloader(dataarray)
+#	raise dataarray.inspect
 	teamleague		=	League.find_by_name('Major League Baseball').id
 	raise "no league!" if teamleague.nil?
 	# outdate - day+1 - g.home - res['hlambda'] - g.homescore - g.away - res['alambda'] - g.awayscore - g.homemoneyline - g.awaymoneyline - res['probhomewin'] - g.overunder - oline - uline - res['probtotalover'] - homerunlinespread - homerunline - res['probhrlcover'] - 	awayrunlinespread - awayrunline - res['probarlcover']
@@ -49,7 +50,7 @@ def	mlbloader(dataarray)
 	dataarray		=	gs(dataarray) # proc names
 	seasonnumber		=	0
 	prevdate		=	nil
-	mlbstruc		=	Struct.new(:date, :day, :home, :hlambda, :homescore, :away, :alambda, 
+	mlbstruc		=	Struct.new(:date, :gametime, :day, :home, :hlambda, :homescore, :away, :alambda, 
 		:awayscore, :homemoneyline, :awaymoneyline, :probhomewin, :overunder, :oline, :uline, 
 		:probtotalover, :homerunlinespread, :homerunline, :probhrlcover, :awayrunlinespread, 
 		:awayrunline, :probarlcover)
@@ -64,14 +65,14 @@ def	mlbloader(dataarray)
 #		pa		=	Prediction.find_all_by_game_date_time(Time.local(2000+t[2].to_i, t[1], t[0]))
 #		puts "looking for date #{gstruct.date.inspect}"
 #		pa		=	Prediction.find_all_by_game_date_time(gstruct.date)
-		sqlstr  = "SELECT * from predictions WHERE predictions.home_team_id = #{gstruct.home} AND predictions.away_team_id = #{gstruct.away}"
+		sqlstr		= "SELECT * from predictions WHERE predictions.home_team_id = #{gstruct.home} AND predictions.away_team_id = #{gstruct.away}"
 		puts "seeking on this sql str #{sqlstr}"
-		pa   = Prediction.find_by_sql(sqlstr)
+		pa		= Prediction.find_by_sql(sqlstr)
 		puts "pa length before date filter is #{pa.length}"
 		pa.delete_if{|g|
-			g["game_date_time"].year     != gstruct.date.year or 
-			g["game_date_time"].month    != gstruct.date.month or 
-			g["game_date_time"].day      != gstruct.date.day
+			g["game_date_time"].year     != gstruct.gametime.year or 
+			g["game_date_time"].month    != gstruct.gametime.month or 
+			g["game_date_time"].day      != gstruct.gametime.day
 	        }
 		puts "pa length after date filter is #{pa.length}"
 #		raise p.inspect
