@@ -1,4 +1,4 @@
-Mlbgame = Struct.new(:date, :datestr, :day, :home, :away, :probhomewsu, :probawaywsu, :homepitcher, 
+Mlbgame = Struct.new(:date, :datestr, :hour, :minutes, :day, :home, :away, :probhomewsu, :probawaywsu, :homepitcher, 
 	:awaypitcher, :homemoneyline, :awaymoneyline, :overunder, :uline, :oline, :uprob, :oprob, 
 	:homerunlinespread, :homerunline, :probhrlcover, :awayrunlinespread, :awayrunline, 
 	:probarlcover, :homescore, :awayscore, :daysback, :discount, :adjhomescore, :adjawayscore, :div)
@@ -11,6 +11,10 @@ Streakbethwin	= 1
 Streakbethlose	= -1
 Streakbetawin	= 2
 Streakbetalose	= -2
+
+def makepc(a, b)
+	return (100.00*a/(a+b)).r2
+end
 
 def marginmaker(a, b)
 	return (((1.0/convml(a)+1.0/convml(b))-1.0)*100.0).r2
@@ -96,7 +100,9 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 #		raise "#{p.inspect} 
 		#{bbb.inspect}"
 		bbg			= Mlbgame.new
-		bbg.date		= p.game_date_time.localtime
+		bbg.date		= p.game_date_time
+		bbg.hour		= p.hour
+		bbg.minutes		= p.minutes
 		bbg.day			= p.week
 		th[p.home_team_id]	= Team.find(p.home_team_id).name unless th.has_key?(p.home_team_id)
 		bbg.home		= th[p.home_team_id]
@@ -163,27 +169,168 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 	yobr	= obr	= yubr	= ubr	= 0.0
 	alloupc	= yalloupc 		= 0	# all ou push count
 	soupc	= ysoupc 		= 0	# ou push count for games we selected
-	gc	= ygc	= 0			# daily and yearly game count
+	gc	= ygc			= 0	# daily and yearly game count
+	hwc	= awc	= yhwc	= yawc	= 0	# home and away win counts
+	hfa	= 0.0 				# home field advantage
 	diddata	= false
 	predgame= false
 	dayadj	= bba.first.day - 1
 	bba.each_with_index{|b, gn|
-		raise "bad score #{b.inspect}" unless ((b.homescore == -1 && b.awayscore == -1) || (b.homescore > -1 && b.awayscore > -1))
+		raise "bad score #{b.inspect}" unless ((b.homescore == -1 && b.awayscore == -1) || 
+							(b.homescore > -1 && b.awayscore > -1))
 		predgame = (b.homescore == -1)
-		if od == b.day
+		unless od == b.day # stats summary
+			if diddata
+				# stats
+				diddata	= false
+				tstr =  "<tr><td>Day #{(od-dayadj).commify} Statistics</td>"
+
+				# bankroll
+				ymlbr	+=	mlbr
+				todaybr	=	mlbr + oubr + smlbr # + obr + ubr
+				#			ybr	+=	stbr  # streak bet
+				ybr	+=	mlbr  # money line
+				ybr	+=	oubr  # over under
+				ybr	+=	smlbr # spread money line
+#				ybr	+=	obr + ubr # over and under
+				todaybrstr	= makediv(todaybr)
+				ybrstr		= makediv(ybr)
+				tstr	+= 	"<td>Won #{todaybrstr} units this day 
+						Won #{ybrstr} units this season so far"
+				# streak bet
+				ystbr	+=	stbr
+				#		tstr	+=	"<td>Streak Bet Won $#{stbr.r2} today Won $#{ystbr.r2} this season</td>"
+				stbr	=	0.0
+
+				# sml
+				ysmlr	+= smlr
+				ysmlw	+= smlw
+				ysmlbr	+= smlbr
+				smlbrstr= makediv(smlbr)
+				ysmlbrstr = makediv(ysmlbr)
+				tstr	+= "<td>Spread moneyline
+					<br><br>#{smlr} Right 
+					<br>#{smlw} Wrong today
+					<br><br>#{ysmlr} Right 
+					<br>#{ysmlw} Wrong this season
+					#{ssdec(ysmlr, ysmlw, true)}
+					<br><br>#{smlbrstr} units won today #{ysmlbrstr} units won this season 
+					#{makepc(ysmlr,ysmlw)} % hit rate"
+				smlr	= smlw = 0
+				smlbr	= 0.0
+
+				# dr traal 905 826 2881
+
+				# ou
+				your	+= our
+				youw	+= ouw
+				youbr	+= oubr
+				yoc	+= oc
+				yuc	+= uc
+				yobr	+= obr
+				yubr	+= ubr
+				yalloupc+= alloupc
+				ysoupc	+= soupc
+				oubrstr	= makediv(oubr)
+				youbrstr= makediv(youbr)
+				yobrstr	= makediv(yobr)
+				yubrstr	= makediv(yubr)
+				obrstr	= makediv(obr)
+				ubrstr	= makediv(ubr)
+				spushstr= soupc > 0 ? "<br>#{soupc} Selected Pushes" : ""
+				ypshstr = ysoupc > 0 ? "<br>#{ysoupc.commify} Selected Pushes" : ""
+				apushstr= alloupc > 0 ? "<br>#{alloupc} Total Pushes" : ""
+				yapshstr= yalloupc > 0 ? "<br>#{yalloupc.commify} Total Pushes" : ""
+				tstr	+= "<td>Over/Under<br><br>#{our} Right 
+					<br>#{ouw} Wrong #{spushstr} today
+					<br><br>#{your} Right
+					<br>#{youw} Wrong #{(100.0*(your/((your+youw) > 0 ? (your+youw) : 1.0))).r2}% 
+					#{ypshstr} this season
+					#{ssdec(your, youw, true)}
+					<br><br>#{oubrstr} units won today 
+					#{youbrstr} units won this season
+					<br><br>#{makepc(your,youw)} % hit rate
+					<br><br>#{oc} over #{uc} under today
+					<br><br>#{yoc.commify} over #{yuc.commify} under #{yapshstr} this season
+					<br><br>#{obrstr} units won by over #{ubrstr} units won by under today
+					<br><br>#{yobrstr} units won by over #{yubrstr} units won by under this season"
+				our	= ouw = oc = uc = obr = ubr = 0
+				oubr	= 0.0
+				alloupc	= 0
+				soupc	= 0
+
+				# moneyline	
+				ymlr	+=	mlr
+				ymlw	+=	mlw
+				mlrstr	=	makediv(mlr, true)
+				mlwstr	=	makediv(mlw, true)
+				mlbrstr	=	makediv(mlbr)
+				ymlbrstr=	makediv(ymlbr)
+				ymlrstr	=	makediv(ymlr, true)
+				ymlwstr	=	makediv(ymlw, true)
+				tstr	+=	"<td>Moneyline<br><br>#{mlrstr} right
+						<br>#{mlwstr} wrong #{makepc(mlr,mlw)}%<br><br>
+						Won #{mlbrstr} units today #{ymlbrstr} units this season<br><br>
+						Season<br><br>#{ymlrstr} right
+						<br>#{ymlwstr} wrong #{makepc(ymlr,ymlw)}%</td>"
+				mlr	= mlw = 0
+				mlbr	=	0.0
+				# straight up
+				ysur	+=	sur
+				ysuw	+=	suw
+				yhwc	+=	hwc
+				yawc	+=	awc
+				surstr	=	makediv(sur, true)
+				suwstr	=	makediv(suw, true)
+				ysurstr	=	makediv(ysur, true)
+				ysuwstr	=	makediv(ysuw, true)
+				tstr	+=	"<td>Straight Up 
+						<br><br>#{surstr} Right
+						<br>#{suwstr} Wrong
+						#{makepc(sur,suw)}%<br><br>
+						#{hwc.commify} Home wins #{awc.commify} Away wins #{makepc(hwc,awc)}%<br><br>
+						#{yhwc.commify} Season Home wins #{yawc.commify} Season Away wins 
+						#{makepc(yhwc,yawc)}%<br><br>
+						Home Field Advantage is #{(hfa / (yhwc+yawc)).r2} runs
+						</td>
+						<td>Straight Up
+						<br><br>#{ysurstr} Right
+						<br>#{ysuwstr} Wrong
+						#{makepc(ysur,ysuw)}% #{ssdec(ysur,ysuw)}
+						</td>"
+				sur	= suw = 0
+				hwc	= awc = 0
+
+				tstr	+= '</tr>'
+				repstr	= "<br><br>#{gc.commify} Games This Day"
+				gc	= 0
+				ss	<< makehr(repstr)
+				ss	<< tstr
+			end
+			od = b.day
+		end
+#		if od == b.day
 			ygc 		+= 1
 			gc 		+= 1
 			diddata		= true
 			outstr		= '<tr>'
 		#	raise "b.date #{b.date.inspect}" if b.date.hour > 0
-			outstr		+= wrap(b.date.strftime("%A %B %d %Y") +
-				" - Day #{(b.day-dayadj).commify} - Game # #{ygc.commify}") unless b.date.hour > 0
-			outstr		+= wrap(b.date.strftime("%A %B %d %Y - %H:%M") +
-				" - Day #{(b.day-dayadj).commify} - Game # #{ygc.commify}") if b.date.hour > 0
+			outstr		+= wrap(b.date.strftime("%A %B %d %Y") + 
+				" - #{b.hour}:#{b.minutes} 
+				- Day #{(b.day-dayadj).commify} 
+				- Game # #{ygc.commify}") # unless b.date.hour > 0
+#			outstr		+= wrap(b.date.strftime("%A %B %d %Y - %H:%M") +
+#				" - Day #{(b.day-dayadj).commify} - Game # #{ygc.commify}") if b.date.hour > 0
 
 			# dealing with home and away straight up wins and losses
 			hw		= (b.homescore > b.awayscore)
+			unless b.homescore == -1
+				hwc		+= 1 if hw
+				awc		+= 1 unless hw
+				hfa		+= (b.homescore - b.awayscore)
+			end
 			
+
 			# do streak bet before updating streak
 			sbet 	= nil
 			sbetstr	= ''
@@ -440,128 +587,7 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 #			outstr += wrap(sbetstr)
 			outstr += '</tr>'
 			ss << outstr.dup
-		else
-			if diddata
-				# stats
-				diddata	= false
-				tstr =  "<tr><td>Day #{(od-dayadj).commify} Statistics</td>"
-
-				# bankroll
-				ymlbr	+=	mlbr
-				todaybr	=	mlbr + oubr + smlbr # + obr + ubr
-				#			ybr	+=	stbr  # streak bet
-				ybr	+=	mlbr  # money line
-				ybr	+=	oubr  # over under
-				ybr	+=	smlbr # spread money line
-#				ybr	+=	obr + ubr # over and under
-				todaybrstr	= makediv(todaybr)
-				ybrstr		= makediv(ybr)
-				tstr	+= 	"<td>Won #{todaybrstr} units this day 
-						Won #{ybrstr} units this season so far"
-				# streak bet
-				ystbr	+=	stbr
-				#		tstr	+=	"<td>Streak Bet Won $#{stbr.r2} today Won $#{ystbr.r2} this season</td>"
-				stbr	=	0.0
-
-				# sml
-				ysmlr	+= smlr
-				ysmlw	+= smlw
-				ysmlbr	+= smlbr
-				smlbrstr= makediv(smlbr)
-				ysmlbrstr = makediv(ysmlbr)
-				tstr	+= "<td>Spread moneyline
-					<br><br>#{smlr} Right 
-					<br>#{smlw} Wrong today
-					<br><br>#{ysmlr} Right 
-					<br>#{ysmlw} Wrong this season
-					#{ssdec(ysmlr, ysmlw, true)}
-					<br><br>#{smlbrstr} units won today #{ysmlbrstr} units won this season 
-					#{(100.00*ysmlr/(ysmlr+ysmlw)).r2} % hit rate"
-				smlr	= smlw = 0
-				smlbr	= 0.0
-
-				# dr traal 905 826 2881
-
-				# ou
-				your	+= our
-				youw	+= ouw
-				youbr	+= oubr
-				yoc	+= oc
-				yuc	+= uc
-				yobr	+= obr
-				yubr	+= ubr
-				yalloupc+= alloupc
-				ysoupc	+= soupc
-				oubrstr	= makediv(oubr)
-				youbrstr= makediv(youbr)
-				yobrstr	= makediv(yobr)
-				yubrstr	= makediv(yubr)
-				obrstr	= makediv(obr)
-				ubrstr	= makediv(ubr)
-				spushstr= soupc > 0 ? "<br>#{soupc} Selected Pushes" : ""
-				ypshstr = ysoupc > 0 ? "<br>#{ysoupc.commify} Selected Pushes" : ""
-				apushstr= alloupc > 0 ? "<br>#{alloupc} Total Pushes" : ""
-				yapshstr= yalloupc > 0 ? "<br>#{yalloupc.commify} Total Pushes" : ""
-				tstr	+= "<td>Over/Under<br><br>#{our} Right 
-					<br>#{ouw} Wrong #{spushstr} today
-					<br><br>#{your} Right
-					<br>#{youw} Wrong #{(100.0*(your/((your+youw) > 0 ? (your+youw) : 1.0))).r2}% 
-					#{ypshstr} this season
-					#{ssdec(your, youw, true)}
-					<br><br>#{oubrstr} units won today 
-					#{youbrstr} units won this season
-					<br><br>#{(100.00*your/(your+youw)).r2} % hit rate
-					<br><br>#{oc} over #{uc} under today
-					<br><br>#{yoc.commify} over #{yuc.commify} under #{yapshstr} this season
-					<br><br>#{obrstr} units won by over #{ubrstr} units won by under today
-					<br><br>#{yobrstr} units won by over #{yubrstr} units won by under this season"
-				our	= ouw = oc = uc = obr = ubr = 0
-				oubr	= 0.0
-				alloupc	= 0
-				soupc	= 0
-
-				# moneyline	
-				ymlr	+=	mlr
-				ymlw	+=	mlw
-				mlrstr	=	makediv(mlr, true)
-				mlwstr	=	makediv(mlw, true)
-				mlbrstr	=	makediv(mlbr)
-				ymlbrstr=	makediv(ymlbr)
-				ymlrstr	=	makediv(ymlr, true)
-				ymlwstr	=	makediv(ymlw, true)
-				tstr	+=	"<td>Moneyline<br><br>#{mlrstr} right 
-						<br>#{mlwstr} wrong #{(100.0*mlr/(mlr+mlw)).r2}%<br><br>
-						Won #{mlbrstr} units today #{ymlbrstr} units this season<br><br> 
-						Season<br><br>#{ymlrstr} right 
-						<br>#{ymlwstr} wrong #{(100.0*ymlr/(ymlr+ymlw)).r2}%</td>"
-				mlr	= mlw = 0
-				mlbr	=	0.0
-
-				# straight up
-				ysur	+=	sur
-				ysuw	+=	suw
-				surstr	=	makediv(sur, true)
-				suwstr	=	makediv(suw, true)
-				ysurstr	=	makediv(ysur, true)
-				ysuwstr	=	makediv(ysuw, true)
-				tstr	+=	"<td>Straight Up 
-						<br><br>#{surstr} Right
-						<br>#{suwstr} Wrong
-						#{(100.0*sur/(sur+suw)).r2}%</td>
-						<td>Straight Up
-						<br><br>#{ysurstr} Right
-						<br>#{ysuwstr} Wrong
-						#{(100.0*ysur/(ysur+ysuw)).r2}% #{ssdec(ysur,ysuw)}</td>"
-				sur	= suw = 0
-
-				tstr	+= '</tr>'
-				repstr	= "<br><br>#{gc.commify} Games This Day"
-				gc	= 0
-				ss	<< makehr(repstr)
-				ss	<< tstr
-			end
-			od = b.day
-		end
+#		end # always 
 	}
 	puta = uta.uniq.sort.join(', ')
 	@main			=	{}

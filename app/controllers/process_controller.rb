@@ -1,6 +1,7 @@
 class ProcessController < ApplicationController
 require "migration_helpers"
 extend MigrationHelpers
+# this routine loads in new games and the results of old games via the update file
 Keystring				=	"05b76c924d8d2ebc2f9771c5195a9790e8b5135fad77e9b11eac2848f781c25b53316dc727efef2a7b354c980b5524f499da2237e5a6daa7a9abbd032ca1cad6add5d365d7a189"
 def index
 	passed_key			=	params[:id]

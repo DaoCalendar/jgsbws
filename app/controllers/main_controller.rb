@@ -156,16 +156,26 @@ def soccer
 	render :template=>"main/main.rhtml"
 end
 
+def bbsort(a, b)
+	return a.game_date_time<=>b.game_date_time unless a.game_date_time == b.game_date_time
+	return a.hour<=>b.hour unless a.hour == b.hour
+	return a.minutes<=>b.minutes unless a.minutes == b.minutes
+#	raise "wierd time in sort"
+	return 0 # tie
+end
+
 def main
 	# params[:id] is now like 012007 - 01 is the league
-	year		=	params[:id][2,4].to_i
+	year	=	params[:id][2,4].to_i
 	logger.warn params.inspect
-	leagueid	=	params[:id][0,2].to_i
+	leagueid=	params[:id][0,2].to_i
 #	raise "year #{year} leagueid #{leagueid}"
-	pred		=	Prediction.find_all_by_league(leagueid)
+	pred	=	Prediction.find_all_by_league(leagueid)
 	puts "pred length is #{pred.length.commify}"
-#	logger.warn pred.inspect
-	pred.sort!{|a,b|a["game_date_time"]<=>b["game_date_time"]}
+#	raise "pred.length #{pred.length}"
+	pred.sort!{|a,b|bbsort(a,b)}
+#	raise
+#	raise "pred.inspect #{pred.inspect}"
 	proba	=	[]
 	lname	=	nil
 	pred.each{|g|
@@ -257,11 +267,14 @@ def main
 	end
 	newpred	=	[]
 	pred.each{|g|
-		newpred	<< g if g.game_date_time.localtime >= startdate && g.game_date_time.localtime <= enddate
+		newpred	<< g if g.game_date_time >= startdate && g.game_date_time <= enddate
 	}
 #	raise
 	case leagueid
 	when 28 # mlb
+		ffsao	=	File.new("pred checkdata.txt",'w')
+		newpred.each{|p|ffsao.write(p.inspect+"\n")}
+		ffsao.close
 		@main	= mlbseason(newpred, year, winprob, header, gap, gaptitle, sport, lname)
 	else
 		@main	= do_season(newpred, year, winprob, header, gap, gaptitle, (leagueid == 5), sport, lname)

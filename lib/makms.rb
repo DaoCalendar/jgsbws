@@ -41,7 +41,8 @@ def	makrmlbstruc(g, gs)
 	gt				=	d[0].split(" - ")[1].split(":")
 #	raise "d #{d.inspect} t #{t.inspect} gt #{gt.inspect}"
 	gstruct.date			=	Time.local(2000+t[2].to_i, t[1], t[0])
-	gstruct.gametime		=	Time.local(2000+t[2].to_i, t[1], t[0],gt[0].to_i,gt[1].to_i)
+	gstruct.hour			=	gt[0].to_i
+	gstruct.minutes			=	gt[1].to_i
 #	outdate				=	g.date.day.to_s+"/"+g.date.month.to_s+"/"+
 #		g.date.year.to_s[2,2]+' - '+g.gametime.hour.to_s+':'+g.gametime.min.to_s
 	#	puts "g.inspect #{g.inspect}"
@@ -51,6 +52,7 @@ def	makrmlbstruc(g, gs)
 	rescue
 		raise "no such team as "+d[2] if home_id.nil?
 	end
+#	raise "ad #{gstruct.home} - #{d.inspect}" if d[2].include?("arizona diamondbacks")
 	gstruct.hlambda			=	d[3].to_f
 	gstruct.homescore		=	d[4].to_i
 	begin

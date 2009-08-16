@@ -59,6 +59,8 @@ ActiveRecord::Schema.define(:version => 34) do
   create_table "predictions", :force => true do |t|
     t.datetime "game_date_time"
     t.integer  "league"
+    t.integer  "hour"
+    t.integer  "minutes"
     t.integer  "soccer_bet"
     t.integer  "week",                    :default => 0
     t.integer  "season",                  :default => 0
