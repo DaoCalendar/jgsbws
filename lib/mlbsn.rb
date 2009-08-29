@@ -11,7 +11,7 @@ Streakbethwin	= 1
 Streakbethlose	= -1
 Streakbetawin	= 2
 Streakbetalose	= -2
-Makedat		= true
+Makedat		= false # true
 
 def makepc(a, b)
 	return (100.00*a/(a+b)).r2
