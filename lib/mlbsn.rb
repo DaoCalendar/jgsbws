@@ -11,6 +11,7 @@ Streakbethwin	= 1
 Streakbethlose	= -1
 Streakbetawin	= 2
 Streakbetalose	= -2
+Makedat		= true
 
 def makepc(a, b)
 	return (100.00*a/(a+b)).r2
@@ -93,6 +94,7 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 #	raise "#{newpred[0].inspect}"
 	bba	= []
 	th	= {}
+	ff	= File.new("/home/terry/Dropbox/My Work/rails/njg/graphdata.txt",'a') if Makedat
 	newpred.each{|p|
 		# note - doing all these individual seeks is bad m'kay?
 		bbb			= BaseballBet.find_by_pred_id(p.id)
@@ -145,6 +147,7 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 #	raise "#{bba[0]} #{bba[1].inspect} "
 	fdate	= bba.first.date
 	ldate	= bba.last.date
+	ff.write("MLBWSS -> Joe Guy's Major League Baseball - with Statium Strength^ #{fdate.strftime("%A %B %d %Y")} - #{ldate.strftime("%A %B %d %Y")}\n") if Makedat
 #	raise bba.inspect
 	# now create a big array to send to the view
 	ba = []
@@ -176,6 +179,11 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 	predgame= false
 	dayadj	= bba.first.day - 1
 	bba.each_with_index{|b, gn|
+		# skip first month
+		if (b.day-dayadj) < 30
+			ygc	+= 1
+			next 
+		end
 		raise "bad score #{b.inspect}" unless ((b.homescore == -1 && b.awayscore == -1) || 
 							(b.homescore > -1 && b.awayscore > -1))
 		predgame = (b.homescore == -1)
@@ -195,6 +203,7 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 #				ybr	+=	obr + ubr # over and under
 				todaybrstr	= makediv(todaybr)
 				ybrstr		= makediv(ybr)
+				ff.write("MLBWSS -> #{ybr.r2}\n") if Makedat
 				tstr	+= 	"<td>Won #{todaybrstr} units this day 
 						Won #{ybrstr} units this season so far"
 				# streak bet
@@ -213,9 +222,9 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 					<br>#{smlw} Wrong today
 					<br><br>#{ysmlr} Right 
 					<br>#{ysmlw} Wrong this season
+					#{makepc(ysmlr,ysmlw)} % hit rate 
 					#{ssdec(ysmlr, ysmlw, true)}
-					<br><br>#{smlbrstr} units won today #{ysmlbrstr} units won this season 
-					#{makepc(ysmlr,ysmlw)} % hit rate"
+					<br><br>#{smlbrstr} units won today #{ysmlbrstr} units won this season"
 				smlr	= smlw = 0
 				smlbr	= 0.0
 
@@ -589,6 +598,7 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 			ss << outstr.dup
 #		end # always 
 	}
+	ff.close if Makedat
 	puta = uta.uniq.sort.join(', ')
 	@main			=	{}
 	@main['pad']		=	false
