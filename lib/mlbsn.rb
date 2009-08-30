@@ -11,7 +11,7 @@ Streakbethwin	= 1
 Streakbethlose	= -1
 Streakbetawin	= 2
 Streakbetalose	= -2
-Makedat		= false # true
+Makedat		= true
 
 def makepc(a, b)
 	return (100.00*a/(a+b)).r2
@@ -147,7 +147,7 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 #	raise "#{bba[0]} #{bba[1].inspect} "
 	fdate	= bba.first.date
 	ldate	= bba.last.date
-	ff.write("MLBWSS -> Joe Guy's Major League Baseball - with Statium Strength^ #{fdate.strftime("%A %B %d %Y")} - #{ldate.strftime("%A %B %d %Y")}\n") if Makedat
+	ff.write("MLBWSS -> Joe Guy's Major League Baseball - with Stadium Strength^ #{fdate.strftime("%A %B %d %Y")} - #{ldate.strftime("%A %B %d %Y")}\n") if Makedat
 #	raise bba.inspect
 	# now create a big array to send to the view
 	ba = []
@@ -178,6 +178,7 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 	diddata	= false
 	predgame= false
 	dayadj	= bba.first.day - 1
+	oybr	= 0.0
 	bba.each_with_index{|b, gn|
 		# skip first month
 		if (b.day-dayadj) < 30
@@ -203,7 +204,8 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 #				ybr	+=	obr + ubr # over and under
 				todaybrstr	= makediv(todaybr)
 				ybrstr		= makediv(ybr)
-				ff.write("MLBWSS -> #{ybr.r2}\n") if Makedat
+				ff.write("MLBWSS -> #{(ybr-oybr).r2}\n") if Makedat
+				oybr	=	ybr
 				tstr	+= 	"<td>Won #{todaybrstr} units this day 
 						Won #{ybrstr} units this season so far"
 				# streak bet
