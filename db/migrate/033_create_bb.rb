@@ -3,6 +3,8 @@ class CreateBb < ActiveRecord::Migration
 	begin
 	create_table :baseball_bets do |t|
 	t.column :pred_id,	:integer
+	t.column :hpitcher,	:integer
+	t.column :apitcher,	:integer
 	t.column :rlhome,	:float
 	t.column :rlhodds,	:integer
 	t.column :rlhprob,	:float
