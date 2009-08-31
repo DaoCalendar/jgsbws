@@ -11,7 +11,7 @@ Streakbethwin	= 1
 Streakbethlose	= -1
 Streakbetawin	= 2
 Streakbetalose	= -2
-Makedat		= true
+Makedat		= false
 
 def makepc(a, b)
 	return (100.00*a/(a+b)).r2
@@ -255,12 +255,11 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 				tstr	+= "<td>Over/Under<br><br>#{our} Right 
 					<br>#{ouw} Wrong #{spushstr} today
 					<br><br>#{your} Right
-					<br>#{youw} Wrong #{(100.0*(your/((your+youw) > 0 ? (your+youw) : 1.0))).r2}% 
+					<br>#{youw} Wrong #{makepc(your, youw)}% 
 					#{ypshstr} this season
 					#{ssdec(your, youw, true)}
 					<br><br>#{oubrstr} units won today 
 					#{youbrstr} units won this season
-					<br><br>#{makepc(your,youw)} % hit rate
 					<br><br>#{oc} over #{uc} under today
 					<br><br>#{yoc.commify} over #{yuc.commify} under #{yapshstr} this season
 					<br><br>#{obrstr} units won by over #{ubrstr} units won by under today
@@ -605,8 +604,8 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 	@main			=	{}
 	@main['pad']		=	false
 	@main['heading']	=	"Joe Guy's #{lname} Betting - #{year} - #{fdate.strftime("%B %d %Y  ")} to #{ldate.strftime("%B %d %Y  ")} "
-	@main['desc']		=	"Joe Guy's Baseball #{year} #{puta}"
-	@main['content']	=	"Joe Guy's Baseball #{year} #{puta}"
+	@main['desc']		=	"Joe Guy's Baseball #{year}, #{puta}"
+	@main['content']	=	"Joe Guy's Baseball #{year}, #{puta}"
 	@main['rollwith']	=	[header]
 	@main['rollwith']	<<	ba + ss.reverse + ['</table>']
 	render :template=>"main/main.rhtml"
