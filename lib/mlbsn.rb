@@ -197,7 +197,7 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 				# bankroll
 				ymlbr	+=	mlbr
 				todaybr	=	mlbr + oubr + smlbr # + obr + ubr
-				#			ybr	+=	stbr  # streak bet
+				#	ybr	+=	stbr  # streak bet
 				ybr	+=	mlbr  # money line
 				ybr	+=	oubr  # over under
 				ybr	+=	smlbr # spread money line
@@ -320,6 +320,7 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 			od = b.day
 		end
 #		if od == b.day
+#		do the individual day's game
 			ygc 		+= 1
 			gc 		+= 1
 			diddata		= true
@@ -334,7 +335,7 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 
 			# dealing with home and away straight up wins and losses
 			hw		= (b.homescore > b.awayscore)
-			unless b.homescore == -1
+			unless predgame # b.homescore == -1
 				hwc		+= 1 if hw
 				awc		+= 1 unless hw
 				hfa		+= (b.homescore - b.awayscore)
@@ -388,35 +389,35 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 			end
 			hdiv, ehdiv	= Ydiv, Ediv if predgame && !hdiv.empty?
 			adiv, eadiv	= Ydiv, Ediv if predgame && !adiv.empty?
-			sur	+=	1 if hdiv == Gdiv
-			suw	+=	1 if hdiv == Rdiv
+			sur		+=	1 if hdiv == Gdiv
+			suw		+=	1 if hdiv == Rdiv
 			streakstring	= ''
-			hsstr	=	b.homescore == -1 ? '' : b.homescore.to_s
+			hsstr		=	(predgame ? '' : b.homescore.to_s)
 #			streakstring	= " - Streak is #{sh[b.home]} win " if sh[b.home] == 1
 #			streakstring	= " - Streak is #{sh[b.home]} wins " if sh[b.home] > 1
 #			streakstring	= " - Streak is #{-sh[b.home]} loss " if sh[b.home] == -1
 #			streakstring	= " - Streak is #{-sh[b.home]} losses " if sh[b.home] < -1
 			outstr += wrap(hdiv + b.home+' '+hsstr + streakstring + ehdiv)
 
-			sur	+=	1 if adiv == Gdiv
-			suw	+=	1 if adiv == Rdiv
+			sur		+=	1 if adiv == Gdiv
+			suw		+=	1 if adiv == Rdiv
 			streakstring	= ''
-			asstr	=	b.awayscore == -1 ? '' : b.awayscore.to_s
+			asstr		=	(predgame ? '' : b.awayscore.to_s)
 #			streakstring	= " - Streak is #{sh[b.away]} win " if sh[b.away] == 1
 #			streakstring	= " - Streak is #{sh[b.away]} wins " if sh[b.away] > 1
 #			streakstring	= " - Streak is #{-sh[b.away]} loss " if sh[b.away] == -1
 #			streakstring	= " - Streak is #{-sh[b.away]} losses " if sh[b.away] < -1
 			outstr += wrap(adiv + b.away+' '+asstr + streakstring + eadiv)
 			# done
-			
+
 			uta << b.home # unique team array for keywords
-			uta << b.away                                        
-			
+			uta << b.away
+
 			# moneylines
-			
+
 			bethome = ((convml(b.homemoneyline) * b.probhomewsu) > Betml)
 			betaway = ((convml(b.awaymoneyline) * b.probawaywsu) > Betml)
-			
+
 			hdiv	= hediv = ''
 			if bethome
 				hdiv, ehdiv = Gdiv, Ediv if hw
@@ -431,8 +432,8 @@ def mlbseason(newpred,	year,	winprob,	header,	gap,	gaptitle,	sport,	lname)
 				adiv, eadiv = Rdiv, Ediv if hw
 			end
 			
-			hdiv, ehdiv	= Ydiv, Ediv if predgame && !hdiv.empty?
-			adiv, eadiv	= Ydiv, Ediv if predgame && !adiv.empty?
+			hdiv, ehdiv	= Ydiv, Ediv if predgame && bethome # !hdiv.empty?
+			adiv, eadiv	= Ydiv, Ediv if predgame && betaway # !adiv.empty?
 			
 			if hdiv == Gdiv
 				mlr	+= 1
